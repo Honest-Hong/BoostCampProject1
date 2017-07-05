@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FirstMiniProject</string>
+    <string name="title_activity_direct">DirectActivity</string>
+</resources>
