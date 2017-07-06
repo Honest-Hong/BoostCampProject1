@@ -64,7 +64,7 @@ public class TimelineRecyclerAdapter extends RecyclerView.Adapter {
         // 기본 텍스트와 썸네일 이미지 표시
         vh.textWriter.setText(timeline.getWriter());
         vh.imageThumb.setImageBitmap(timeline.getThumb());
-        vh.textTime.setText(timeline.getTime());
+        vh.textTime.setText(timeline.getTime() + " · ");
         vh.textLike.setText(String.format("%d명", timeline.getLike()));
 
         // 각각 숫자가 0이 아닐 경우에만 표시해주기
@@ -199,7 +199,7 @@ public class TimelineRecyclerAdapter extends RecyclerView.Adapter {
                     Toast.makeText(context, "공유하기 버튼 클릭", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.button_more:
-                    BottomSheetDialog dialog = new BottomSheetDialog(context);
+                    BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.BottomOptionsDialogTheme);
                     dialog.show();
                     break;
                 case R.id.text_writer:

@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,8 +23,8 @@ import android.widget.Toast;
  */
 
 public class BottomSheetDialog extends Dialog implements AdapterView.OnItemClickListener{
-    public BottomSheetDialog(@NonNull Context context) {
-        super(context);
+    public BottomSheetDialog(@NonNull Context context, @StyleRes int themeResId) {
+        super(context, themeResId);
     }
 
     @Override

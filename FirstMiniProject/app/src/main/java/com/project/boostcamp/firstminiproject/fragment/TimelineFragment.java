@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.project.boostcamp.firstminiproject.R;
 import com.project.boostcamp.firstminiproject.data.Timeline;
@@ -47,6 +48,7 @@ public class TimelineFragment extends Fragment{
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(false);
+                        Toast.makeText(getContext(), "새로고침 되었습니다", Toast.LENGTH_SHORT).show();
                     }
                 }, 1500);
             }
@@ -70,7 +72,7 @@ public class TimelineFragment extends Fragment{
                     "또는 자신의 남.여자친구가 전에 동거를 했었다고 하더라도 아무렇지 않은가요? \n" +
                     "단순호기심에 물어봅니다!");
             t.setTimelineType(Timeline.TIMELINE_TYPE_TEXT);
-            t.setLike(0);
+            t.setLike(3);
             t.setLiked(false);
             t.setComment(2);
             t.setShare(0);
