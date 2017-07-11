@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SecondMiniProject</string>
+    <string name="nav_open">열림</string>
+    <string name="nav_close">닫힘</string>
+</resources>
