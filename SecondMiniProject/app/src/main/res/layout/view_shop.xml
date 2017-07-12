@@ -40,10 +40,12 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorBlack"/>
 
-            <ImageView
-                android:id="@+id/image_check"
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/check_box"
                 android:layout_width="32dp"
-                android:layout_height="32dp"/>
+                android:layout_height="32dp"
+                android:button="@null"
+                android:background="@drawable/selector_check_box"/>
         </LinearLayout>
 
         <TextView

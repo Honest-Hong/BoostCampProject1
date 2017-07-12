@@ -68,7 +68,9 @@ public class ShopRecyclerAdapter extends RecyclerView.Adapter {
 
     private void sort(Comparator<Shop> comparator) {
         Collections.sort(shops, comparator);
-        notifyDataSetChanged();
+        for(int i=0; i<shops.size(); i++) {
+            notifyItemChanged(i);
+        }
     }
 
     @Override

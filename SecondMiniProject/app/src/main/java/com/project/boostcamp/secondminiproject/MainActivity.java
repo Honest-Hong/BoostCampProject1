@@ -1,5 +1,6 @@
 package com.project.boostcamp.secondminiproject;
 
+import android.content.res.Configuration;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,25 +18,27 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     @BindView(R.id.drawer_layout) DrawerLayout drawerLayout; // 네비게이션 드로우어
     @BindView(R.id.tool_bar) Toolbar toolbar; // 툴바
     @BindView(R.id.tab_layout) TabLayout tabLayout; // 탭 레이아웃
     @BindView(R.id.button_change_view) ImageView btnChangeView; // 보기 방식 바꾸기 버튼
     @BindView(R.id.recycler_view) RecyclerView recyclerView; // 리사이클러뷰
     private ShopRecyclerAdapter recyclerAdapter; // 리사이클러뷰 어댑터
+    private ActionBarDrawerToggle drawerToggle; // 드로우어 토글 버튼
 
     private boolean showVertical = false;
+
+    public final static int LIST_COLUMN = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("맛집리스트");
+        getSupportActionBar().setTitle(R.string.app_name);
 
         setupDrawer();
         setupTabLayout();
@@ -44,25 +47,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupDrawer() {
         // 네비게이션 드로우어 토글 버튼 설정
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_open, R.string.nav_close);
-        drawerToggle.setDrawerIndicatorEnabled(true);
-        drawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.openDrawer(GravityCompat.START);
-                } else {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                }
-            }
-        });
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_open, R.string.nav_close);
+        drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
     private void setupTabLayout() {
-        tabLayout.addTab(tabLayout.newTab().setText("거리순"));
-        tabLayout.addTab(tabLayout.newTab().setText("인기순"));
-        tabLayout.addTab(tabLayout.newTab().setText("최근순"));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_distance));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_like));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_time));
+        // 탭에 따라서 데이터 순서 변화
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(LIST_COLUMN, StaggeredGridLayoutManager.VERTICAL));
         recyclerAdapter = new ShopRecyclerAdapter(this, ShopTestData.get());
         recyclerView.setAdapter(recyclerAdapter);
     }
@@ -99,12 +99,20 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.button_change_view)
     public void OnChangeView(ImageView v) {
         showVertical = !showVertical;
-        if(showVertical) {
-            v.setImageResource(R.drawable.ic_staggered_grid);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        v.setImageResource(showVertical
+                ? R.drawable.ic_staggered_grid
+                : R.drawable.ic_vertical);
+        recyclerView.setLayoutManager(showVertical
+                ? new LinearLayoutManager(this)
+                : new StaggeredGridLayoutManager(LIST_COLUMN, StaggeredGridLayoutManager.VERTICAL));
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            v.setImageResource(R.drawable.ic_vertical);
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+            super.onBackPressed();
         }
     }
 }
