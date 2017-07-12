@@ -1,5 +1,7 @@
 package com.project.boostcamp.secondminiproject;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.res.Configuration;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.ImageView;
 
 import butterknife.BindView;
@@ -99,12 +102,23 @@ public class MainActivity extends AppCompatActivity{
     @OnClick(R.id.button_change_view)
     public void OnChangeView(ImageView v) {
         showVertical = !showVertical;
+        // 버튼 이미지 변환하기
         v.setImageResource(showVertical
                 ? R.drawable.ic_staggered_grid
                 : R.drawable.ic_vertical);
-        recyclerView.setLayoutManager(showVertical
-                ? new LinearLayoutManager(this)
-                : new StaggeredGridLayoutManager(LIST_COLUMN, StaggeredGridLayoutManager.VERTICAL));
+        // 리사이클러 숨기기 애니메이션
+        hideRecycler(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                // 레이아웃 매니져 변환하기
+                recyclerView.setLayoutManager(showVertical
+                        ? new LinearLayoutManager(MainActivity.this)
+                        : new StaggeredGridLayoutManager(LIST_COLUMN, StaggeredGridLayoutManager.VERTICAL));
+                // 리사이클러 보여주기 애니메이션
+                showRecycler();
+            }
+        });
     }
 
     @Override
@@ -114,5 +128,25 @@ public class MainActivity extends AppCompatActivity{
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void hideRecycler(AnimatorListenerAdapter adapter) {
+        int cx = (recyclerView.getLeft() + recyclerView.getRight()) / 2;
+        int cy = (recyclerView.getTop() + recyclerView.getBottom()) / 2;
+
+        int finalRadius = Math.max(recyclerView.getWidth(), recyclerView.getHeight());
+        Animator anim = ViewAnimationUtils.createCircularReveal(recyclerView, cx, cy, finalRadius, 0);
+        anim.addListener(adapter);
+        anim.start();
+    }
+
+    public void showRecycler() {
+        int cx = (recyclerView.getLeft() + recyclerView.getRight()) / 2;
+        int cy = (recyclerView.getTop() + recyclerView.getBottom()) / 2;
+
+        int finalRadius = Math.max(recyclerView.getWidth(), recyclerView.getHeight());
+        Animator anim = ViewAnimationUtils.createCircularReveal(recyclerView, cx, cy, 0, finalRadius);
+        recyclerView.setVisibility(View.VISIBLE);
+        anim.start();
     }
 }
