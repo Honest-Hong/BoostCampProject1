@@ -34,7 +34,7 @@ public class ShopRecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((ShopViewHolder)holder).initLayout(shops.get(position));
+        ((ShopViewHolder)holder).initLayout(context, shops.get(position));
     }
 
     public void changeSorting(int type) {

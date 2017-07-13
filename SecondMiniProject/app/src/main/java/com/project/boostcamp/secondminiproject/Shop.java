@@ -10,7 +10,7 @@ import android.graphics.Bitmap;
 public class Shop {
     private String name; // 맛집 이름
     private String text; // 맛집 설명
-    private int image; // 맛집 이미지
+    private String imageUrl; // 맛집 이미지
     private boolean checked; // 체크 유무
     private int distance; // 거리
     private int like; // 좋아요
@@ -32,12 +32,12 @@ public class Shop {
         this.text = text;
     }
 
-    public int getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(int image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public boolean isChecked() {
