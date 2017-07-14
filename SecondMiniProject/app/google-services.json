@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "626277564162",
+    "firebase_url": "https://secondminiproject.firebaseio.com",
+    "project_id": "secondminiproject",
+    "storage_bucket": "secondminiproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:626277564162:android:12d25a0c6ae098ef",
+        "android_client_info": {
+          "package_name": "com.project.boostcamp.secondminiproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "626277564162-mgk28u7hlrlfh62itafptncjlu2tnptk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnxjtqPphPqIR0pCxBFq8w_V1WXQzXzts"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

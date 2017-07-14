@@ -7,9 +7,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
-import com.bumptech.glide.module.AppGlideModule;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,9 +32,8 @@ public class ShopViewHolder extends RecyclerView.ViewHolder {
 
     public void initLayout(Context context, Shop shop) {
         this.shop = shop;
-        GlideApp.with(context)
+        Picasso.with(context)
                 .load(shop.getImageUrl())
-                .fitCenter()
                 .placeholder(R.drawable.place_holder)
                 .into(imageView);
         textName.setText(shop.getName());

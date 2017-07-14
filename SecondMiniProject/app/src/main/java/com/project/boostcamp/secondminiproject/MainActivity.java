@@ -17,11 +17,20 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.ImageView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     @BindView(R.id.drawer_layout) DrawerLayout drawerLayout; // 네비게이션 드로우어
     @BindView(R.id.tool_bar) Toolbar toolbar; // 툴바
     @BindView(R.id.tab_layout) TabLayout tabLayout; // 탭 레이아웃
@@ -43,9 +52,10 @@ public class MainActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
 
-        setupDrawer();
-        setupTabLayout();
-        setupRecyclerView();
+        setupDrawer(); // 드로우어 설정
+        setupTabLayout(); // 탭 레이아웃 설정
+        setupRecyclerView(); // 리사이클러뷰 설정
+        setupDatabase(); // 데이터베이스 설정
     }
 
     private void setupDrawer() {
@@ -53,12 +63,6 @@ public class MainActivity extends AppCompatActivity{
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_open, R.string.nav_close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     private void setupTabLayout() {
@@ -95,8 +99,6 @@ public class MainActivity extends AppCompatActivity{
     private void setupRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(LIST_COLUMN, StaggeredGridLayoutManager.VERTICAL));
-        recyclerAdapter = new ShopRecyclerAdapter(this, ShopTestData.get());
-        recyclerView.setAdapter(recyclerAdapter);
     }
 
     @OnClick(R.id.button_change_view)
@@ -130,7 +132,30 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    public void hideRecycler(AnimatorListenerAdapter adapter) {
+    private void setupDatabase() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("shop");
+        ref.addValueEventListener(shopValueEventListener);
+    }
+
+    private ValueEventListener shopValueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            ArrayList<Shop> shops = new ArrayList<>();
+            for(DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                shops.add(postSnapshot.getValue(Shop.class));
+            }
+            recyclerAdapter = new ShopRecyclerAdapter(MainActivity.this, shops);
+            recyclerView.setAdapter(recyclerAdapter);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+        }
+    };
+
+    // 리사이클려뷰 숨겨주기
+    private void hideRecycler(AnimatorListenerAdapter adapter) {
         int cx = (recyclerView.getLeft() + recyclerView.getRight()) / 2;
         int cy = (recyclerView.getTop() + recyclerView.getBottom()) / 2;
 
@@ -140,7 +165,8 @@ public class MainActivity extends AppCompatActivity{
         anim.start();
     }
 
-    public void showRecycler() {
+    // 리사이클러뷰 나타내기
+    private void showRecycler() {
         int cx = (recyclerView.getLeft() + recyclerView.getRight()) / 2;
         int cy = (recyclerView.getTop() + recyclerView.getBottom()) / 2;
 
