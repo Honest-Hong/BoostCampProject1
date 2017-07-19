@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "507291155582",
+    "firebase_url": "https://boostcampsample.firebaseio.com",
+    "project_id": "boostcampsample",
+    "storage_bucket": "boostcampsample.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507291155582:android:efa7a6874038c8f9",
+        "android_client_info": {
+          "package_name": "com.project.boostcamp.boostcampsample1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "507291155582-8seg7agge3arumqmtanuja8m5frijdll.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPYwAfMtULCgG9yhFSH45IAibxTvpaS7I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507291155582:android:e2c5c2deca7638db",
+        "android_client_info": {
+          "package_name": "com.project.boostcamp.thirdminiproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "507291155582-8seg7agge3arumqmtanuja8m5frijdll.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPYwAfMtULCgG9yhFSH45IAibxTvpaS7I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

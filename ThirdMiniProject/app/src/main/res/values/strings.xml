@@ -2,8 +2,7 @@
     <string name="app_name">맛집 등록</string>
 
     <string name="button_prev">이전</string>
-    <string name="button_add">추가</string>
-    <string name="button_ok">확인</string>
+    <string name="button_next">다음</string>
 
     <string name="hint_name">맛집 이름</string>
     <string name="hint_address">맛집 주소</string>
