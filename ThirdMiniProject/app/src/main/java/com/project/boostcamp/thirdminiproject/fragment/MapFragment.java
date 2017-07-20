@@ -47,7 +47,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     public static MapFragment newInstance(@NonNull Restraurant rest) {
         Bundle arg = new Bundle();
-        arg.putSerializable("rest", rest);
+        arg.putParcelable("rest", rest);
         MapFragment mapFragment = new MapFragment();
         mapFragment.setArguments(arg);
         return mapFragment;
@@ -59,7 +59,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         onNextClickListener = (MainActivity)context;
         geocoder = new Geocoder(context);
         rest = getArguments() != null
-                ? (Restraurant)getArguments().getSerializable("rest")
+                ? (Restraurant)getArguments().getParcelable("rest")
                 : new Restraurant();
     }
 
