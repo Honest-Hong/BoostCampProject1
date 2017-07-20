@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity implements onNextClickListen
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
-        TextView textTitle = (TextView)toolbar.findViewById(R.id.text_title);
-        textTitle.setText(R.string.app_name);
         setSupportActionBar(toolbar);
     }
 

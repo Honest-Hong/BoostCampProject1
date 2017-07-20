@@ -54,19 +54,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        if(getArguments() != null) {
-            rest = (Restraurant)getArguments().getSerializable("rest");
-        }
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         onNextClickListener = (MainActivity)context;
         geocoder = new Geocoder(context);
+        rest = getArguments() != null
+                ? (Restraurant)getArguments().getSerializable("rest")
+                : new Restraurant();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable

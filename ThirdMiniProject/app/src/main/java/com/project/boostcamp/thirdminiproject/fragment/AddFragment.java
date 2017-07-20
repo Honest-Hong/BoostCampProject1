@@ -78,11 +78,6 @@ public class AddFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
     @OnClick(R.id.edit_address)
     public void onAddressClick(EditText ev) {
         try {
