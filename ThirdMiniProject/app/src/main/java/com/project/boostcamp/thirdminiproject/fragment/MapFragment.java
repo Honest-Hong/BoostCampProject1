@@ -1,12 +1,16 @@
 package com.project.boostcamp.thirdminiproject.fragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +23,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -39,6 +44,8 @@ import butterknife.OnClick;
  */
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener{
+    private final static int REQUEST_PERMISSION = 0x100;
+
     @BindView(R.id.edit_address) TextView textAddress; // 맵 상단의 주소를 보여주는 텍스트
     private onNextClickListener onNextClickListener; // 다음 버튼을 클릭하였을 때의 이벤트 처리
     private Restraurant rest; // 현재 맛집 정보
@@ -116,8 +123,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     .position(latLng));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
             googleMap.setOnMarkerDragListener(this);
+            UiSettings settings = googleMap.getUiSettings();
+            settings.setZoomControlsEnabled(true);
+            settings.setMyLocationButtonEnabled(true);
+
+            if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+                if(shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                }
+                requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_PERMISSION);
+            } else  {
+                googleMap.setMyLocationEnabled(true);
+            }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == REQUEST_PERMISSION) {
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                googleMap.setMyLocationEnabled(true);
+            }
         }
     }
 
