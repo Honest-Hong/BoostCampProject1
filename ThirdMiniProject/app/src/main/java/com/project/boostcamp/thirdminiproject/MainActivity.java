@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements onNextClickListener, GoogleApiClient.OnConnectionFailedListener, FragmentManager.OnBackStackChangedListener {
+public class MainActivity extends AppCompatActivity implements OnNextClickListener, GoogleApiClient.OnConnectionFailedListener, FragmentManager.OnBackStackChangedListener {
     @BindView(R.id.fab_add) FloatingActionButton fabAdd; // 맛집 추가 버튼
 
     @Override
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements onNextClickListen
 
     private void initFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.fragment, ListFragment.newInstance());
+        transaction.replace(R.id.fragment, ListFragment.newInstance());
         transaction.commit();
         getSupportFragmentManager().addOnBackStackChangedListener(this);
     }

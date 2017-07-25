@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -20,7 +19,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.project.boostcamp.thirdminiproject.MainActivity;
-import com.project.boostcamp.thirdminiproject.onNextClickListener;
+import com.project.boostcamp.thirdminiproject.OnNextClickListener;
 import com.project.boostcamp.thirdminiproject.R;
 import com.project.boostcamp.thirdminiproject.Restraurant;
 
@@ -44,7 +43,7 @@ public class AddFragment extends Fragment {
     @BindView(R.id.edit_desc) EditText editDesc;
     @BindView(R.id.text_count) TextView textCount;
 
-    private onNextClickListener onNextClickListener; // 다음 버튼 클릭 이벤트 처리
+    private OnNextClickListener onNextClickListener; // 다음 버튼 클릭 이벤트 처리
 
     public static AddFragment newInstance() {
         return new AddFragment();
@@ -53,7 +52,7 @@ public class AddFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        onNextClickListener = (MainActivity)context;
+        onNextClickListener = (OnNextClickListener) context;
     }
 
     @Override

@@ -8,7 +8,6 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -27,8 +26,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.project.boostcamp.thirdminiproject.MainActivity;
-import com.project.boostcamp.thirdminiproject.onNextClickListener;
+import com.project.boostcamp.thirdminiproject.OnNextClickListener;
 import com.project.boostcamp.thirdminiproject.R;
 import com.project.boostcamp.thirdminiproject.Restraurant;
 
@@ -47,7 +45,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private final static int REQUEST_PERMISSION = 0x100;
 
     @BindView(R.id.edit_address) TextView textAddress; // 맵 상단의 주소를 보여주는 텍스트
-    private onNextClickListener onNextClickListener; // 다음 버튼을 클릭하였을 때의 이벤트 처리
+    private OnNextClickListener onNextClickListener; // 다음 버튼을 클릭하였을 때의 이벤트 처리
     private Restraurant rest; // 현재 맛집 정보
     private Geocoder geocoder; // 위도, 경도 <-> 주소 변환해주는 용도
     private GoogleMap googleMap; // 구글 맵
@@ -63,7 +61,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        onNextClickListener = (MainActivity)context;
+        onNextClickListener = (OnNextClickListener)context;
         geocoder = new Geocoder(context);
         rest = getArguments() != null
                 ? (Restraurant)getArguments().getParcelable("rest")
@@ -142,9 +140,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == REQUEST_PERMISSION) {
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 googleMap.setMyLocationEnabled(true);
-            }
         }
     }
 
