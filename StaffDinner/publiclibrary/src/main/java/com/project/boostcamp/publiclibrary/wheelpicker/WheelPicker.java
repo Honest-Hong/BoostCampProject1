@@ -1,8 +1,10 @@
 package com.project.boostcamp.publiclibrary.wheelpicker;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,6 +77,9 @@ public class WheelPicker extends ScrollView {
     }
 
     private void measureItemViewHeight() {
+        if(adapter.getCount() == 0) {
+            return;
+        }
         container.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         itemViewHeight = container.getMeasuredHeight();
         itemViewHeight /= adapter.getCount();
@@ -150,11 +155,12 @@ public class WheelPicker extends ScrollView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         int height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         if(heightMeasureSpec == MeasureSpec.UNSPECIFIED) {
             height = itemViewHeight * 3;
         }
-        setMeasuredDimension(width, height);
+        container.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+        Log.d("HTJ", "width: " + container.getMeasuredWidth());
+        setMeasuredDimension(container.getMeasuredWidth(), height);
     }
 }

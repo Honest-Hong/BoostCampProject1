@@ -14,11 +14,11 @@ import java.util.Locale;
  * Created by Hong Tae Joon on 2017-07-27.
  */
 
-public class TextWheelAdapter extends WheelPickerAdapter<Integer> {
+public class TextWheelAdapter extends WheelPickerAdapter<String> {
     @Override
     public View getView(LayoutInflater inflater, ViewGroup parent, int pos) {
         TextView textView = (TextView)inflater.inflate(R.layout.layout_wheel_item, parent, false);
-        textView.setText(String.format(Locale.getDefault(), "%02d", data.get(pos)));
+        textView.setText(data.get(pos));
         return textView;
     }
 }

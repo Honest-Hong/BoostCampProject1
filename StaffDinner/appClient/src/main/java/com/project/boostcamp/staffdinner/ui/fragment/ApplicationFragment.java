@@ -55,6 +55,9 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     private static final int REQUEST_PERMISSION = 0x100;
     public static final int MAX_NUMBER = 99;
     public static final int MIN_NUMBER = 1;
+    public static final int MAX_HOUR = 24;
+    public static final int MAX_MINUTE = 60;
+    public static final int MAX_DATE = 14;
     private NestedScrollView scrollView;
     private ImageView imageState; // 상단의 신청서 상태 이미지
     private TextView textState; // 상단의 신청서 상태 텍스트
@@ -70,6 +73,8 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     private TextWheelAdapter wheelAdapterHour; //  신청서의 시간 뷰 어댑터
     private WheelPicker wheelMinute; // 신청서의 분 선택 도구
     private TextWheelAdapter wheelAdapterMinute; // 신청서의 분 뷰 어댑터
+    private WheelPicker wheelDate;
+    private TextWheelAdapter wheelAdapterDate;
     private Apply apply = new Apply(); // 현재 신청서 정보
     private Button btnApply;
     private static ApplicationFragment instance;
@@ -120,27 +125,39 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
 
     private void setupWheel(View v) {
         wheelAdapterHour = new TextWheelAdapter();
-        ArrayList<Integer> hours = new ArrayList<>();
-        for(int i=0; i<24; i++) {
-            hours.add(i);
+        ArrayList<String> hours = new ArrayList<>();
+        for(int i = 0; i< MAX_HOUR; i++) {
+            hours.add(String.format("%02d", i));
         }
         wheelAdapterHour.setData(hours);
+        wheelHour = (WheelPicker)v.findViewById(R.id.wheel_hour);
+        wheelHour.setAdapter(wheelAdapterHour);
 
         wheelAdapterMinute = new TextWheelAdapter();
-        ArrayList<Integer> minutes = new ArrayList<>();
-        for(int i=0; i< 60; i+= 10) {
-            minutes.add(i);
+        ArrayList<String> minutes = new ArrayList<>();
+        for(int i = 0; i< MAX_MINUTE; i+= 10) {
+            minutes.add(String.format("%02d", i));
         }
         wheelAdapterMinute.setData(minutes);
-
-        wheelHour = (WheelPicker)v.findViewById(R.id.wheel_hour);
         wheelMinute = (WheelPicker)v.findViewById(R.id.wheel_minute);
-        wheelHour.setAdapter(wheelAdapterHour);
         wheelMinute.setAdapter(wheelAdapterMinute);
 
+        wheelAdapterDate = new TextWheelAdapter();
+        ArrayList<String> dates = new ArrayList<>();
+
         Calendar calendar = Calendar.getInstance();
+        for(int i = 0; i< MAX_DATE; i++) {
+            dates.add(String.format("%02d/%02d", calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE)));
+            calendar.add(Calendar.DATE, 1);
+        }
+        wheelAdapterDate.setData(dates);
+        wheelDate = (WheelPicker)v.findViewById(R.id.wheel_date);
+        wheelDate.setAdapter(wheelAdapterDate);
+
+        calendar.setTimeInMillis(System.currentTimeMillis());
         wheelHour.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
         wheelMinute.setSelectedIndex(calendar.get(Calendar.MINUTE) / 10);
+        wheelDate.setSelectedIndex(0);
     }
 
     private void setupButton(View v) {
@@ -187,13 +204,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                 }
                 break;
             case R.id.button_apply:
-                if(apply.getState() == Apply.STATE_EDIT) {
-                    MyAlertDialog.newInstance(getString(R.string.dialog_alert_title), getString(R.string.dialog_apply_message), this)
-                            .show(getChildFragmentManager(), null);
-                } else {
-                    MyAlertDialog.newInstance(getString(R.string.dialog_alert_title), getString(R.string.dialog_cancel_message), this)
-                            .show(getChildFragmentManager(), null);
-                }
+                handleApplyButton();
                 break;
             case R.id.button_search:
                 MapDetailActivity.show(this
@@ -202,6 +213,30 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                         , false);
                 break;
         }
+    }
+
+    private void handleApplyButton() {
+        if(apply.getState() == Apply.STATE_EDIT) {
+            MyAlertDialog.newInstance(getString(R.string.dialog_alert_title), getString(R.string.dialog_apply_message), this)
+                    .show(getChildFragmentManager(), null);
+        } else {
+            MyAlertDialog.newInstance(getString(R.string.dialog_alert_title), getString(R.string.dialog_cancel_message), this)
+                    .show(getChildFragmentManager(), null);
+        }
+    }
+
+    @Override
+    public void onPositive() {
+        if(apply.getState() == Apply.STATE_EDIT) {
+            requestApply();
+        } else {
+            requestCancel();
+        }
+        scrollView.smoothScrollTo(0,0);
+    }
+
+    @Override
+    public void onNegative() {
     }
 
     @Override
@@ -272,9 +307,11 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     public void requestApply() {
         apply.setTitle(editTitle.getText().toString());
         apply.setNumber(Integer.parseInt(editNumber.getText().toString()));
-        int hour = wheelAdapterHour.getItem(wheelHour.getSelectedIndex());
-        int minute = wheelAdapterMinute.getItem(wheelMinute.getSelectedIndex());
-        apply.setWantedTime(TimeHelper.getTime(hour, minute));
+        String hour = wheelAdapterHour.getItem(wheelHour.getSelectedIndex());
+        String minute = wheelAdapterMinute.getItem(wheelMinute.getSelectedIndex());
+        apply.setWantedTime(TimeHelper.getTime(
+                Integer.parseInt(hour)
+                , Integer.parseInt(minute)));
         apply.setWantedStyle(autoStyle.getText().toString());
         apply.setWantedMenu(editMenu.getText().toString());
         apply.setWantedLatitude(marker.getPosition().latitude);
@@ -287,7 +324,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     }
 
     private void requestCancel() {
-        // // TODO: 2017-07-28 내용 모두 지우기
+        // TODO: 2017-07-28 내용 모두 지우기
         apply.setState(Apply.STATE_EDIT);
         setState(Apply.STATE_EDIT);
     }
@@ -311,19 +348,5 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
             case Apply.STATE_FAIL:
                 break;
         }
-    }
-
-    @Override
-    public void onPositive() {
-        if(apply.getState() == Apply.STATE_EDIT) {
-            requestApply();
-        } else {
-            requestCancel();
-        }
-        scrollView.smoothScrollTo(0,0);
-    }
-
-    @Override
-    public void onNegative() {
     }
 }

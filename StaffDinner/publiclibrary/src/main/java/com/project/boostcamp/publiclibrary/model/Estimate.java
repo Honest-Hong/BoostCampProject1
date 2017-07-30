@@ -8,6 +8,7 @@ import android.os.Parcelable;
  */
 
 public class Estimate implements Parcelable{
+    private int id;
     private String restName;
     private String restImgUrl;
     private String restStyle;
@@ -22,6 +23,7 @@ public class Estimate implements Parcelable{
     }
 
     protected Estimate(Parcel in) {
+        id = in.readInt();
         restName = in.readString();
         restImgUrl = in.readString();
         restStyle = in.readString();
@@ -52,6 +54,7 @@ public class Estimate implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
         parcel.writeString(restName);
         parcel.writeString(restImgUrl);
         parcel.writeString(restStyle);
@@ -61,6 +64,14 @@ public class Estimate implements Parcelable{
         parcel.writeInt(restMenuCost);
         parcel.writeString(sendDate);
         parcel.writeString(message);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getRestName() {

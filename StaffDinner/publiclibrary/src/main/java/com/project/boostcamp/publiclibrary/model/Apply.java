@@ -9,6 +9,7 @@ public class Apply {
     public static final int STATE_APPLY = 0x1;
     public static final int STATE_FAIL = 0x2;
 
+    private int id;
     private String writerName;
     private String title;
     private int number;
@@ -19,6 +20,14 @@ public class Apply {
     private double wantedLongitude;
     private long writedTime;
     private int state;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getWriterName() {
         return writerName;

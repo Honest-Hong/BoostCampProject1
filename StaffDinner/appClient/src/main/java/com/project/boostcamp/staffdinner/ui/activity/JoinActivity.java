@@ -50,6 +50,10 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
+        startMainActivity();
+    }
+
+    private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

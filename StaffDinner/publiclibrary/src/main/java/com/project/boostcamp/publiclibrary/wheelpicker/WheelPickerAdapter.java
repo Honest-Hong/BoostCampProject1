@@ -24,7 +24,9 @@ public abstract class WheelPickerAdapter<T> {
                 : 0;
     }
     public T getItem(int pos) {
-        return data.get(pos);
+        return data != null
+                ? data.get(pos)
+                : null;
     }
 }
 

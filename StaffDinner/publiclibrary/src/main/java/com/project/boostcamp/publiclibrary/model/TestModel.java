@@ -22,7 +22,7 @@ public class TestModel {
             e1.setRestMenu("닭발");
             e1.setRestMenuCost(13000);
             e1.setSendDate("2017.07.20 21:22");
-            e1.setMessage("이쪽으로 오시죠!");
+            e1.setMessage("이쪽으로 오시죠! 저희 가게의 닭발은 모두가 아는 최고의 안주입니다.");
             datas.add(e1);
         }
         {

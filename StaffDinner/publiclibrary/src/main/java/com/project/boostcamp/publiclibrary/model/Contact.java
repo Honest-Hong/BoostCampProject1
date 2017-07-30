@@ -8,6 +8,7 @@ import android.os.Parcelable;
  */
 
 public class Contact implements Parcelable{
+    private int _id;
     private String applierName;
     private int applyNumber;
     private String applyDate;
@@ -26,6 +27,7 @@ public class Contact implements Parcelable{
     }
 
     protected Contact(Parcel in) {
+        _id = in.readInt();
         applierName = in.readString();
         applyNumber = in.readInt();
         applyDate = in.readString();
@@ -60,6 +62,7 @@ public class Contact implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(_id);
         parcel.writeString(applierName);
         parcel.writeInt(applyNumber);
         parcel.writeString(applyDate);
@@ -73,6 +76,14 @@ public class Contact implements Parcelable{
         parcel.writeDouble(estimateLat);
         parcel.writeDouble(estimateLng);
         parcel.writeString(contactDate);
+    }
+
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
     }
 
     public String getApplierName() {
