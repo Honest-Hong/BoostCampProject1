@@ -1,4 +1,4 @@
-package com.project.boostcamp.publiclibrary.model;
+package com.project.boostcamp.publiclibrary.data;
 
 /**
  * Created by Hong Tae Joon on 2017-07-25.

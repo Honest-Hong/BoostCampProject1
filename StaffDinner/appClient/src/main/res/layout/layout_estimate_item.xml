@@ -36,7 +36,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_restaurant_yellow_24dp"/>
+                android:src="@drawable/ic_estimate_yellow_24dp"/>
 
             <TextView
                 android:id="@+id/text_name"

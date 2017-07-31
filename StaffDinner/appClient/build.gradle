@@ -19,6 +19,10 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -32,10 +36,15 @@ dependencies {
     compile 'com.android.support:support-v4:26.+'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'
     compile 'com.google.android.gms:play-services-location:11.0.2'
-    compile 'com.google.android.gms:play-services-maps:11.0.2'
     compile 'com.google.android.gms:play-services-places:11.0.2'
     compile 'com.google.firebase:firebase-messaging:11.0.2'
     compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.jakewharton:butterknife:8.7.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+    // 카카오톡 로그인
+    compile group: 'com.kakao.sdk', name: 'usermgmt', version: '1.4.1'
+    // 페이스북 로그인
+//    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     testCompile 'junit:junit:4.12'
     compile project(':publiclibrary')
 }

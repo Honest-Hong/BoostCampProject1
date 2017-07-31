@@ -1,4 +1,4 @@
-package com.project.boostcamp.publiclibrary.model;
+package com.project.boostcamp.publiclibrary.data;
 
 import com.project.boostcamp.publiclibrary.util.TimeHelper;
 
@@ -14,6 +14,7 @@ public class TestModel {
         ArrayList<Estimate> datas = new ArrayList<>();
         {
             Estimate e1 = new Estimate();
+            e1.setApplierName("홍태준");
             e1.setRestName("한신포차");
             e1.setRestLat(37.401971);
             e1.setRestLng(127.108751);
@@ -21,12 +22,14 @@ public class TestModel {
             e1.setRestStyle("포차");
             e1.setRestMenu("닭발");
             e1.setRestMenuCost(13000);
-            e1.setSendDate("2017.07.20 21:22");
             e1.setMessage("이쪽으로 오시죠! 저희 가게의 닭발은 모두가 아는 최고의 안주입니다.");
+            e1.setWritedTime(TimeHelper.getTime(20, 50));
+            e1.setState(Estimate.STATE_CONTACTED);
             datas.add(e1);
         }
         {
             Estimate e1 = new Estimate();
+            e1.setApplierName("고정환");
             e1.setRestName("지짐이");
             e1.setRestLat(37.400854);
             e1.setRestLng(127.106535);
@@ -34,12 +37,14 @@ public class TestModel {
             e1.setRestStyle("선술집");
             e1.setRestMenu("볶음");
             e1.setRestMenuCost(11000);
-            e1.setSendDate("2017.07.20 21:19");
             e1.setMessage("안주가 기가 막힙니다!");
+            e1.setWritedTime(TimeHelper.getTime(21, 10));
+            e1.setState(Estimate.STATE_WATING);
             datas.add(e1);
         }
         {
             Estimate e1 = new Estimate();
+            e1.setApplierName("한운희");
             e1.setRestName("삼구포차");
             e1.setRestLat(37.401991);
             e1.setRestLng(127.106692);
@@ -47,8 +52,9 @@ public class TestModel {
             e1.setRestStyle("포차");
             e1.setRestMenu("계란말이");
             e1.setRestMenuCost(3900);
-            e1.setSendDate("2017.07.20 21:17");
             e1.setMessage("저렴한 가격에 모시겠습니다~");
+            e1.setWritedTime(TimeHelper.getTime(21, 15));
+            e1.setState(Estimate.STATE_FAILED);
             datas.add(e1);
         }
         return datas;

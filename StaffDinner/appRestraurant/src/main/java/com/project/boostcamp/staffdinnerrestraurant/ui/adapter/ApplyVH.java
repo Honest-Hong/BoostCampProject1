@@ -1,12 +1,11 @@
 package com.project.boostcamp.staffdinnerrestraurant.ui.adapter;
 
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.project.boostcamp.publiclibrary.model.Apply;
+import com.project.boostcamp.publiclibrary.data.Apply;
+import com.project.boostcamp.publiclibrary.object.BaseVH;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
 /**

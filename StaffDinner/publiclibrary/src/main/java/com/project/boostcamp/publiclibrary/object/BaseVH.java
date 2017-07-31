@@ -1,4 +1,4 @@
-package com.project.boostcamp.staffdinnerrestraurant.ui.adapter;
+package com.project.boostcamp.publiclibrary.object;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

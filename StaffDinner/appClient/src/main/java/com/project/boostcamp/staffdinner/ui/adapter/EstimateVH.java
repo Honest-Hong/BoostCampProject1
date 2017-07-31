@@ -4,17 +4,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.project.boostcamp.publiclibrary.object.BaseVH;
 import com.project.boostcamp.publiclibrary.util.StringHelper;
 import com.project.boostcamp.staffdinner.GlideApp;
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.model.Estimate;
-import com.project.boostcamp.publiclibrary.model.OnEstimateClickListener;
+import com.project.boostcamp.publiclibrary.data.Estimate;
+import com.project.boostcamp.publiclibrary.data.OnEstimateClickListener;
 
 /**
  * Created by Hong Tae Joon on 2017-07-25.
  */
 
-public class EstimateVH extends DefaultVH<Estimate> implements View.OnClickListener{
+public class EstimateVH extends BaseVH<Estimate> implements View.OnClickListener{
     private ImageView imageView;
     private TextView textName;
     private TextView textMessage;
@@ -40,7 +41,7 @@ public class EstimateVH extends DefaultVH<Estimate> implements View.OnClickListe
                 .centerCrop()
                 .into(imageView);
         textName.setText(data.getRestName());
-        textDate.setText(data.getSendDate());
+        textDate.setText(data.getWritedTime() + "");
         textMessage.setText(StringHelper.cutEnd(data.getMessage(), 30));
     }
 

@@ -3,6 +3,7 @@ package com.project.boostcamp.staffdinner.ui.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -15,12 +16,14 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
     private EditText editName;
     private EditText editPhone;
     private Button btnJoin;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
 
+        token = getIntent().getStringExtra(LoginActivity.EXTRA_TOKEN);
         setupView();
     }
 
@@ -50,6 +53,11 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
+        requestJoin();
+    }
+
+    private void requestJoin() {
+        Log.d("HTJ", "Token: " + token);
         startMainActivity();
     }
 

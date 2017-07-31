@@ -5,8 +5,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.model.Estimate;
-import com.project.boostcamp.publiclibrary.model.OnEstimateClickListener;
+import com.project.boostcamp.publiclibrary.data.Estimate;
+import com.project.boostcamp.publiclibrary.data.OnEstimateClickListener;
 
 import java.util.ArrayList;
 

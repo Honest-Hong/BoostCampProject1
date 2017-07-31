@@ -25,8 +25,8 @@
     <string name="text_cancel">취소</string>
     <string name="text_search">탐색</string>
     <string name="text_need_input">작성 필요</string>
-    <string name="text_contact_title">%1$s님 - %2$s</string>
-    <string name="text_contact_subtitle">신청 시간: %1$s\n계약 시간: %2$s</string>
+    <string name="text_contact_list_title">%1$s님 - %2$s</string>
+    <string name="text_contact_list_subtitle">신청 시간: %1$s\n계약 시간: %2$s</string>
     <string name="text_contact_apply_title">신청서 내용</string>
     <string name="text_contact_apply_detail">인원: %1$d\n\n고객 위치: %2$s\n\n신청 시간: %3$s\n\n고객 전화번호: %4$s</string>
     <string name="text_contact_estimate_title">견적서 내용</string>
@@ -38,8 +38,6 @@
     <string name="text_start_contact">계약하기</string>
     <string name="text_style_completion_hint">분위기를 선택해주세요</string>
     <string name="text_select_this">이곳으로 지정</string>
-    <string name="button_yes">예</string>
-    <string name="button_no">아니오</string>
     <string name="text_no_address">주소 없음</string>
     <string name="dialog_alert_title">알림</string>
     <string name="dialog_apply_message">신청하면 취소는 가능하지만 수정이 불가능합니다. 이대로 신청하시겠습니까?</string>
@@ -47,6 +45,7 @@
     <string name="dialog_cancel_message">신청서를 취소하면 내용이 모두 삭제 됩니다. 정말로 취소하시겠습니까?</string>
     <string name="drawer_open">메뉴 열림</string>
     <string name="drawer_close">메뉴 닫힘</string>
+    <string name="kakao_app_key">cf6bb484f52252387132a157d7832fb0</string>
 
     <string-array name="styles">
         <item>포차</item>
@@ -63,4 +62,7 @@
         <item>룸식</item>
         <item>한적함</item>
     </string-array>
+
+    <string name="facebook_app_id">1586397501435939</string>
+    <string name="fb_login_protocol_scheme">fb1586397501435939</string>
 </resources>

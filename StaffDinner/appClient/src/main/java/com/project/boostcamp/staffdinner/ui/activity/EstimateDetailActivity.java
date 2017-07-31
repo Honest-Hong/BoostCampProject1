@@ -17,13 +17,13 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.project.boostcamp.staffdinner.GlideApp;
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.model.Estimate;
-import com.project.boostcamp.staffdinner.ui.dialog.DialogResultListener;
-import com.project.boostcamp.staffdinner.ui.dialog.MyAlertDialog;
+import com.project.boostcamp.publiclibrary.data.Estimate;
+import com.project.boostcamp.publiclibrary.dialog.DialogResultListener;
+import com.project.boostcamp.publiclibrary.dialog.MyAlertDialog;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
 
-public class EstimateDetailActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, DialogResultListener {
+public class EstimateDetailActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, DialogResultListener, GoogleMap.OnMapClickListener {
     private Estimate estimate;
 
     @Override
@@ -59,7 +59,7 @@ public class EstimateDetailActivity extends AppCompatActivity implements View.On
                 .centerCrop()
                 .into(imageView);
         textName.setText(estimate.getRestName());
-        textDate.setText(estimate.getSendDate());
+        textDate.setText(estimate.getWritedTime() + "");
         textMessage.setText(estimate.getMessage());
         textStyle.setText(estimate.getRestStyle());
         textMenu.setText(estimate.getRestMenu());
@@ -97,6 +97,7 @@ public class EstimateDetailActivity extends AppCompatActivity implements View.On
         googleMap.moveCamera(CameraUpdateFactory
                 .newLatLngZoom(latLng, 16));
         googleMap.addMarker(MarkerBuilder.simple(latLng));
+        googleMap.setOnMapClickListener(this);
     }
 
     @Override
@@ -108,5 +109,10 @@ public class EstimateDetailActivity extends AppCompatActivity implements View.On
     @Override
     public void onNegative() {
         Toast.makeText(this, "계약 중단", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        MapDetailActivity.show(this, estimate.getRestLat(), estimate.getRestLng(), true);
     }
 }

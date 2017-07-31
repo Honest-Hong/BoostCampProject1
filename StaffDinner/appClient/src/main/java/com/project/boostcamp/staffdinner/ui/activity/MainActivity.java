@@ -16,10 +16,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.model.Contact;
-import com.project.boostcamp.publiclibrary.model.Estimate;
-import com.project.boostcamp.publiclibrary.model.OnContactClickListener;
-import com.project.boostcamp.publiclibrary.model.OnEstimateClickListener;
+import com.project.boostcamp.publiclibrary.data.Contact;
+import com.project.boostcamp.publiclibrary.data.Estimate;
+import com.project.boostcamp.publiclibrary.data.OnContactClickListener;
+import com.project.boostcamp.publiclibrary.data.OnEstimateClickListener;
 import com.project.boostcamp.staffdinner.ui.adapter.MainViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements OnEstimateClickListener, OnContactClickListener, GoogleApiClient.OnConnectionFailedListener{

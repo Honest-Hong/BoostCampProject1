@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.model.Contact;
-import com.project.boostcamp.publiclibrary.model.OnContactClickListener;
+import com.project.boostcamp.publiclibrary.data.Contact;
+import com.project.boostcamp.publiclibrary.data.OnContactClickListener;
 
 import java.util.ArrayList;
 

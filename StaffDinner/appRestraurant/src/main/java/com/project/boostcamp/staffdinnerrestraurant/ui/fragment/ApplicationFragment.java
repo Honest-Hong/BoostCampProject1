@@ -1,20 +1,20 @@
 package com.project.boostcamp.staffdinnerrestraurant.ui.fragment;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.project.boostcamp.publiclibrary.model.Apply;
-import com.project.boostcamp.publiclibrary.model.TestModel;
+import com.project.boostcamp.publiclibrary.data.Apply;
+import com.project.boostcamp.publiclibrary.data.TestModel;
 import com.project.boostcamp.staffdinnerrestraurant.R;
+import com.project.boostcamp.staffdinnerrestraurant.ui.activity.ApplyDetailActivity;
 import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.ApplyAdapter;
 import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.OnClickItemListener;
 
@@ -57,6 +57,8 @@ public class ApplicationFragment extends Fragment implements OnClickItemListener
 
     @Override
     public void onClickItem(Apply data) {
-        Toast.makeText(getContext(), data.getWriterName() + "님", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getContext(), ApplyDetailActivity.class);
+        intent.putExtra(Apply.class.getName(), data);
+        startActivity(intent);
     }
 }

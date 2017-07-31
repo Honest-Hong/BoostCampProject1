@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.model.OnContactClickListener;
-import com.project.boostcamp.publiclibrary.model.TestModel;
+import com.project.boostcamp.publiclibrary.data.OnContactClickListener;
+import com.project.boostcamp.publiclibrary.data.TestModel;
 import com.project.boostcamp.staffdinner.ui.adapter.ContactRecyclerAdapter;
 
 /**
@@ -40,6 +40,7 @@ public class ContactFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contact, container, false);
         setupView(v);
+        // TODO: 2017-07-31 로컬로 저장하고 맵은 사진으로 임시 저장하도록
         return v;
     }
 

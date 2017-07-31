@@ -1,7 +1,8 @@
-package com.project.boostcamp.staffdinner.ui.activity;
+package com.project.boostcamp.staffdinnerrestraurant.ui.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -15,7 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.project.boostcamp.publiclibrary.data.Contact;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
-import com.project.boostcamp.staffdinner.R;
+import com.project.boostcamp.staffdinnerrestraurant.R;
 
 public class ContactDetailActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
     private Contact contact;
@@ -44,7 +45,7 @@ public class ContactDetailActivity extends AppCompatActivity implements OnMapRea
         TextView textEstimateDetail = (TextView)findViewById(R.id.text_estimate_detail);
         TextView textContactDetail = (TextView)findViewById(R.id.text_contact_detail);
 
-        textTitle.setText(getString(R.string.text_contact_list_title, contact.getApplierName(), contact.getEstimaterName()));
+        textTitle.setText(getString(R.string.text_contact_list_title, contact.getEstimaterName(), contact.getApplierName()));
         textApplyDetail.setText(getString(R.string.text_contact_apply_detail
                 , contact.getApplyNumber()
                 , GeocoderHelper.getAddress(this, new LatLng(contact.getApplyLat(), contact.getApplyLng()))
@@ -75,6 +76,15 @@ public class ContactDetailActivity extends AppCompatActivity implements OnMapRea
     }
 
     @Override
+    public void onMapClick(LatLng latLng) {
+        MapDetailActivity.show(
+                this
+                , contact.getEstimateLat()
+                , contact.getEstimateLng()
+                , true);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -82,10 +92,5 @@ public class ContactDetailActivity extends AppCompatActivity implements OnMapRea
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onMapClick(LatLng latLng) {
-        MapDetailActivity.show(this, contact.getEstimateLat(), contact.getEstimateLng(), true);
     }
 }

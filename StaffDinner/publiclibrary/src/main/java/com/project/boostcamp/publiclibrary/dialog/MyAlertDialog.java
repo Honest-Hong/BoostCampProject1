@@ -1,14 +1,13 @@
-package com.project.boostcamp.staffdinner.ui.dialog;
+package com.project.boostcamp.publiclibrary.dialog;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import com.project.boostcamp.staffdinner.R;
+import com.project.boostcamp.publiclibrary.R;
 
 /**
  * Created by Hong Tae Joon on 2017-07-26.

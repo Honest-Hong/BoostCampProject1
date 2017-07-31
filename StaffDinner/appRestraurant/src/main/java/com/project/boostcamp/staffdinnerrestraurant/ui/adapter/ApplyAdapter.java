@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.project.boostcamp.publiclibrary.model.Apply;
+import com.project.boostcamp.publiclibrary.data.Apply;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
 import java.util.ArrayList;

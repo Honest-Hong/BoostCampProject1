@@ -1,4 +1,4 @@
-package com.project.boostcamp.staffdinner.ui.activity;
+package com.project.boostcamp.staffdinnerrestraurant.ui.activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
-import com.project.boostcamp.staffdinner.R;
+import com.project.boostcamp.staffdinnerrestraurant.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

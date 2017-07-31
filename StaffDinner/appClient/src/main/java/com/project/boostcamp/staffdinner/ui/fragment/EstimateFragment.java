@@ -11,9 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.model.Estimate;
-import com.project.boostcamp.publiclibrary.model.OnEstimateClickListener;
-import com.project.boostcamp.publiclibrary.model.TestModel;
+import com.project.boostcamp.publiclibrary.data.OnEstimateClickListener;
+import com.project.boostcamp.publiclibrary.data.TestModel;
 import com.project.boostcamp.staffdinner.ui.adapter.EstimateRecyclerAdapter;
 
 /**

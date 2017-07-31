@@ -1,4 +1,4 @@
-package com.project.boostcamp.publiclibrary.model;
+package com.project.boostcamp.publiclibrary.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;

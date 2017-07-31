@@ -11,7 +11,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.project.boostcamp.staffdinner.R;
 
 public class SplashActivity extends AppCompatActivity {
-    boolean isLogined = true;
+    boolean isLogined = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

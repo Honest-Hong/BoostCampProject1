@@ -1,10 +1,13 @@
-package com.project.boostcamp.publiclibrary.model;
+package com.project.boostcamp.publiclibrary.data;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Hong Tae Joon on 2017-07-27.
  */
 
-public class Apply {
+public class Apply implements Parcelable{
     public static final int STATE_EDIT = 0x0;
     public static final int STATE_APPLY = 0x1;
     public static final int STATE_FAIL = 0x2;
@@ -20,6 +23,55 @@ public class Apply {
     private double wantedLongitude;
     private long writedTime;
     private int state;
+
+    public Apply() {
+    }
+
+    protected Apply(Parcel in) {
+        id = in.readInt();
+        writerName = in.readString();
+        title = in.readString();
+        number = in.readInt();
+        wantedTime = in.readLong();
+        wantedStyle = in.readString();
+        wantedMenu = in.readString();
+        wantedLatitude = in.readDouble();
+        wantedLongitude = in.readDouble();
+        writedTime = in.readLong();
+        state = in.readInt();
+    }
+
+    public static final Creator<Apply> CREATOR = new Creator<Apply>() {
+        @Override
+        public Apply createFromParcel(Parcel in) {
+            return new Apply(in);
+        }
+
+        @Override
+        public Apply[] newArray(int size) {
+            return new Apply[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(writerName);
+        parcel.writeString(title);
+        parcel.writeInt(number);
+        parcel.writeLong(wantedTime);
+        parcel.writeString(wantedStyle);
+        parcel.writeString(wantedMenu);
+        parcel.writeDouble(wantedLatitude);
+        parcel.writeDouble(wantedLongitude);
+        parcel.writeLong(writedTime);
+        parcel.writeInt(state);
+    }
 
     public int getId() {
         return id;

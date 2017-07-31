@@ -160,7 +160,6 @@ public class WheelPicker extends ScrollView {
             height = itemViewHeight * 3;
         }
         container.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-        Log.d("HTJ", "width: " + container.getMeasuredWidth());
         setMeasuredDimension(container.getMeasuredWidth(), height);
     }
 }

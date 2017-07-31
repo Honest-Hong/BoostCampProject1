@@ -32,11 +32,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.model.Apply;
+import com.project.boostcamp.publiclibrary.data.Apply;
 import com.project.boostcamp.staffdinner.ui.activity.MapDetailActivity;
 import com.project.boostcamp.staffdinner.ui.adapter.TextWheelAdapter;
-import com.project.boostcamp.staffdinner.ui.dialog.DialogResultListener;
-import com.project.boostcamp.staffdinner.ui.dialog.MyAlertDialog;
+import com.project.boostcamp.publiclibrary.dialog.DialogResultListener;
+import com.project.boostcamp.publiclibrary.dialog.MyAlertDialog;
 import com.project.boostcamp.publiclibrary.wheelpicker.WheelPicker;
 import com.project.boostcamp.publiclibrary.util.TimeHelper;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
@@ -107,7 +107,6 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         editMenu= (EditText)v.findViewById(R.id.edit_menu);
         textLocation = (TextView)v.findViewById(R.id.text_location);
 
-        // // TODO: 2017-07-28 키보드로 잘못 된 입력 예외 처리 하기
         apply.setNumber(MIN_NUMBER);
         editNumber.setText(MIN_NUMBER + "");
         textLocation.setText(R.string.text_no_address);
@@ -121,6 +120,9 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
 
         SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // TODO: 2017-07-28 키보드로 잘못 된 입력 예외 처리 하기
+        // TODO: 2017-07-31 분위기를 선택하면서 해시태깅을 하도록 추가!
     }
 
     private void setupWheel(View v) {

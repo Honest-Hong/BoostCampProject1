@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.project.boostcamp.publiclibrary.model.Apply;
+import com.project.boostcamp.publiclibrary.data.Apply;
 
 /**
  * Created by Hong Tae Joon on 2017-07-28.
