@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
+import com.project.boostcamp.publiclibrary.data.Client;
+import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinner.R;
 
 public class SplashActivity extends AppCompatActivity {
@@ -18,6 +20,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        Client client = SharedPreperenceHelper.getInstance(this).getClient();
+        isLogined = client != null && client.getPhone() != null;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

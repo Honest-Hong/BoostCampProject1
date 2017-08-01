@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
+import com.project.boostcamp.publiclibrary.data.Admin;
+import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
 public class SplashActivity extends AppCompatActivity {
@@ -15,6 +17,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        Admin admin = SharedPreperenceHelper.getInstance(this).getAdmin();
+        isLogined = admin != null && admin.getPhone() != null;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -2,26 +2,44 @@ package com.project.boostcamp.staffdinnerrestraurant.ui.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.project.boostcamp.publiclibrary.data.AccountType;
+import com.project.boostcamp.publiclibrary.data.Admin;
+import com.project.boostcamp.publiclibrary.data.Client;
+import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.MainViewPagerAdapter;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener{
     public static final String EXTRA_NOTIFICATION_TYPE = "noti_type";
     public static final int NOTIFICATION_TYPE_NONE = 0x00;
     public static final int NOTIFICATION_TYPE_ESTIMATE = 0x01;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+    @BindView(R.id.drawer) DrawerLayout drawer;
+    @BindView(R.id.tab_layout) TabLayout tabLayout;
+    @BindView(R.id.view_pager) ViewPager viewPager;
+    @BindView(R.id.navigation)
+    NavigationView navigationView;
     private MainViewPagerAdapter pagerAdapter;
 
     @Override
@@ -32,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
+        ButterKnife.bind(this);
+        setupToolbar();
         setupTabLayout();
         setupViewPager();
         handleIntent();
@@ -42,6 +62,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addApi(LocationServices.API)
                 .build();
         googleApiClient.connect();
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        drawer = (DrawerLayout)findViewById(R.id.drawer);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setupTabLayout() {
@@ -89,5 +121,35 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e("HTJ", "onConnectionFailed:" + connectionResult.getErrorMessage());
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.nav_logout:
+                logout();
+                break;
+        }
+
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void logout() {
+        Admin admin = SharedPreperenceHelper.getInstance(this).getAdmin();
+        SharedPreperenceHelper.getInstance(this).saveClient(new Client());
+        if(admin.getType() == AccountType.TYPE_KAKAO) {
+            UserManagement.requestLogout(new LogoutResponseCallback() {
+                @Override
+                public void onCompleteLogout() {
+                    finish();
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
+            });
+        } else if(admin.getType() == AccountType.TYPE_FACEBOOK) {
+            LoginManager.getInstance().logOut();
+            finish();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        }
     }
 }

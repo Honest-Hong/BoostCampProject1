@@ -45,7 +45,8 @@
     <string name="dialog_cancel_message">신청서를 취소하면 내용이 모두 삭제 됩니다. 정말로 취소하시겠습니까?</string>
     <string name="drawer_open">메뉴 열림</string>
     <string name="drawer_close">메뉴 닫힘</string>
-    <string name="kakao_app_key">cf6bb484f52252387132a157d7832fb0</string>
+    <string name="snack_need_name">이름을 입력해주세요.</string>
+    <string name="snack_need_phone">전화번호를 입력해주세요.</string>
 
     <string-array name="styles">
         <item>포차</item>
@@ -63,6 +64,9 @@
         <item>한적함</item>
     </string-array>
 
+    <string name="kakao_app_key">cf6bb484f52252387132a157d7832fb0</string>
     <string name="facebook_app_id">1586397501435939</string>
     <string name="fb_login_protocol_scheme">fb1586397501435939</string>
+    <string name="text_email">계정 이메일</string>
+    <string name="menu_logout">로그아웃</string>
 </resources>

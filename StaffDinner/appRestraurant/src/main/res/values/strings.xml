@@ -50,4 +50,17 @@
     <string name="text_wanted_menu">원하는 메뉴</string>
     <string name="text_select_this">이 곳으로 선택</string>
     <string name="write_estimate_activity_title">견적서 작성</string>
+    <string name="snack_name_length">이름은 4글자 이상입니다.</string>
+    <string name="snack_phone">전화번호 형식이 잘못되었습니다.</string>
+    <string name="snack_style_select">분위기를 선택해주세요.</string>
+    <string name="snack_menu_input">대표 메뉴를 입력해주세요.</string>
+    <string name="snack_menu_cost">메뉴의 가격을 입력해주세요.</string>
+    <string name="drawer_open">메뉴 열림</string>
+    <string name="drawer_close">메뉴 닫힘</string>
+
+    <string name="kakao_app_key">da3852fe468833c3e1c9d83859b3ada1</string>
+    <string name="facebook_app_id">1920252784901809</string>
+    <string name="fb_login_protocol_scheme">fb1920252784901809</string>
+    <string name="nav_logout">로그아웃</string>
+
 </resources>

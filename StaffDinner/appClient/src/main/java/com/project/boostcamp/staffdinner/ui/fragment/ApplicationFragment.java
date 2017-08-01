@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.project.boostcamp.publiclibrary.api.RetrofitClient;
 import com.project.boostcamp.staffdinner.R;
 import com.project.boostcamp.publiclibrary.data.Apply;
 import com.project.boostcamp.staffdinner.ui.activity.MapDetailActivity;
@@ -46,6 +48,10 @@ import com.project.boostcamp.publiclibrary.util.StringHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Hong Tae Joon on 2017-07-25.
@@ -93,7 +99,8 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         setupView(v);
         setupButton(v);
         setupWheel(v);
-        loadData();
+        loadLocalData();
+        loadServerData();
         return v;
     }
 
@@ -170,21 +177,43 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         btnApply.setOnClickListener(this);
     }
 
-    private void loadData() {
+    private void loadLocalData() {
         apply = SharedPreperenceHelper.getInstance(getContext()).getApply();
         if(apply == null) {
             apply = new Apply();
             return;
         } else {
-            editTitle.setText(apply.getTitle());
-            editNumber.setText(apply.getNumber() + "");
-            autoStyle.setText(apply.getWantedStyle());
-            editMenu.setText(apply.getWantedMenu());
-            wheelHour.setSelectedIndex(TimeHelper.getHour(apply.getWantedTime()));
-            wheelMinute.setSelectedIndex(TimeHelper.getMinute(apply.getWantedTime()) / 10);
-            setState(apply.getState());
+            setupTexts(apply);
         }
-        // // TODO: 2017-07-28 저장된 위치 맵에 출력하기
+    }
+
+    private void loadServerData() {
+        String id = SharedPreperenceHelper.getInstance(getContext()).getClient().getId();
+        RetrofitClient.getInstance().clientService.getApplication(id).enqueue(new Callback<Apply>() {
+            @Override
+            public void onResponse(Call<Apply> call, Response<Apply> response) {
+                Log.d("HTJ", "ApplicationFragment-loadLocalData-onReponse: " + response.body().getId());
+                Apply applyServer = response.body();
+                Apply applyLocal = SharedPreperenceHelper.getInstance(getContext()).getApply();
+                setupTexts(applyServer);
+            }
+
+            @Override
+            public void onFailure(Call<Apply> call, Throwable t) {
+                Log.e("HTJ", "ApplicattionFragment-loadLocalData-onFailuer: " + t.getMessage());
+            }
+        });
+    }
+
+    private void setupTexts(Apply apply) {
+        editTitle.setText(apply.getTitle());
+        editNumber.setText(apply.getNumber() + "");
+        autoStyle.setText(apply.getWantedStyle());
+        editMenu.setText(apply.getWantedMenu());
+        wheelHour.setSelectedIndex(TimeHelper.getHour(apply.getWantedTime()));
+        wheelMinute.setSelectedIndex(TimeHelper.getMinute(apply.getWantedTime()) / 10);
+        setState(apply.getState());
+        // TODO: 2017-07-28 저장된 위치 맵에 출력하기
     }
 
     @Override
@@ -230,9 +259,9 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     @Override
     public void onPositive() {
         if(apply.getState() == Apply.STATE_EDIT) {
-            requestApply();
+            sendApply();
         } else {
-            requestCancel();
+            cancelApply();
         }
         scrollView.smoothScrollTo(0,0);
     }
@@ -306,7 +335,8 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    public void requestApply() {
+    public void sendApply() {
+        // 데이터 최신화 작업
         apply.setTitle(editTitle.getText().toString());
         apply.setNumber(Integer.parseInt(editNumber.getText().toString()));
         String hour = wheelAdapterHour.getItem(wheelHour.getSelectedIndex());
@@ -320,12 +350,25 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         apply.setWantedLongitude(marker.getPosition().longitude);
         apply.setWritedTime(TimeHelper.now());
         apply.setState(Apply.STATE_APPLY);
+        // 로컬에 저장
         SharedPreperenceHelper.getInstance(getContext()).saveApply(apply);
+        // 서버에 저장
+        RetrofitClient.getInstance().clientService.setApplication(apply).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.d("HTJ", "ApplicationFragment-sendApply-onResponse: " + response.body());
+                String id = response.body();
+                setState(Apply.STATE_APPLY);;
+            }
 
-        setState(Apply.STATE_APPLY);
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("HTJ", "ApplicationFragment-sendApply-onFailure: " + t.getMessage());
+            }
+        });
     }
 
-    private void requestCancel() {
+    private void cancelApply() {
         // TODO: 2017-07-28 내용 모두 지우기
         apply.setState(Apply.STATE_EDIT);
         setState(Apply.STATE_EDIT);

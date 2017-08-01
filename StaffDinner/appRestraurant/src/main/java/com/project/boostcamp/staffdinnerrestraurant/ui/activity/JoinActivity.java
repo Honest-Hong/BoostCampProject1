@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -29,8 +30,12 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.project.boostcamp.publiclibrary.api.RetrofitAdmin;
+import com.project.boostcamp.publiclibrary.data.Admin;
+import com.project.boostcamp.publiclibrary.util.EditTextHelper;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
+import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.publiclibrary.util.StringHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
@@ -38,9 +43,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class JoinActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, OnMapReadyCallback, OnSuccessListener<Location>, GoogleApiClient.OnConnectionFailedListener {
     private static final int REQUEST_PERMISSION = 0x100;
+    private View rootView;
     @BindView(R.id.edit_name) EditText editName;
     @BindView(R.id.edit_phone) EditText editPhone;
     @BindView(R.id.edit_style) EditText editStyle;
@@ -71,6 +80,7 @@ public class JoinActivity extends AppCompatActivity implements CompoundButton.On
     }
 
     private void setupView() {
+        rootView = getWindow().getDecorView().getRootView();
         checkBox.setOnCheckedChangeListener(this);
 
         // TODO: 2017-07-31 위치 기능이 켜있는지 확인
@@ -80,8 +90,61 @@ public class JoinActivity extends AppCompatActivity implements CompoundButton.On
 
     @OnClick(R.id.button_join)
     public void doJoin() {
-        // TODO: 2017-07-31 입력한 값들의 유효성 판단
+        if(checkInvalidate()) {
+            Admin admin = SharedPreperenceHelper.getInstance(this).getAdmin();
+            admin.setName(editName.getText().toString());
+            admin.setPhone(editPhone.getText().toString());
+            admin.setStyle(editStyle.getText().toString());
+            admin.setMenu(editMenu.getText().toString());
+            admin.setCost(Integer.parseInt(editCost.getText().toString()));
+            admin.setLatitude(googleMap.getCameraPosition().target.latitude);
+            admin.setLongitude(googleMap.getCameraPosition().target.longitude);
+            SharedPreperenceHelper.getInstance(this).saveAdmin(admin);
+            requestJoin(admin);
+        }
+    }
 
+    private boolean checkInvalidate() {
+        // TODO: 2017-07-31 입력한 값들의 유효성 판단
+        if(!EditTextHelper.greaterLength(editName, 4)) {
+            Snackbar.make(rootView, R.string.snack_name_length, Snackbar.LENGTH_SHORT).show();
+            return false;
+        }
+        if(!EditTextHelper.greaterLength(editPhone, 7)) {
+            Snackbar.make(rootView, R.string.snack_phone, Snackbar.LENGTH_SHORT).show();
+            return false;
+        }
+        if(!EditTextHelper.greaterLength(editStyle, 1)) {
+            Snackbar.make(rootView, R.string.snack_style_select, Snackbar.LENGTH_SHORT).show();
+            return false;
+        }
+        if(!EditTextHelper.greaterLength(editMenu, 1)) {
+            Snackbar.make(rootView, R.string.snack_menu_input, Snackbar.LENGTH_SHORT).show();
+            return false;
+        }
+        if(!EditTextHelper.greaterLength(editCost, 1)) {
+            Snackbar.make(rootView, R.string.snack_menu_cost, Snackbar.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void requestJoin(Admin admin) {
+        RetrofitAdmin.getInstance().adminService.join(admin).enqueue(new Callback<Admin>() {
+            @Override
+            public void onResponse(Call<Admin> call, Response<Admin> response) {
+                Log.d("HTJ", "join onResponse: " + response.body());
+                startMainActivity();
+            }
+
+            @Override
+            public void onFailure(Call<Admin> call, Throwable t) {
+                Log.e("HTJ", "join onFailure: " + t.getMessage());
+            }
+        });
+    }
+
+    private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

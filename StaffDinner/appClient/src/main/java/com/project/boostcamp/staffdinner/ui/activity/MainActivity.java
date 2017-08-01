@@ -2,6 +2,7 @@ package com.project.boostcamp.staffdinner.ui.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -11,10 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.kakao.auth.Session;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.project.boostcamp.publiclibrary.data.AccountType;
+import com.project.boostcamp.publiclibrary.data.Client;
+import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinner.R;
 import com.project.boostcamp.publiclibrary.data.Contact;
 import com.project.boostcamp.publiclibrary.data.Estimate;
@@ -22,13 +31,17 @@ import com.project.boostcamp.publiclibrary.data.OnContactClickListener;
 import com.project.boostcamp.publiclibrary.data.OnEstimateClickListener;
 import com.project.boostcamp.staffdinner.ui.adapter.MainViewPagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements OnEstimateClickListener, OnContactClickListener, GoogleApiClient.OnConnectionFailedListener{
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity implements OnEstimateClickListener, OnContactClickListener, GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener{
     public static final String EXTRA_NOTIFICATION_TYPE = "noti_type";
     public static final int NOTIFICATION_TYPE_NONE = 0x00;
     public static final int NOTIFICATION_TYPE_ESTIMATE = 0x01;
-    private DrawerLayout drawer;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+    @BindView(R.id.drawer) DrawerLayout drawer;
+    @BindView(R.id.tab_layout) TabLayout tabLayout;
+    @BindView(R.id.view_pager) ViewPager viewPager;
+    @BindView(R.id.navigation) NavigationView navigationView;
     private MainViewPagerAdapter pagerAdapter;
 
     @Override
@@ -36,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnEstimateClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ButterKnife.bind(this);
         setupToolbar();
         setupTabLayout();
         setupViewPager();
@@ -58,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements OnEstimateClickLi
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setupTabLayout() {
@@ -127,6 +142,36 @@ public class MainActivity extends AppCompatActivity implements OnEstimateClickLi
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_logout:
+                logout();
+                break;
+        }
+
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void logout() {
+        Client client = SharedPreperenceHelper.getInstance(this).getClient();
+        SharedPreperenceHelper.getInstance(this).saveClient(new Client());
+        if(client.getType() == AccountType.TYPE_KAKAO) {
+            UserManagement.requestLogout(new LogoutResponseCallback() {
+                @Override
+                public void onCompleteLogout() {
+                    finish();
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
+            });
+        } else if(client.getType() == AccountType.TYPE_FACEBOOK) {
+            LoginManager.getInstance().logOut();
+            finish();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
     }
 }

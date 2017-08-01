@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.project.boostcamp.publiclibrary.data.Admin;
 import com.project.boostcamp.publiclibrary.data.Apply;
+import com.project.boostcamp.publiclibrary.data.Client;
 
 /**
  * Created by Hong Tae Joon on 2017-07-28.
@@ -30,12 +32,34 @@ public class SharedPreperenceHelper {
 
     public void saveApply(Apply apply) {
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(KEY_APPLY, gson.toJson(apply));
+        editor.putString(Apply.class.getName(), gson.toJson(apply));
         editor.apply();
     }
 
     public Apply getApply() {
-        String str = preferences.getString(KEY_APPLY, "");
+        String str = preferences.getString(Apply.class.getName(), "");
         return gson.fromJson(str, Apply.class);
+    }
+
+    public void saveClient(Client client) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Client.class.getName(), gson.toJson(client));
+        editor.apply();
+    }
+
+    public Client getClient() {
+        String str = preferences.getString(Client.class.getName(), "");
+        return gson.fromJson(str, Client.class);
+    }
+
+    public void saveAdmin(Admin admin) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Admin.class.getName(), gson.toJson(admin));
+        editor.apply();
+    }
+
+    public Admin getAdmin() {
+        String str = preferences.getString(Admin.class.getName(), "");
+        return gson.fromJson(str, Admin.class);
     }
 }

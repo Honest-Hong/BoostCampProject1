@@ -1,6 +1,7 @@
 package com.project.boostcamp.staffdinner.ui.activity;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,33 +10,43 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.project.boostcamp.publiclibrary.api.RetrofitClient;
+import com.project.boostcamp.publiclibrary.data.Client;
+import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinner.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class JoinActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener{
-    private EditText editName;
-    private EditText editPhone;
-    private Button btnJoin;
-    private String token;
+    private View rootView;
+    @BindView(R.id.edit_name) EditText editName;
+    @BindView(R.id.edit_phone) EditText editPhone;
+    @BindView(R.id.button_join) Button btnJoin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
 
-        token = getIntent().getStringExtra(LoginActivity.EXTRA_TOKEN);
+        ButterKnife.bind(this);
         setupView();
     }
 
     private void setupView() {
-        btnJoin = (Button)findViewById(R.id.button_join);
+        rootView = getWindow().getDecorView().getRootView();
         btnJoin.setOnClickListener(this);
-
-        editName = (EditText)findViewById(R.id.edit_name);
-        editPhone = (EditText)findViewById(R.id.edit_phone);
 
         CheckBox checkBox = (CheckBox)findViewById(R.id.check_box);
         checkBox.setOnCheckedChangeListener(this);
+
+        Client client = SharedPreperenceHelper.getInstance(this).getClient();
+        editName.setText(client.getName());
     }
 
     @Override
@@ -44,22 +55,38 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
         String phone = editPhone.getText().toString();
 
         if(name.equals("")) {
-            // 이름을 입력해주세요.
+            Snackbar.make(rootView, R.string.snack_need_name, Snackbar.LENGTH_SHORT).show();
             return;
         }
 
         if(phone.equals("")) {
-            // 전화번호를 입력해주세요.
+            Snackbar.make(rootView, R.string.snack_need_phone, Snackbar.LENGTH_SHORT).show();
             return;
         }
 
-        requestJoin();
+        Client client = SharedPreperenceHelper.getInstance(this).getClient();
+        client.setName(name);
+        client.setPhone(phone);
+        SharedPreperenceHelper.getInstance(this).saveClient(client);
+        requestJoin(client);
     }
 
-    private void requestJoin() {
-        Log.d("HTJ", "Token: " + token);
-        startMainActivity();
+    private void requestJoin(Client client) {
+        RetrofitClient.getInstance().clientService.join(client).enqueue(joinCallback);
     }
+
+    private Callback<Client> joinCallback = new Callback<Client>() {
+        @Override
+        public void onResponse(Call<Client> call, Response<Client> response) {
+            Log.d("HTJ", "join onResponse: " + response.body().toString());
+            startMainActivity();
+        }
+
+        @Override
+        public void onFailure(Call<Client> call, Throwable t) {
+            Log.e("HTJ", "join onFailure: " + t.getMessage());
+        }
+    };
 
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
