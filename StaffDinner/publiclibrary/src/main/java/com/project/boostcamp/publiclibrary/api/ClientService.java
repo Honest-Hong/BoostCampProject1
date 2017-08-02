@@ -6,10 +6,12 @@ import com.project.boostcamp.publiclibrary.data.Client;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 /**
@@ -27,5 +29,12 @@ public interface ClientService {
     Call<Apply> getApplication(@Path("id") String id);
 
     @POST("/client/{id}/application")
-    Call<String> setApplication(@Path("id") Apply apply);
+    Call<String> setApplication(@Path("id") String id, @Body Apply apply);
+
+    @POST("/application/{id}/cancel")
+    Call<Apply> cancelApplication(@Path("id") String id);
+
+    @FormUrlEncoded
+    @PUT("/client/{id}/token")
+    Call<String> updateToken(@Path("id") String id, @Field("type") int type, @Field("token") String token);
 }

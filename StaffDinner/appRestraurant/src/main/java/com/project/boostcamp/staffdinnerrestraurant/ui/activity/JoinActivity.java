@@ -30,8 +30,10 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.project.boostcamp.publiclibrary.api.RetrofitAdmin;
 import com.project.boostcamp.publiclibrary.data.Admin;
+import com.project.boostcamp.publiclibrary.data.Geo;
 import com.project.boostcamp.publiclibrary.util.EditTextHelper;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
@@ -97,8 +99,11 @@ public class JoinActivity extends AppCompatActivity implements CompoundButton.On
             admin.setStyle(editStyle.getText().toString());
             admin.setMenu(editMenu.getText().toString());
             admin.setCost(Integer.parseInt(editCost.getText().toString()));
-            admin.setLatitude(googleMap.getCameraPosition().target.latitude);
-            admin.setLongitude(googleMap.getCameraPosition().target.longitude);
+            admin.setGeo(new Geo("Point", new double[]{
+                    googleMap.getCameraPosition().target.longitude,
+                    googleMap.getCameraPosition().target.latitude
+            }));
+            admin.setToken(FirebaseInstanceId.getInstance().getToken());
             SharedPreperenceHelper.getInstance(this).saveAdmin(admin);
             requestJoin(admin);
         }

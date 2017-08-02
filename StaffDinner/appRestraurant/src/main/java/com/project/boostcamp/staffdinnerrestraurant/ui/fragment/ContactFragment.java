@@ -11,10 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.publiclibrary.data.Contact;
-import com.project.boostcamp.publiclibrary.data.TestModel;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 import com.project.boostcamp.staffdinnerrestraurant.ui.activity.ContactDetailActivity;
-import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.ApplyAdapter;
 import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.ContactAdapter;
 import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.OnClickItemListener;
 
@@ -52,7 +50,6 @@ public class ContactFragment extends Fragment implements OnClickItemListener<Con
     }
 
     private void loadData() {
-        adapter.setData(TestModel.getContacts());
     }
 
     @Override

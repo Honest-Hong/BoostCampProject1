@@ -18,9 +18,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -33,6 +35,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
+import com.project.boostcamp.publiclibrary.data.Geo;
 import com.project.boostcamp.staffdinner.R;
 import com.project.boostcamp.publiclibrary.data.Apply;
 import com.project.boostcamp.staffdinner.ui.activity.MapDetailActivity;
@@ -49,6 +52,9 @@ import com.project.boostcamp.publiclibrary.util.StringHelper;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,25 +70,28 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     public static final int MAX_HOUR = 24;
     public static final int MAX_MINUTE = 60;
     public static final int MAX_DATE = 14;
-    private NestedScrollView scrollView;
-    private ImageView imageState; // 상단의 신청서 상태 이미지
-    private TextView textState; // 상단의 신청서 상태 텍스트
-    private EditText editTitle; // 신청서의 제목 입력창
-    private EditText editNumber; // 신청서의 인원 입력창
-    private MultiAutoCompleteTextView autoStyle; // 신청서의 분위기 입력창
-    private EditText editMenu; // 신청서의 메뉴 입력창
-    private TextView textLocation; // 신청서의 위치 텍스트
+    @BindView(R.id.scroll_view) NestedScrollView scrollView;
+    @BindView(R.id.image_state) ImageView imageState; // 상단의 신청서 상태 이미지
+    @BindView(R.id.text_state) TextView textState; // 상단의 신청서 상태 텍스트
+    @BindView(R.id.edit_title) EditText editTitle; // 신청서의 제목 입력창
+    @BindView(R.id.edit_number) EditText editNumber; // 신청서의 인원 입력창
+    @BindView(R.id.auto_style) MultiAutoCompleteTextView autoStyle; // 신청서의 분위기 입력창
+    @BindView(R.id.edit_menu) EditText editMenu; // 신청서의 메뉴 입력창
+    @BindView(R.id.text_location) TextView textLocation; // 신청서의 위치 텍스트
+    @BindView(R.id.button_apply) Button btnApply; // 신청 버튼
+    @BindView(R.id.button_up) ImageButton btnUp;
+    @BindView(R.id.button_down) ImageButton btnDown;
+    @BindView(R.id.button_search) ImageButton btnSearch;
+    @BindView(R.id.wheel_hour) WheelPicker wheelHour; // 선청서의 시간 선택 도구
+    @BindView(R.id.wheel_minute) WheelPicker wheelMinute; // 신청서의 분 선택 도구
+    @BindView(R.id.wheel_date) WheelPicker wheelDate;
+    private TextWheelAdapter wheelAdapterHour; //  신청서의 시간 뷰 어댑터
+    private TextWheelAdapter wheelAdapterMinute; // 신청서의 분 뷰 어댑터
+    private TextWheelAdapter wheelAdapterDate;
     private GoogleMap googleMap; // 신청서의 위치 지도
     private Marker marker; // 신청서의 위치 지도 마커
     private FusedLocationProviderClient fusedLocationClient; // 현재 위치를 가져오는 서비스
-    private WheelPicker wheelHour; // 선청서의 시간 선택 도구
-    private TextWheelAdapter wheelAdapterHour; //  신청서의 시간 뷰 어댑터
-    private WheelPicker wheelMinute; // 신청서의 분 선택 도구
-    private TextWheelAdapter wheelAdapterMinute; // 신청서의 분 뷰 어댑터
-    private WheelPicker wheelDate;
-    private TextWheelAdapter wheelAdapterDate;
     private Apply apply = new Apply(); // 현재 신청서 정보
-    private Button btnApply;
     private static ApplicationFragment instance;
 
     public static ApplicationFragment getInstance() {
@@ -96,28 +105,14 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_application, container, false);
+        ButterKnife.bind(this, v);
         setupView(v);
-        setupButton(v);
         setupWheel(v);
-        loadLocalData();
-        loadServerData();
+        loadApplyData();
         return v;
     }
 
     private void setupView(View v) {
-        scrollView = (NestedScrollView)v.findViewById(R.id.scroll_view);
-        imageState = (ImageView)v.findViewById(R.id.image_state);
-        textState = (TextView)v.findViewById(R.id.text_state);
-        editTitle = (EditText)v.findViewById(R.id.edit_title);
-        editNumber= (EditText)v.findViewById(R.id.edit_number);
-        autoStyle = (MultiAutoCompleteTextView)v.findViewById(R.id.auto_style);
-        editMenu= (EditText)v.findViewById(R.id.edit_menu);
-        textLocation = (TextView)v.findViewById(R.id.text_location);
-
-        apply.setNumber(MIN_NUMBER);
-        editNumber.setText(MIN_NUMBER + "");
-        textLocation.setText(R.string.text_no_address);
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
 
         autoStyle.setAdapter(new ArrayAdapter<String>(getContext(),
@@ -132,6 +127,21 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         // TODO: 2017-07-31 분위기를 선택하면서 해시태깅을 하도록 추가!
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        UiSettings uiSettings = googleMap.getUiSettings();
+        uiSettings.setScrollGesturesEnabled(false);
+        uiSettings.setZoomGesturesEnabled(false);
+        googleMap.moveCamera(CameraUpdateFactory.zoomTo(16));
+        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_DENIED) {
+            requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_PERMISSION);
+        } else {
+            setMyLocation();
+        }
+    }
+
     private void setupWheel(View v) {
         wheelAdapterHour = new TextWheelAdapter();
         ArrayList<String> hours = new ArrayList<>();
@@ -139,7 +149,6 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
             hours.add(String.format("%02d", i));
         }
         wheelAdapterHour.setData(hours);
-        wheelHour = (WheelPicker)v.findViewById(R.id.wheel_hour);
         wheelHour.setAdapter(wheelAdapterHour);
 
         wheelAdapterMinute = new TextWheelAdapter();
@@ -148,7 +157,6 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
             minutes.add(String.format("%02d", i));
         }
         wheelAdapterMinute.setData(minutes);
-        wheelMinute = (WheelPicker)v.findViewById(R.id.wheel_minute);
         wheelMinute.setAdapter(wheelAdapterMinute);
 
         wheelAdapterDate = new TextWheelAdapter();
@@ -160,63 +168,61 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
             calendar.add(Calendar.DATE, 1);
         }
         wheelAdapterDate.setData(dates);
-        wheelDate = (WheelPicker)v.findViewById(R.id.wheel_date);
         wheelDate.setAdapter(wheelAdapterDate);
-
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        wheelHour.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
-        wheelMinute.setSelectedIndex(calendar.get(Calendar.MINUTE) / 10);
-        wheelDate.setSelectedIndex(0);
     }
 
-    private void setupButton(View v) {
-        v.findViewById(R.id.button_up).setOnClickListener(this);
-        v.findViewById(R.id.button_down).setOnClickListener(this);
-        v.findViewById(R.id.button_search).setOnClickListener(this);
-        btnApply = (Button)v.findViewById(R.id.button_apply);
-        btnApply.setOnClickListener(this);
-    }
-
-    private void loadLocalData() {
-        apply = SharedPreperenceHelper.getInstance(getContext()).getApply();
-        if(apply == null) {
-            apply = new Apply();
-            return;
-        } else {
-            setupTexts(apply);
-        }
-    }
-
-    private void loadServerData() {
+    /**
+     * 신청서의 데이터를 불러옵니다.
+     * 서버에서 데이터를 불러올 수 있다면 서버의 데이터를 사용하고
+     * 불러올 수 없다면 로컬 데이터를 사용합니다.
+     */
+    private void loadApplyData() {
         String id = SharedPreperenceHelper.getInstance(getContext()).getClient().getId();
         RetrofitClient.getInstance().clientService.getApplication(id).enqueue(new Callback<Apply>() {
             @Override
             public void onResponse(Call<Apply> call, Response<Apply> response) {
-                Log.d("HTJ", "ApplicationFragment-loadLocalData-onReponse: " + response.body().getId());
-                Apply applyServer = response.body();
-                Apply applyLocal = SharedPreperenceHelper.getInstance(getContext()).getApply();
-                setupTexts(applyServer);
+                Log.d("HTJ", "ApplicationFragment-loadApplyData-onReponse: " + response.body());
+                Log.d("HTJ", "apply id: " + apply.getId());
+                apply = response.body();
+                setupTexts(apply);
             }
 
             @Override
             public void onFailure(Call<Apply> call, Throwable t) {
-                Log.e("HTJ", "ApplicattionFragment-loadLocalData-onFailuer: " + t.getMessage());
+                Log.e("HTJ", "ApplicattionFragment-loadApplyData-onFailuer: " + t.getMessage());
+                apply = SharedPreperenceHelper.getInstance(getContext()).getApply();
+                if(apply == null) {
+                    apply = new Apply();
+                }
+                setupTexts(apply);
             }
         });
     }
 
+    /**
+     * 신청서 데이터를 뷰에 뿌려주는 함수
+     * @param apply 신청서 데이터
+     */
     private void setupTexts(Apply apply) {
+        if(apply.getNumber() == 0) {
+            apply.setNumber(1);
+        }
+        if(apply.getWantedTime() == 0) {
+            apply.setWantedTime(TimeHelper.now());
+        }
+
         editTitle.setText(apply.getTitle());
         editNumber.setText(apply.getNumber() + "");
         autoStyle.setText(apply.getWantedStyle());
         editMenu.setText(apply.getWantedMenu());
         wheelHour.setSelectedIndex(TimeHelper.getHour(apply.getWantedTime()));
         wheelMinute.setSelectedIndex(TimeHelper.getMinute(apply.getWantedTime()) / 10);
+
         setState(apply.getState());
         // TODO: 2017-07-28 저장된 위치 맵에 출력하기
     }
 
-    @Override
+    @OnClick({R.id.button_up, R.id.button_down, R.id.button_apply, R.id.button_search})
     public void onClick(View view) {
         int number = apply.getNumber();
         switch(view.getId()) {
@@ -250,9 +256,13 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         if(apply.getState() == Apply.STATE_EDIT) {
             MyAlertDialog.newInstance(getString(R.string.dialog_alert_title), getString(R.string.dialog_apply_message), this)
                     .show(getChildFragmentManager(), null);
-        } else {
+        } else if(apply.getState() == Apply.STATE_APPLY) {
             MyAlertDialog.newInstance(getString(R.string.dialog_alert_title), getString(R.string.dialog_cancel_message), this)
                     .show(getChildFragmentManager(), null);
+        } else {
+            apply = new Apply();
+            setupTexts(apply);
+            setState(Apply.STATE_EDIT);
         }
     }
 
@@ -270,25 +280,6 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     public void onNegative() {
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        initGoogleMap();
-        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_DENIED) {
-            requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_PERMISSION);
-        } else {
-            setMyLocation();
-        }
-    }
-
-    private void initGoogleMap() {
-        UiSettings uiSettings = googleMap.getUiSettings();
-        uiSettings.setScrollGesturesEnabled(false);
-        uiSettings.setZoomGesturesEnabled(false);
-        googleMap.moveCamera(CameraUpdateFactory.zoomTo(16));
-    }
-
     private void setMyLocation() {
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -303,6 +294,8 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                     location.getLatitude(),
                     location.getLongitude());
             setLocation(latLng);
+        } else {
+            textLocation.setText(R.string.text_no_address);
         }
     }
 
@@ -346,18 +339,22 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                 , Integer.parseInt(minute)));
         apply.setWantedStyle(autoStyle.getText().toString());
         apply.setWantedMenu(editMenu.getText().toString());
-        apply.setWantedLatitude(marker.getPosition().latitude);
-        apply.setWantedLongitude(marker.getPosition().longitude);
+        apply.setGeo(new Geo("Point",
+                marker.getPosition().longitude,
+                marker.getPosition().latitude));
         apply.setWritedTime(TimeHelper.now());
         apply.setState(Apply.STATE_APPLY);
         // 로컬에 저장
         SharedPreperenceHelper.getInstance(getContext()).saveApply(apply);
         // 서버에 저장
-        RetrofitClient.getInstance().clientService.setApplication(apply).enqueue(new Callback<String>() {
+        String clientId = SharedPreperenceHelper.getInstance(getContext()).getClient().getId();
+        RetrofitClient.getInstance().clientService.setApplication(clientId, apply).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 Log.d("HTJ", "ApplicationFragment-sendApply-onResponse: " + response.body());
                 String id = response.body();
+                apply.setId(id);
+                SharedPreperenceHelper.getInstance(getContext()).saveApply(apply);
                 setState(Apply.STATE_APPLY);;
             }
 
@@ -369,9 +366,32 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     }
 
     private void cancelApply() {
-        // TODO: 2017-07-28 내용 모두 지우기
-        apply.setState(Apply.STATE_EDIT);
-        setState(Apply.STATE_EDIT);
+        Log.d("HTJ", "cancelApply: " + apply.getId());
+        RetrofitClient.getInstance().clientService.cancelApplication(apply.getId()).enqueue(new Callback<Apply>() {
+            @Override
+            public void onResponse(Call<Apply> call, Response<Apply> response) {
+                // 취소 성공
+                Log.d("HTJ", "ApplicationFragment-cancelApply-onResponse: " + response.body());
+                // TODO: 2017-07-28 내용 모두 지우기
+                apply = new Apply();
+                setupTexts(apply);
+                apply.setState(Apply.STATE_EDIT);
+                setState(Apply.STATE_EDIT);
+                SharedPreperenceHelper.getInstance(getContext()).saveApply(apply);
+            }
+
+            @Override
+            public void onFailure(Call<Apply> call, Throwable t) {
+                // 취소 실패
+                Log.e("HTJ", "ApplicationFragment-cancelApply-onFailure: " + t.getMessage());
+                Toast.makeText(getContext(), "서버 오류", Toast.LENGTH_SHORT).show();
+                apply = new Apply();
+                setupTexts(apply);
+                apply.setState(Apply.STATE_EDIT);
+                setState(Apply.STATE_EDIT);
+                SharedPreperenceHelper.getInstance(getContext()).saveApply(apply);
+            }
+        });
     }
 
     private void setState(int state) {
@@ -381,17 +401,40 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                 imageState.setImageResource(R.drawable.ic_error_orange_24dp);
                 textState.setText(R.string.text_need_input);
                 textState.setTextColor(ContextCompat.getColor(getContext(), R.color.yellow));
+                blockView(false);
                 break;
             case Apply.STATE_APPLY:
                 btnApply.setText(R.string.text_cancel);
                 imageState.setImageResource(R.drawable.ic_check_circle_green_24dp);
                 textState.setText(R.string.text_apply_success);
                 textState.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
-
-                // // TODO: 2017-07-28 내용 수정 못하게 하기
+                blockView(true);
                 break;
             case Apply.STATE_FAIL:
+                btnApply.setText(R.string.text_rewrite);
+                imageState.setImageResource(R.drawable.ic_cancel_red_24dp);
+                textState.setText(R.string.text_apply_canceled);
+                textState.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                blockView(true);
                 break;
         }
+    }
+
+    /**
+     * 입력 폼을 사용 불가능하게 하는 함수
+     * @param block
+     */
+    private void blockView(boolean block) {
+        editTitle.setEnabled(!block);
+        editNumber.setEnabled(!block);
+        wheelHour.setEnableScroll(!block);
+        wheelMinute.setEnableScroll(!block);
+        wheelDate.setEnableScroll(!block);
+        autoStyle.setEnabled(!block);
+        editMenu.setEnabled(!block);
+        editMenu.setEnabled(!block);
+        btnUp.setEnabled(!block);
+        btnDown.setEnabled(!block);
+        btnSearch.setEnabled(!block);
     }
 }

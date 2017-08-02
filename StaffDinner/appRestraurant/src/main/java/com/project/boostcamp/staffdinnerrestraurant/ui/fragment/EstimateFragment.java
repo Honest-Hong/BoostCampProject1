@@ -10,9 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.publiclibrary.data.Estimate;
-import com.project.boostcamp.publiclibrary.data.TestModel;
 import com.project.boostcamp.staffdinnerrestraurant.R;
-import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.ApplyAdapter;
 import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.EstimateAdapter;
 import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.OnClickItemListener;
 
@@ -50,7 +48,6 @@ public class EstimateFragment extends Fragment implements OnClickItemListener<Es
     }
 
     private void loadData() {
-        adapter.setData(TestModel.getEstimates());
     }
 
     @Override

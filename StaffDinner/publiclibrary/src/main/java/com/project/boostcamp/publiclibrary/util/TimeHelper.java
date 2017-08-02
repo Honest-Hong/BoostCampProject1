@@ -1,6 +1,8 @@
 package com.project.boostcamp.publiclibrary.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Hong Tae Joon on 2017-07-28.
@@ -39,5 +41,9 @@ public class TimeHelper {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
         return cal.get(Calendar.MINUTE);
+    }
+
+    public static String getTimeString(long time, String pattern) {
+        return new SimpleDateFormat(pattern).format(new Date(time));
     }
 }

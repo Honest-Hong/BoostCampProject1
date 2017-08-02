@@ -14,6 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.project.boostcamp.publiclibrary.data.Apply;
+import com.project.boostcamp.publiclibrary.data.ApplyWithClient;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
 import com.project.boostcamp.staffdinnerrestraurant.R;
@@ -23,7 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ApplyDetailActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
-    private Apply apply;
+    private ApplyWithClient apply;
     @BindView(R.id.tool_bar) Toolbar toolbar;
     @BindView(R.id.text_name) TextView textName;
     @BindView(R.id.text_message) TextView textMessage;
@@ -40,7 +41,7 @@ public class ApplyDetailActivity extends AppCompatActivity implements OnMapReady
         ButterKnife.bind(this);
 
         if(getIntent() != null) {
-            apply = getIntent().getParcelableExtra(Apply.class.getName());
+            apply = getIntent().getParcelableExtra(ApplyWithClient.class.getName());
             setupToolbar();
             setupView();
             setupMap();
@@ -55,7 +56,7 @@ public class ApplyDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void setupView() {
-        textName.setText(getString(R.string.text_apply_detail_name, apply.getWriterName()));
+        textName.setText(getString(R.string.text_apply_detail_name, apply.getClient().getName()));
         textMessage.setText(apply.getTitle());
         textNumber.setText(getString(R.string.text_apply_detail_number, apply.getNumber()));
         textWantedTime.setText(apply.getWantedTime() + "");
@@ -63,9 +64,7 @@ public class ApplyDetailActivity extends AppCompatActivity implements OnMapReady
         textWantedMenu.setText(apply.getWantedMenu());
         textLocation.setText(GeocoderHelper.getAddress(
                 this
-                , new LatLng(
-                        apply.getWantedLatitude(),
-                        apply.getWantedLongitude())));
+                , apply.getLatLng()));
     }
 
     private void setupMap() {
@@ -79,7 +78,7 @@ public class ApplyDetailActivity extends AppCompatActivity implements OnMapReady
         settings.setZoomControlsEnabled(false);
         settings.setMyLocationButtonEnabled(false);
         settings.setScrollGesturesEnabled(false);
-        LatLng latLng = new LatLng(apply.getWantedLatitude(), apply.getWantedLongitude());
+        LatLng latLng = apply.getLatLng();
         googleMap.addMarker(MarkerBuilder.simple(latLng));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
         googleMap.setOnMapClickListener(this);
@@ -89,8 +88,8 @@ public class ApplyDetailActivity extends AppCompatActivity implements OnMapReady
     public void onMapClick(LatLng latLng) {
         MapDetailActivity.show(
                 this
-                , apply.getWantedLatitude()
-                , apply.getWantedLongitude()
+                , apply.getGeo().getCoordinates()[1]
+                , apply.getGeo().getCoordinates()[0]
                 , true);
     }
 

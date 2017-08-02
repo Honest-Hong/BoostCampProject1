@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.project.boostcamp.staffdinner.R;
 import com.project.boostcamp.publiclibrary.data.OnEstimateClickListener;
-import com.project.boostcamp.publiclibrary.data.TestModel;
 import com.project.boostcamp.staffdinner.ui.adapter.EstimateRecyclerAdapter;
 
 /**
@@ -48,7 +47,6 @@ public class EstimateFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new EstimateRecyclerAdapter(estimateClickListener);
-        adapter.setEstimates(TestModel.getEstimates());
         recyclerView.setAdapter(adapter);
     }
 }

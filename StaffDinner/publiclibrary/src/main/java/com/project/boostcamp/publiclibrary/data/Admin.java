@@ -12,8 +12,7 @@ public class Admin {
     private String style;
     private String menu;
     private int cost;
-    private double latitude;
-    private double longitude;
+    private Geo geo;
     private String token;
     private int type;
 
@@ -73,20 +72,12 @@ public class Admin {
         this.cost = cost;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public Geo getGeo() {
+        return geo;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setGeo(Geo geo) {
+        this.geo = geo;
     }
 
     public String getToken() {

@@ -20,9 +20,11 @@
     <string name="text_menu">메뉴</string>
     <string name="text_location">위치</string>
     <string name="text_apply_success">신청 완료</string>
+    <string name="text_apply_canceled">취소됨</string>
     <string name="text_count_person">명</string>
     <string name="text_apply">신청</string>
     <string name="text_cancel">취소</string>
+    <string name="text_rewrite">다시 작성</string>
     <string name="text_search">탐색</string>
     <string name="text_need_input">작성 필요</string>
     <string name="text_contact_list_title">%1$s님 - %2$s</string>

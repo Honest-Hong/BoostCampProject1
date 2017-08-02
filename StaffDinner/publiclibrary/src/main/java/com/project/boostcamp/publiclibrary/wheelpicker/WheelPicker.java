@@ -26,6 +26,7 @@ public class WheelPicker extends ScrollView {
     private final static float ALPHA_NOT_SELECTED = 0.3f;
     private final static float ALPHA_SELECTED = 1.0f;
     private int selectedIndex;
+    private boolean enableScroll = true;
 
     public WheelPicker(Context context) {
         super(context);
@@ -143,6 +144,9 @@ public class WheelPicker extends ScrollView {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        if(!enableScroll) {
+            return true;
+        }
         if(ev.getAction() == MotionEvent.ACTION_UP) {
             this.post(scrollTask);
             getParent().requestDisallowInterceptTouchEvent(false);
@@ -161,5 +165,13 @@ public class WheelPicker extends ScrollView {
         }
         container.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         setMeasuredDimension(container.getMeasuredWidth(), height);
+    }
+
+    public boolean isEnableScroll() {
+        return enableScroll;
+    }
+
+    public void setEnableScroll(boolean enableScroll) {
+        this.enableScroll = enableScroll;
     }
 }

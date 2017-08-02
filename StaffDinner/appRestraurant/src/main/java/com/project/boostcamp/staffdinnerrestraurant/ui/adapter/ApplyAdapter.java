@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.publiclibrary.data.Apply;
+import com.project.boostcamp.publiclibrary.data.ApplyWithClient;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
 import java.util.ArrayList;
@@ -14,15 +15,15 @@ import java.util.ArrayList;
  */
 
 public class ApplyAdapter extends RecyclerView.Adapter<ApplyVH> {
-    private ArrayList<Apply> data;
-    private OnClickItemListener<Apply> onClickItemListener;
+    private ArrayList<ApplyWithClient> data;
+    private OnClickItemListener<ApplyWithClient> onClickItemListener;
 
-    public ApplyAdapter(OnClickItemListener<Apply> onClickItemListener) {
+    public ApplyAdapter(OnClickItemListener<ApplyWithClient> onClickItemListener) {
         data = new ArrayList<>();
         this.onClickItemListener = onClickItemListener;
     }
 
-    public void setData(ArrayList<Apply> data) {
+    public void setData(ArrayList<ApplyWithClient> data) {
         this.data = data;
         notifyDataSetChanged();
     }

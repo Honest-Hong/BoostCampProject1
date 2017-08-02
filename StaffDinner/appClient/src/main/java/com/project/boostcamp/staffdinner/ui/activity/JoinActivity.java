@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
 import com.project.boostcamp.publiclibrary.data.Client;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
@@ -67,6 +68,7 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
         Client client = SharedPreperenceHelper.getInstance(this).getClient();
         client.setName(name);
         client.setPhone(phone);
+        client.setToken(FirebaseInstanceId.getInstance().getToken());
         SharedPreperenceHelper.getInstance(this).saveClient(client);
         requestJoin(client);
     }
