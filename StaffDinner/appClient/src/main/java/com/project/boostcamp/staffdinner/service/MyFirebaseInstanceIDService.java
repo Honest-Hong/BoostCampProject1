@@ -8,6 +8,7 @@ import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 
 /**
  * Created by Hong Tae Joon on 2017-07-27.
+ * 파이어베이스의 알림 토큰 값을 최신화 해주는 서비스
  */
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {

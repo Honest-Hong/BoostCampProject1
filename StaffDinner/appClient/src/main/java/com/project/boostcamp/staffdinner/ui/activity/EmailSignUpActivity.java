@@ -16,9 +16,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
 import com.project.boostcamp.publiclibrary.data.AccountType;
+import com.project.boostcamp.publiclibrary.data.ExtraType;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.util.EditTextHelper;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
+import com.project.boostcamp.publiclibrary.util.StringHelper;
 import com.project.boostcamp.staffdinner.R;
 
 import butterknife.BindView;
@@ -28,6 +30,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * 이메일로 회원가입을 시작하기 위해서 이메일과 비밀번호를 입력받는 액티비티
+ */
 public class EmailSignUpActivity extends AppCompatActivity {
     @BindView(R.id.edit_email) EditText editEmail;
     @BindView(R.id.edit_password) EditText editPassword;
@@ -95,6 +100,10 @@ public class EmailSignUpActivity extends AppCompatActivity {
             Toast.makeText(this, "비밀번호 불일치", Toast.LENGTH_SHORT).show();
             return false;
         }
+        if(!StringHelper.isValidEmail(editEmail.getText().toString())) {
+            Toast.makeText(this, "올바르지 않은 이메일 형식", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
@@ -108,7 +117,11 @@ public class EmailSignUpActivity extends AppCompatActivity {
                 Log.d("HTJ", "login onResponse: " + response.body());
                 LoginDTO dto = response.body();
                 if(dto.getId() == null) {
-                    JoinActivity.show(EmailSignUpActivity.this, id, type, "", true);
+                    Intent intent = new Intent(EmailSignUpActivity.this, JoinActivity.class);
+                    intent.putExtra(ExtraType.EXTRA_ID, id);
+                    intent.putExtra(ExtraType.EXTRA_TYPE, type);
+                    startActivity(intent);
+                    finish();
                 } else {
                     SharedPreperenceHelper.getInstance(EmailSignUpActivity.this).saveLogin(dto);
                     startActivity(new Intent(EmailSignUpActivity.this, MainActivity.class));

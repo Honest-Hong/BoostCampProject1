@@ -7,6 +7,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 /**
  * Created by Hong Tae Joon on 2017-07-27.
+ * 파이어베이스의 알림을 수신하는 서비스
  */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {

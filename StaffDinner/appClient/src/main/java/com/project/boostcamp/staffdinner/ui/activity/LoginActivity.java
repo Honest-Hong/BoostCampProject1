@@ -25,6 +25,7 @@ import com.kakao.util.exception.KakaoException;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
 import com.project.boostcamp.publiclibrary.data.AccountType;
 import com.project.boostcamp.publiclibrary.data.Client;
+import com.project.boostcamp.publiclibrary.data.ExtraType;
 import com.project.boostcamp.publiclibrary.domain.ClientDTO;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
@@ -176,7 +177,11 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("HTJ", "login onResponse: " + response.body());
                 LoginDTO dto = response.body();
                 if(dto.getId() == null) {
-                    JoinActivity.show(LoginActivity.this, id, type, name, true);
+                    Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
+                    intent.putExtra(ExtraType.EXTRA_ID, id);
+                    intent.putExtra(ExtraType.EXTRA_TYPE, type);
+                    intent.putExtra(ExtraType.EXTRA_NAME, name);
+                    startActivity(intent);
                     finish();
                 } else {
                     SharedPreperenceHelper.getInstance(LoginActivity.this).saveLogin(dto);

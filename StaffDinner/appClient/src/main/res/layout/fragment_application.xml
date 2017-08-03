@@ -192,20 +192,19 @@
                 android:layout_marginStart="16dp"/>
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatMultiAutoCompleteTextView
-            android:id="@+id/auto_style"
+        <EditText
+            android:id="@+id/edit_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
+            android:inputType="text"
             android:maxLines="1"
             android:background="@drawable/shape_rounded_rectangle"
             app:layout_constraintTop_toBottomOf="@+id/linear2"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/guide2"
-            android:completionHint="@string/text_style_completion_hint"
-            android:completionThreshold="1"/>
+            app:layout_constraintLeft_toLeftOf="@+id/guide2"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -218,8 +217,8 @@
             android:gravity="center"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/guide2"
-            app:layout_constraintTop_toTopOf="@+id/auto_style"
-            app:layout_constraintBottom_toBottomOf="@+id/auto_style"/>
+            app:layout_constraintTop_toTopOf="@+id/edit_style"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_style"/>
 
         <EditText
             android:id="@+id/edit_menu"
@@ -231,7 +230,7 @@
             android:inputType="text"
             android:maxLines="1"
             android:background="@drawable/shape_rounded_rectangle"
-            app:layout_constraintTop_toBottomOf="@+id/auto_style"
+            app:layout_constraintTop_toBottomOf="@+id/edit_style"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/guide2" />
 

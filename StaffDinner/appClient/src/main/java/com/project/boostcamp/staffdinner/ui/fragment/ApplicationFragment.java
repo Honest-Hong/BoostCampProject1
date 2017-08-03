@@ -78,7 +78,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.text_state) TextView textState; // 상단의 신청서 상태 텍스트
     @BindView(R.id.edit_title) EditText editTitle; // 신청서의 제목 입력창
     @BindView(R.id.edit_number) EditText editNumber; // 신청서의 인원 입력창
-    @BindView(R.id.auto_style) MultiAutoCompleteTextView autoStyle; // 신청서의 분위기 입력창
+    @BindView(R.id.edit_style) EditText autoStyle; // 신청서의 분위기 입력창
     @BindView(R.id.edit_menu) EditText editMenu; // 신청서의 메뉴 입력창
     @BindView(R.id.text_location) TextView textLocation; // 신청서의 위치 텍스트
     @BindView(R.id.button_apply) Button btnApply; // 신청 버튼
@@ -117,11 +117,6 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
 
     private void setupView(View v) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-
-        autoStyle.setAdapter(new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_dropdown_item_1line,
-                getResources().getStringArray(R.array.styles)));
-        autoStyle.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
         SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);

@@ -1,6 +1,5 @@
 package com.project.boostcamp.staffdinner.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +13,11 @@ import android.widget.EditText;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
-import com.project.boostcamp.publiclibrary.data.Client;
-import com.project.boostcamp.publiclibrary.domain.ClientDTO;
+import com.project.boostcamp.publiclibrary.data.ExtraType;
 import com.project.boostcamp.publiclibrary.domain.ClientJoinDTO;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
+import com.project.boostcamp.publiclibrary.util.StringHelper;
 import com.project.boostcamp.staffdinner.R;
 
 import butterknife.BindView;
@@ -27,10 +26,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * 회원가입을 위해서 기본 정보를 입력받는 액티비티
+ */
 public class JoinActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener{
-    public static final String EXTRA_ID = "id";
-    public static final String EXTRA_TYPE = "type";
-    public static final String EXTRA_NAME = "name";
     private View rootView;
     @BindView(R.id.edit_name) EditText editName;
     @BindView(R.id.edit_phone) EditText editPhone;
@@ -39,26 +38,15 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
     private int type;
     private String name;
 
-    public static void show(Activity activity, String id, int type, String name, boolean finish) {
-        Intent intent = new Intent(activity, JoinActivity.class);
-        intent.putExtra(JoinActivity.EXTRA_ID, id);
-        intent.putExtra(JoinActivity.EXTRA_TYPE, type);
-        intent.putExtra(JoinActivity.EXTRA_NAME, name);
-        activity.startActivity(intent);
-        if(finish) {
-            activity.finish();
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
 
         if(getIntent() != null) {
-            id = getIntent().getStringExtra(EXTRA_ID);
-            type = getIntent().getIntExtra(EXTRA_TYPE, -1);
-            name = getIntent().getStringExtra(EXTRA_NAME);
+            id = getIntent().getStringExtra(ExtraType.EXTRA_ID);
+            type = getIntent().getIntExtra(ExtraType.EXTRA_TYPE, -1);
+            name = getIntent().getStringExtra(ExtraType.EXTRA_NAME);
         }
         ButterKnife.bind(this);
         setupView();
@@ -79,23 +67,33 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
         String name = editName.getText().toString();
         String phone = editPhone.getText().toString();
 
+        if (checkValidate(name, phone)) {
+            ClientJoinDTO dto = new ClientJoinDTO();
+            dto.setId(id);
+            dto.setType(type);
+            dto.setName(name);
+            dto.setPhone(phone);
+            dto.setToken(FirebaseInstanceId.getInstance().getToken());
+            RetrofitClient.getInstance().clientService.join(dto).enqueue(joinCallback);
+        }
+    }
+
+    private boolean checkValidate(String name, String phone) {
         if(name.equals("")) {
             Snackbar.make(rootView, R.string.snack_need_name, Snackbar.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
         if(phone.equals("")) {
             Snackbar.make(rootView, R.string.snack_need_phone, Snackbar.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
-        ClientJoinDTO dto = new ClientJoinDTO();
-        dto.setId(id);
-        dto.setType(type);
-        dto.setName(name);
-        dto.setPhone(phone);
-        dto.setToken(FirebaseInstanceId.getInstance().getToken());
-        RetrofitClient.getInstance().clientService.join(dto).enqueue(joinCallback);
+        if(!StringHelper.isValidCellPhoneNumber(phone)) {
+            Snackbar.make(rootView, "올바르지 않은 전화번호 형식입니다.", Snackbar.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private Callback<LoginDTO> joinCallback = new Callback<LoginDTO>() {

@@ -58,10 +58,15 @@
     <string name="drawer_open">메뉴 열림</string>
     <string name="drawer_close">메뉴 닫힘</string>
     <string name="text_application_name">%1$s님의 신청서</string>
+    <string name="write_estimate_application_number">%1$d명</string>
+    <string name="write_estimate_application_time">yyyy.MM.dd HH:mm</string>
+    <string name="write_estimate_application_location">약 %.2fkm</string>
 
     <string name="kakao_app_key">da3852fe468833c3e1c9d83859b3ada1</string>
     <string name="facebook_app_id">1920252784901809</string>
     <string name="fb_login_protocol_scheme">fb1920252784901809</string>
     <string name="nav_logout">로그아웃</string>
+    <string name="estimate_content">견적서 내용</string>
+    <string name="help_estimate_send">견적서의 내용은 고객에게 전달되며 사실만을 작성해주시기 바랍니다.</string>
 
 </resources>

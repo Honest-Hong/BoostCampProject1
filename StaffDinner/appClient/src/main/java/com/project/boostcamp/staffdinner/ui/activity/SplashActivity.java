@@ -12,6 +12,10 @@ import com.project.boostcamp.publiclibrary.data.Client;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinner.R;
 
+/**
+ * 앱의 처음화면
+ * 앱의 이름과 아이콘을 보여준다
+ */
 public class SplashActivity extends AppCompatActivity {
     boolean isLogined = false;
 

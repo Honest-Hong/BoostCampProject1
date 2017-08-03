@@ -17,6 +17,9 @@ import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
 import com.project.boostcamp.staffdinner.R;
 
+/**
+ *  계약서를 자세히 볼 수 잇는 액티비티
+ */
 public class ContactDetailActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
     private Contact contact;
 

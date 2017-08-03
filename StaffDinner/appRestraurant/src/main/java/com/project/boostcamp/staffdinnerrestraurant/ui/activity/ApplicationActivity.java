@@ -103,6 +103,7 @@ public class ApplicationActivity extends AppCompatActivity implements OnMapReady
 
     private void showWriteEstimateActivity() {
         Intent intent = new Intent(this, WriteEstimateActivity.class);
+        intent.putExtra(AdminApplication.class.getName(), application);
         startActivity(intent);
     }
 

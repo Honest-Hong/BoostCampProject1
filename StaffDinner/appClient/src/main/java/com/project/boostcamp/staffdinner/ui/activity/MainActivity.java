@@ -35,6 +35,10 @@ import com.project.boostcamp.staffdinner.ui.adapter.MainViewPagerAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 메인 액티비티.
+ * 신청서, 견적서, 계약서 탭 3가지가 존재한다.
+ */
 public class MainActivity extends AppCompatActivity implements OnEstimateClickListener, OnContactClickListener, GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener{
     public static final String EXTRA_NOTIFICATION_TYPE = "noti_type";
     public static final int NOTIFICATION_TYPE_NONE = 0x00;
