@@ -16,9 +16,8 @@ public class TimeHelper {
         return cal.getTimeInMillis();
     }
 
-    public static long getTime(int year, int month, int day, int hour, int minute) {
+    public static long getTime(int month, int day, int hour, int minute) {
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
         cal.set(Calendar.DAY_OF_MONTH, day);
         cal.set(Calendar.HOUR_OF_DAY, hour);

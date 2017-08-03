@@ -78,6 +78,7 @@ public class ApplicationFragment extends Fragment implements OnClickItemListener
                     app.setTitle(dto.getTitle());
                     app.setNumber(dto.getNumber());
                     app.setTime(dto.getTime());
+                    app.setDistance(dto.getDistance());
                     app.setGeo(dto.getGeo().toGeo());
                     app.setStyle(dto.getStyle());
                     app.setMenu(dto.getMenu());

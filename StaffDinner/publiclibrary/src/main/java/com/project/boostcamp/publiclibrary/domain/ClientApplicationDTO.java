@@ -13,6 +13,7 @@ public class ClientApplicationDTO {
     private String menu;
     private GeoDTO geo;
     private int state;
+    private long writedtime;
 
     public String get_id() {
         return _id;
@@ -76,5 +77,13 @@ public class ClientApplicationDTO {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public long getWritedtime() {
+        return writedtime;
+    }
+
+    public void setWritedtime(long writedtime) {
+        this.writedtime = writedtime;
     }
 }

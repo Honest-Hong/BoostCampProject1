@@ -1,5 +1,6 @@
 package com.project.boostcamp.staffdinnerrestraurant.ui.adapter;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.project.boostcamp.staffdinnerrestraurant.R;
  */
 
 public class ApplicationVH extends BaseVH<AdminApplication> {
+    private Context context;
     private AdminApplication data;
     private ImageView imageView;
     private TextView textName;
@@ -24,6 +26,7 @@ public class ApplicationVH extends BaseVH<AdminApplication> {
 
     public ApplicationVH(View v, final OnClickItemListener<AdminApplication> onClickItemListener) {
         super(v);
+        context = v.getContext();
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,9 +42,9 @@ public class ApplicationVH extends BaseVH<AdminApplication> {
     @Override
     public void setupView(AdminApplication data) {
         this.data = data;
-        textName.setText(data.getWriterName());
+        textName.setText(context.getString(R.string.text_application_name, data.getWriterName()));
         textTitle.setText(data.getTitle());
-        String time = TimeHelper.getTimeString(data.getTime(), "hh시 MM분");
-        textContent.setText(textName.getContext().getString(R.string.text_apply_content, data.getNumber(), time, String.format("%.1f", data.getDistance())));
+        String time = TimeHelper.getTimeString(data.getTime(), "HH시 mm분");
+        textContent.setText(context.getString(R.string.text_apply_content, data.getNumber(), time, String.format("%.2f", data.getDistance())));
     }
 }

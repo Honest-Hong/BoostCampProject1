@@ -230,7 +230,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         editMenu.setText(application.getWantedMenu());
         wheelHour.setSelectedIndex(TimeHelper.getHour(application.getWantedTime()));
         wheelMinute.setSelectedIndex(TimeHelper.getMinute(application.getWantedTime()) / 10);
-
+        // TODO: 2017-08-03 정확한 날짜를 가리키도록 하기
         setState(application.getState());
         // TODO: 2017-07-28 저장된 위치 맵에 출력하기
     }
@@ -353,6 +353,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         dto.setStyle(application.getWantedStyle());
         dto.setMenu(application.getWantedMenu());
         dto.setGeo(application.getGeo().toGeoDTO());
+        dto.setWritedtime(application.getWritedTime());
 
         // 서버에 저장
         String clientId = SharedPreperenceHelper.getInstance(getContext()).getLoginId();
@@ -382,9 +383,13 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         application.setNumber(Integer.parseInt(editNumber.getText().toString()));
         String hour = wheelAdapterHour.getItem(wheelHour.getSelectedIndex());
         String minute = wheelAdapterMinute.getItem(wheelMinute.getSelectedIndex());
+        String date = wheelAdapterDate.getItem(wheelDate.getSelectedIndex());
         application.setWantedTime(TimeHelper.getTime(
+                Integer.parseInt(date.substring(0,2)) - 1,
+                Integer.parseInt(date.substring(3,5)),
                 Integer.parseInt(hour)
                 , Integer.parseInt(minute)));
+        Log.d("HTJ", "wantedTime: " + application.getWantedTime());
         application.setWantedStyle(autoStyle.getText().toString());
         application.setWantedMenu(editMenu.getText().toString());
         application.setGeo(new Geo("Point",

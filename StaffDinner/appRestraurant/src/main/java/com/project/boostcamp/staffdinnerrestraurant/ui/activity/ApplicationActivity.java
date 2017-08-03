@@ -17,6 +17,7 @@ import com.project.boostcamp.publiclibrary.data.AdminApplication;
 import com.project.boostcamp.publiclibrary.data.ApplyWithClient;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
+import com.project.boostcamp.publiclibrary.util.TimeHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
 import butterknife.BindView;
@@ -57,7 +58,7 @@ public class ApplicationActivity extends AppCompatActivity implements OnMapReady
         textName.setText(getString(R.string.text_apply_detail_name, application.getWriterName()));
         textMessage.setText(application.getTitle());
         textNumber.setText(getString(R.string.text_apply_detail_number, application.getNumber()));
-        textWantedTime.setText(application.getTime() + "");
+        textWantedTime.setText(TimeHelper.getTimeString(application.getTime(), "MM월 dd일 HH시 mm분"));
         textWantedStyle.setText(application.getStyle());
         textWantedMenu.setText(application.getMenu());
         textLocation.setText(GeocoderHelper.getAddress(
