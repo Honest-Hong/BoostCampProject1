@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.publiclibrary.data.AdminApplication;
-import com.project.boostcamp.publiclibrary.data.Application;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
 import java.util.ArrayList;

@@ -2,6 +2,10 @@ package com.project.boostcamp.publiclibrary.data;
 
 /**
  * Created by Hong Tae Joon on 2017-08-01.
+ * 계정의 종류 클래스
+ * 카카오
+ * 페이스북
+ * 이메일
  */
 
 public class AccountType {

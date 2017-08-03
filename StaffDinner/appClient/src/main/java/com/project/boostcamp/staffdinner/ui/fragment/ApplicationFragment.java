@@ -15,12 +15,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +33,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
+import com.project.boostcamp.publiclibrary.data.ApplicationStateType;
 import com.project.boostcamp.publiclibrary.data.Geo;
 import com.project.boostcamp.publiclibrary.domain.ClientApplicationDTO;
 import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
@@ -190,7 +189,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                     application.setWantedStyle(dto.getStyle());
                     application.setWantedMenu(dto.getMenu());
                     application.setGeo(dto.getGeo().toGeo());
-                    application.setState(Application.STATE_APPLY);
+                    application.setState(ApplicationStateType.STATE_APPLIED);
                 }
                 setupTexts(application);
             }
@@ -261,22 +260,22 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     }
 
     private void handleApplyButton() {
-        if(application.getState() == Application.STATE_EDIT) {
+        if(application.getState() == ApplicationStateType.STATE_EDITING) {
             MyAlertDialog.newInstance(getString(R.string.dialog_alert_title), getString(R.string.dialog_apply_message), this)
                     .show(getChildFragmentManager(), null);
-        } else if(application.getState() == Application.STATE_APPLY) {
+        } else if(application.getState() == ApplicationStateType.STATE_APPLIED) {
             MyAlertDialog.newInstance(getString(R.string.dialog_alert_title), getString(R.string.dialog_cancel_message), this)
                     .show(getChildFragmentManager(), null);
         } else {
             application = new Application();
             setupTexts(application);
-            setState(Application.STATE_EDIT);
+            setState(ApplicationStateType.STATE_EDITING);
         }
     }
 
     @Override
     public void onPositive() {
-        if(application.getState() == Application.STATE_EDIT) {
+        if(application.getState() == ApplicationStateType.STATE_EDITING) {
             submitApplication();
         } else {
             cancelApplication();
@@ -359,7 +358,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                 if(response.body().getResult() != null) {
                     application.setId(response.body().getResult());
                     SharedPreperenceHelper.getInstance(getContext()).saveApply(application);
-                    setState(Application.STATE_APPLY);;
+                    setState(ApplicationStateType.STATE_APPLIED);;
                 } else {
                     Log.d("HTJ", "Not receive application id");
                 }
@@ -391,7 +390,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                 marker.getPosition().longitude,
                 marker.getPosition().latitude));
         application.setWritedTime(TimeHelper.now());
-        application.setState(Application.STATE_APPLY);
+        application.setState(ApplicationStateType.STATE_APPLIED);
         // 로컬에 저장
         SharedPreperenceHelper.getInstance(getContext()).saveApply(application);
     }
@@ -410,8 +409,8 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                     // TODO: 2017-07-28 내용 모두 지우기
                     application = new Application();
                     setupTexts(application);
-                    application.setState(Application.STATE_EDIT);
-                    setState(Application.STATE_EDIT);
+                    application.setState(ApplicationStateType.STATE_EDITING);
+                    setState(ApplicationStateType.STATE_EDITING);
                     SharedPreperenceHelper.getInstance(getContext()).saveApply(application);
                 } else {
                     Log.e("HTJ", "Fail to canceling application");
@@ -425,8 +424,8 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                 Toast.makeText(getContext(), "서버 오류", Toast.LENGTH_SHORT).show();
                 application = new Application();
                 setupTexts(application);
-                application.setState(Application.STATE_EDIT);
-                setState(Application.STATE_EDIT);
+                application.setState(ApplicationStateType.STATE_EDITING);
+                setState(ApplicationStateType.STATE_EDITING);
                 SharedPreperenceHelper.getInstance(getContext()).saveApply(application);
             }
         });
@@ -434,21 +433,21 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
 
     private void setState(int state) {
         switch(state) {
-            case Application.STATE_EDIT:
+            case ApplicationStateType.STATE_EDITING:
                 btnApply.setText(R.string.text_apply);
                 imageState.setImageResource(R.drawable.ic_error_orange_24dp);
                 textState.setText(R.string.text_need_input);
                 textState.setTextColor(ContextCompat.getColor(getContext(), R.color.yellow));
                 blockView(false);
                 break;
-            case Application.STATE_APPLY:
+            case ApplicationStateType.STATE_APPLIED:
                 btnApply.setText(R.string.text_cancel);
                 imageState.setImageResource(R.drawable.ic_check_circle_green_24dp);
                 textState.setText(R.string.text_apply_success);
                 textState.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
                 blockView(true);
                 break;
-            case Application.STATE_FAIL:
+            case ApplicationStateType.STATE_CANCELED:
                 btnApply.setText(R.string.text_rewrite);
                 imageState.setImageResource(R.drawable.ic_cancel_red_24dp);
                 textState.setText(R.string.text_apply_canceled);

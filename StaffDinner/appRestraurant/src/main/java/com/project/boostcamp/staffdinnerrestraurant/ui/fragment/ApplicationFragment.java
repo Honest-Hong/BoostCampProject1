@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.project.boostcamp.publiclibrary.api.RetrofitAdmin;
 import com.project.boostcamp.publiclibrary.data.AdminApplication;
-import com.project.boostcamp.publiclibrary.data.ApplyWithClient;
 import com.project.boostcamp.publiclibrary.domain.AdminApplicationDTO;
 import com.project.boostcamp.publiclibrary.domain.GeoDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;

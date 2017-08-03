@@ -7,19 +7,30 @@ import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by Hong Tae Joon on 2017-08-03.
+ * 고객이 사용하는 신청서 클래스
  */
 
 public class AdminApplication implements Parcelable{
 
+    // 신청서 id
     private String id;
+    // 작성자 이름
     private String writerName;
+    // 신청서 제목
     private String title;
+    // 회식 인원
     private int number;
+    // 회식 시간
     private long time;
+    // 원하는 식당 분위기
     private String style;
+    // 원하는 식당 메뉴
     private String menu;
+    // 원하는 근처 지역
     private Geo geo;
+    // 식당과의 거리
     private double distance;
+    // 작성 시간
     private long writedTime;
 
     public AdminApplication() {

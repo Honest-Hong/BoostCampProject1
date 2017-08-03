@@ -11,11 +11,18 @@ import java.util.List;
 
 /**
  * Created by Hong Tae Joon on 2017-07-26.
+ * Geocoder를 손쉽게 사용할 수 있는 도구
  */
 
 public class GeocoderHelper {
     private static Geocoder geocoder;
 
+    /**
+     * 위도 경도 객체로 부터 주소를 가져오는 함수
+     * @param context 컨텍스트
+     * @param latLng 경도 위도
+     * @return 해당하는 주소
+     */
     public static String getAddress(Context context, LatLng latLng) {
         if (geocoder == null) {
             geocoder = new Geocoder(context);

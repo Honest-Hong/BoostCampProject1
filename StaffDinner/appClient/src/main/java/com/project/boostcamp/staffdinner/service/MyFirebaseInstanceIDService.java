@@ -3,7 +3,6 @@ package com.project.boostcamp.staffdinner.service;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
-import com.project.boostcamp.publiclibrary.data.Client;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 
 /**

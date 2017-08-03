@@ -8,21 +8,22 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import com.project.boostcamp.publiclibrary.R;
+import com.project.boostcamp.publiclibrary.data.ExtraType;
 
 /**
  * Created by Hong Tae Joon on 2017-07-26.
+ * 단순한 알람 다이얼로그 클래스
+ * 제목과 메시지만 넘겨주면 알림을 띄울 수 있다
  */
 
 public class MyAlertDialog extends DialogFragment {
-    private static final String EXTRA_TITLE = "title";
-    private static final String EXTRA_MESSAGE = "message";
     private DialogResultListener resultListener;
 
     public static MyAlertDialog newInstance(String title, String message, DialogResultListener resultListener) {
         MyAlertDialog myAlertDialog = new MyAlertDialog();
         Bundle arg = new Bundle();
-        arg.putString(EXTRA_TITLE, title);
-        arg.putString(EXTRA_MESSAGE, message);
+        arg.putString(ExtraType.EXTRA_TITLE, title);
+        arg.putString(ExtraType.EXTRA_MESSAGE, message);
         myAlertDialog.setArguments(arg);
         myAlertDialog.setResultListener(resultListener);
         return myAlertDialog;
@@ -35,8 +36,8 @@ public class MyAlertDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String title = getArguments().getString(EXTRA_TITLE);
-        String message = getArguments().getString(EXTRA_MESSAGE);
+        String title = getArguments().getString(ExtraType.EXTRA_TITLE);
+        String message = getArguments().getString(ExtraType.EXTRA_MESSAGE);
         return new AlertDialog.Builder(getContext())
                 .setTitle(title)
                 .setMessage(message)

@@ -1,6 +1,5 @@
 package com.project.boostcamp.publiclibrary.domain;
 
-import com.project.boostcamp.publiclibrary.data.Client;
 
 /**
  * Created by Hong Tae Joon on 2017-08-03.
@@ -16,7 +15,7 @@ public class AdminApplicationDTO {
     private float distance;
     private long writedTime;
     private GeoDTO geo;
-    private Client client;
+    private ClientDTO client;
 
     public String get_id() {
         return _id;
@@ -90,11 +89,11 @@ public class AdminApplicationDTO {
         this.geo = geo;
     }
 
-    public Client getClient() {
+    public ClientDTO getClient() {
         return client;
     }
 
-    public void setClient(Client client) {
+    public void setClient(ClientDTO client) {
         this.client = client;
     }
 }

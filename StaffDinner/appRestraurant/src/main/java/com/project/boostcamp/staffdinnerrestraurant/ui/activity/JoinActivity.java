@@ -32,7 +32,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.project.boostcamp.publiclibrary.api.RetrofitAdmin;
-import com.project.boostcamp.publiclibrary.data.Admin;
 import com.project.boostcamp.publiclibrary.data.Geo;
 import com.project.boostcamp.publiclibrary.domain.AdminJoinDTO;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;

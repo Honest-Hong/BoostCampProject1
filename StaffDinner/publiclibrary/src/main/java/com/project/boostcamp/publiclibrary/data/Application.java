@@ -10,10 +10,6 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public class Application implements Parcelable{
-    public static final int STATE_EDIT = 0x0;
-    public static final int STATE_APPLY = 0x1;
-    public static final int STATE_FAIL = 0x2;
-
     private String id;
     private String title;
     private int number;

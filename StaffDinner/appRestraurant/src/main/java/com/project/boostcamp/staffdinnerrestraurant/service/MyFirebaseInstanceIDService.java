@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.project.boostcamp.publiclibrary.api.RetrofitAdmin;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
 import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
@@ -22,7 +23,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         String loginId = SharedPreperenceHelper.getInstance(getApplicationContext()).getLoginId();
         int loginType = SharedPreperenceHelper.getInstance(getApplicationContext()).getLoginType();
         if(!loginId.equals("")) {
-            RetrofitClient.getInstance().clientService.updateToken(
+            RetrofitAdmin.getInstance().adminService.updateToken(
                     loginId,
                     loginType,
                     FirebaseInstanceId.getInstance().getToken()).enqueue(new Callback<ResultIntDTO>() {

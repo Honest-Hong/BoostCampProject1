@@ -21,8 +21,6 @@ import com.google.android.gms.location.LocationServices;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.project.boostcamp.publiclibrary.data.AccountType;
-import com.project.boostcamp.publiclibrary.data.Admin;
-import com.project.boostcamp.publiclibrary.data.Client;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
