@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.project.boostcamp.publiclibrary.data.AdminApplication;
 import com.project.boostcamp.publiclibrary.dialog.DialogResultListener;
 import com.project.boostcamp.publiclibrary.dialog.MyAlertDialog;
-import com.project.boostcamp.publiclibrary.util.StringHelper;
 import com.project.boostcamp.publiclibrary.util.TimeHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
@@ -44,9 +42,9 @@ public class WriteEstimateActivity extends AppCompatActivity implements DialogRe
     private void setupView() {
         textApplicationTitle.setText(getString(R.string.text_application_name, application.getWriterName()));
         textMessage.setText(application.getTitle());
-        textNumber.setText(getString(R.string.write_estimate_application_number, application.getNumber()));
-        textTime.setText(TimeHelper.getTimeString(application.getTime(), getString(R.string.write_estimate_application_time)));
-        textDistance.setText(String.format(getString(R.string.write_estimate_application_location), application.getDistance()));
+        textNumber.setText(getString(R.string.people_count, application.getNumber()));
+        textTime.setText(TimeHelper.getTimeString(application.getTime(), getString(R.string.default_date)));
+        textDistance.setText(String.format(getString(R.string.distance_kilo), application.getDistance()));
         textStyle.setText(application.getStyle());
         textMenu.setText(application.getMenu());
     }

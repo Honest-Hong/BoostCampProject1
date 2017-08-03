@@ -58,9 +58,9 @@
     <string name="drawer_open">메뉴 열림</string>
     <string name="drawer_close">메뉴 닫힘</string>
     <string name="text_application_name">%1$s님의 신청서</string>
-    <string name="write_estimate_application_number">%1$d명</string>
-    <string name="write_estimate_application_time">yyyy.MM.dd HH:mm</string>
-    <string name="write_estimate_application_location">약 %.2fkm</string>
+    <string name="people_count">%1$d명</string>
+    <string name="default_date">yyyy.MM.dd HH:mm</string>
+    <string name="distance_kilo">약 %.2fkm</string>
 
     <string name="kakao_app_key">da3852fe468833c3e1c9d83859b3ada1</string>
     <string name="facebook_app_id">1920252784901809</string>

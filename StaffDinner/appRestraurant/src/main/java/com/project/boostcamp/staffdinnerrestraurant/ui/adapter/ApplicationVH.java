@@ -12,6 +12,10 @@ import com.project.boostcamp.publiclibrary.object.BaseVH;
 import com.project.boostcamp.publiclibrary.util.TimeHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
+import butterknife.BindDimen;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Hong Tae Joon on 2017-07-28.
  */
@@ -19,13 +23,16 @@ import com.project.boostcamp.staffdinnerrestraurant.R;
 public class ApplicationVH extends BaseVH<AdminApplication> {
     private Context context;
     private AdminApplication data;
-    private ImageView imageView;
-    private TextView textName;
-    private TextView textTitle;
-    private TextView textContent;
+    @BindView(R.id.image_view) ImageView imageView;
+    @BindView(R.id.text_name) TextView textName;
+    @BindView(R.id.text_title) TextView textTitle;
+    @BindView(R.id.text_number) TextView textNumber;
+    @BindView(R.id.text_time) TextView textTime;
+    @BindView(R.id.text_distance) TextView textDistance;
 
     public ApplicationVH(View v, final OnClickItemListener<AdminApplication> onClickItemListener) {
         super(v);
+        ButterKnife.bind(this, v);
         context = v.getContext();
         v.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,10 +40,6 @@ public class ApplicationVH extends BaseVH<AdminApplication> {
                 onClickItemListener.onClickItem(data);
             }
         });
-        imageView = (ImageView)v.findViewById(R.id.image_view);
-        textName = (TextView)v.findViewById(R.id.text_name);
-        textTitle = (TextView)v.findViewById(R.id.text_title);
-        textContent = (TextView)v.findViewById(R.id.text_content);
     }
 
     @Override
@@ -44,7 +47,8 @@ public class ApplicationVH extends BaseVH<AdminApplication> {
         this.data = data;
         textName.setText(context.getString(R.string.text_application_name, data.getWriterName()));
         textTitle.setText(data.getTitle());
-        String time = TimeHelper.getTimeString(data.getTime(), "HH시 mm분");
-        textContent.setText(context.getString(R.string.text_apply_content, data.getNumber(), time, String.format("%.2f", data.getDistance())));
+        textNumber.setText(context.getString(R.string.people_count, data.getNumber()));
+        textTime.setText(TimeHelper.getTimeString(data.getTime(), context.getString(R.string.default_date)));
+        textDistance.setText(context.getString(R.string.distance_kilo, data.getDistance()));
     }
 }
