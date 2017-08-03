@@ -61,14 +61,14 @@ public class LoginActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(callbackManager, callbackFacebook);
     }
 
-    @OnClick({R.id.text_kakao, R.id.text_facebook})
+    @OnClick({R.id.text_kakao, R.id.text_facebook, R.id.button_email})
     public void onLoginClick(TextView v) {
         if(v.getId() == R.id.text_kakao) {
             Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, this);
         } else if(v.getId() == R.id.text_facebook) {
             LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
-        } else {
-            finish();
+        } else if(v.getId() == R.id.button_email) {
+            startActivity(new Intent(this, EmailSignUpActivity.class));
         }
     }
 
@@ -176,11 +176,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("HTJ", "login onResponse: " + response.body());
                 LoginDTO dto = response.body();
                 if(dto.getId() == null) {
-                    Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
-                    intent.putExtra(JoinActivity.EXTRA_ID, id);
-                    intent.putExtra(JoinActivity.EXTRA_TYPE, type);
-                    intent.putExtra(JoinActivity.EXTRA_NAME, name);
-                    startActivity(intent);
+                    JoinActivity.show(LoginActivity.this, id, type, name, true);
                     finish();
                 } else {
                     SharedPreperenceHelper.getInstance(LoginActivity.this).saveLogin(dto);

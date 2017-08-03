@@ -71,4 +71,12 @@
     <string name="fb_login_protocol_scheme">fb1586397501435939</string>
     <string name="text_email">계정 이메일</string>
     <string name="menu_logout">로그아웃</string>
+    <string name="email_sign_up_email_help">비밀번호를 잊었을 때 찾는 용도로 사용합니다.</string>
+    <string name="email_sign_up_email">이메일</string>
+    <string name="email_sign_up_password">비밀번호</string>
+    <string name="email_sign_up_password_help">비밀번호는 8자리 이상입니다.</string>
+    <string name="email_sign_up_password_confirm">비밀번호 확인</string>
+    <string name="email_sign_up_password_confirm_help">동일한 비밀번호를 한번더 입력해주세요.</string>
+    <string name="text_prev">이전</string>
+    <string name="text_next">다음</string>
 </resources>

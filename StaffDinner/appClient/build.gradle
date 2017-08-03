@@ -43,6 +43,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:11.0.2'
     // 파이어베이스
     compile 'com.google.firebase:firebase-messaging:11.0.2'
+    compile 'com.google.firebase:firebase-auth:11.0.2'
     // 지슨
     compile 'com.google.code.gson:gson:2.2.4'
     // 버터나이프
@@ -52,9 +53,9 @@ dependencies {
     compile group: 'com.kakao.sdk', name: 'usermgmt', version: '1.4.1'
     // 페이스북 로그인
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-
-    testCompile 'junit:junit:4.12'
+    
     compile project(':publiclibrary')
+    testCompile 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'

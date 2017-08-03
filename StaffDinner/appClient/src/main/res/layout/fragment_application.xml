@@ -13,7 +13,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
         <android.support.constraint.Guideline
-            android:id="@+id/guide"
+            android:id="@+id/guide2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -58,7 +58,7 @@
             android:background="@drawable/shape_rounded_rectangle"
             app:layout_constraintTop_toBottomOf="@+id/image_state"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/guide" />
+            app:layout_constraintLeft_toLeftOf="@+id/guide2" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
             android:textColor="@color/black"
             android:gravity="center"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/guide"
+            app:layout_constraintRight_toLeftOf="@+id/guide2"
             app:layout_constraintTop_toTopOf="@+id/edit_title"
             app:layout_constraintBottom_toBottomOf="@+id/edit_title"/>
 
@@ -85,7 +85,7 @@
             android:gravity="center_vertical"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_title"
-            app:layout_constraintLeft_toLeftOf="@+id/guide">
+            app:layout_constraintLeft_toLeftOf="@+id/guide2">
 
             <ImageButton
                 android:id="@+id/button_up"
@@ -129,7 +129,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/fontNormal"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/guide"
+            app:layout_constraintRight_toLeftOf="@+id/guide2"
             app:layout_constraintTop_toTopOf="@+id/linear"
             app:layout_constraintBottom_toBottomOf="@+id/linear"/>
 
@@ -144,7 +144,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/fontNormal"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/guide"
+            app:layout_constraintRight_toLeftOf="@+id/guide2"
             app:layout_constraintTop_toBottomOf="@id/linear"/>
 
         <LinearLayout
@@ -203,7 +203,7 @@
             android:background="@drawable/shape_rounded_rectangle"
             app:layout_constraintTop_toBottomOf="@+id/linear2"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/guide"
+            app:layout_constraintLeft_toLeftOf="@+id/guide2"
             android:completionHint="@string/text_style_completion_hint"
             android:completionThreshold="1"/>
 
@@ -217,7 +217,7 @@
             android:textColor="@color/black"
             android:gravity="center"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/guide"
+            app:layout_constraintRight_toLeftOf="@+id/guide2"
             app:layout_constraintTop_toTopOf="@+id/auto_style"
             app:layout_constraintBottom_toBottomOf="@+id/auto_style"/>
 
@@ -233,7 +233,7 @@
             android:background="@drawable/shape_rounded_rectangle"
             app:layout_constraintTop_toBottomOf="@+id/auto_style"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/guide" />
+            app:layout_constraintLeft_toLeftOf="@+id/guide2" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -245,7 +245,7 @@
             android:textColor="@color/black"
             android:gravity="center"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/guide"
+            app:layout_constraintRight_toLeftOf="@+id/guide2"
             app:layout_constraintTop_toTopOf="@+id/edit_menu"
             app:layout_constraintBottom_toBottomOf="@+id/edit_menu"/>
 
@@ -260,7 +260,7 @@
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/edit_menu"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/guide">
+            app:layout_constraintLeft_toLeftOf="@+id/guide2">
 
             <TextView
                 android:id="@+id/text_location"
@@ -289,7 +289,7 @@
             android:textColor="@color/black"
             android:gravity="center"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/guide"
+            app:layout_constraintRight_toLeftOf="@+id/guide2"
             app:layout_constraintTop_toTopOf="@+id/linear3"
             app:layout_constraintBottom_toBottomOf="@+id/linear3"/>
 

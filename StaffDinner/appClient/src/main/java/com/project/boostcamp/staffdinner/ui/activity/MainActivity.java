@@ -173,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements OnEstimateClickLi
             LoginManager.getInstance().logOut();
             finish();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        } else {
+            finish();
         }
     }
 }

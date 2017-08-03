@@ -1,5 +1,6 @@
 package com.project.boostcamp.staffdinner.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,17 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
     private String id;
     private int type;
     private String name;
+
+    public static void show(Activity activity, String id, int type, String name, boolean finish) {
+        Intent intent = new Intent(activity, JoinActivity.class);
+        intent.putExtra(JoinActivity.EXTRA_ID, id);
+        intent.putExtra(JoinActivity.EXTRA_TYPE, type);
+        intent.putExtra(JoinActivity.EXTRA_NAME, name);
+        activity.startActivity(intent);
+        if(finish) {
+            activity.finish();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
