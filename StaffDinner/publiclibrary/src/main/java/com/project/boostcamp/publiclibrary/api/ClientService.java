@@ -1,12 +1,15 @@
 package com.project.boostcamp.publiclibrary.api;
 
-import com.project.boostcamp.publiclibrary.data.Apply;
-import com.project.boostcamp.publiclibrary.data.Client;
+import com.project.boostcamp.publiclibrary.data.Application;
+import com.project.boostcamp.publiclibrary.domain.ClientApplicationDTO;
+import com.project.boostcamp.publiclibrary.domain.ClientDTO;
+import com.project.boostcamp.publiclibrary.domain.ClientJoinDTO;
+import com.project.boostcamp.publiclibrary.domain.LoginDTO;
+import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
+import com.project.boostcamp.publiclibrary.domain.ResultStringDTO;
 
 import retrofit2.Call;
-import retrofit2.Retrofit;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -20,21 +23,21 @@ import retrofit2.http.Path;
 
 public interface ClientService {
     @POST("/client/login")
-    Call<Client> login(@Body Client client);
+    Call<LoginDTO> login(@Body LoginDTO loginDTO);
 
     @POST("/client/join")
-    Call<Client> join(@Body Client client);
+    Call<LoginDTO> join(@Body ClientJoinDTO clientJoinDTO);
 
     @GET("/client/{id}/application")
-    Call<Apply> getApplication(@Path("id") String id);
+    Call<ClientApplicationDTO> getApplication(@Path("id") String id);
 
     @POST("/client/{id}/application")
-    Call<String> setApplication(@Path("id") String id, @Body Apply apply);
+    Call<ResultStringDTO> setApplication(@Path("id") String id, @Body ClientApplicationDTO ClientApplicationDTO);
 
     @POST("/application/{id}/cancel")
-    Call<Apply> cancelApplication(@Path("id") String id);
+    Call<ResultIntDTO> cancelApplication(@Path("id") String id);
 
     @FormUrlEncoded
     @PUT("/client/{id}/token")
-    Call<String> updateToken(@Path("id") String id, @Field("type") int type, @Field("token") String token);
+    Call<ResultIntDTO> updateToken(@Path("id") String id, @Field("type") int type, @Field("token") String token);
 }

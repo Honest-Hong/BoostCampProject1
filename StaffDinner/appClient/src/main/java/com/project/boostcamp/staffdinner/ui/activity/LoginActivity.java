@@ -25,6 +25,8 @@ import com.kakao.util.exception.KakaoException;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
 import com.project.boostcamp.publiclibrary.data.AccountType;
 import com.project.boostcamp.publiclibrary.data.Client;
+import com.project.boostcamp.publiclibrary.domain.ClientDTO;
+import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinner.R;
 
@@ -43,6 +45,10 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
+    private String id;
+    private int type;
+    private String name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,16 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             finish();
         }
-    }
-
-    private Client saveClient(String access, String id, String name, int type) {
-        Client client = new Client();
-        client.setAccess(access);
-        client.setId(id);
-        client.setName(name);
-        client.setType(type);
-        SharedPreperenceHelper.getInstance(LoginActivity.this).saveClient(client);
-        return client;
     }
 
     @Override
@@ -103,11 +99,10 @@ public class LoginActivity extends AppCompatActivity {
             UserManagement.requestMe(new MeResponseCallback() {
                 @Override
                 public void onSuccess(UserProfile result) {
-                    String access = Session.getCurrentSession().getTokenInfo().getAccessToken();
-                    long id = result.getId();
-                    String name = result.getNickname();
-                    Client client = saveClient(access, Long.toString(id), name, AccountType.TYPE_KAKAO);
-                    checkAlreadyJoined(client);
+                    id = Long.toString(result.getId());
+                    name = result.getNickname();
+                    type = AccountType.TYPE_KAKAO;
+                    checkAlreadyJoined();
                 }
 
                 @Override
@@ -136,8 +131,7 @@ public class LoginActivity extends AppCompatActivity {
         public void onSuccess(LoginResult loginResult) {
             Log.d("HTJ", "facebook onSuccess");
             Profile.fetchProfileForCurrentAccessToken();
-            final String access = loginResult.getAccessToken().getToken();
-            final String id = loginResult.getAccessToken().getUserId();
+            id = loginResult.getAccessToken().getUserId();
             GraphRequest request = GraphRequest.newMeRequest(
                     loginResult.getAccessToken(),
                     new GraphRequest.GraphJSONObjectCallback() {
@@ -147,9 +141,9 @@ public class LoginActivity extends AppCompatActivity {
                                 GraphResponse response) {
                             Log.d("HTJ", "graph onComplete");
                             try {
-                                String name = object.getString("name");
-                                Client client = saveClient(access, id, name, AccountType.TYPE_FACEBOOK);
-                                checkAlreadyJoined(client);
+                                name = object.getString("name");
+                                type = AccountType.TYPE_FACEBOOK;
+                                checkAlreadyJoined();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -172,22 +166,31 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    private void checkAlreadyJoined(Client client) {
-        RetrofitClient.getInstance().clientService.login(client).enqueue(new Callback<Client>() {
+    private void checkAlreadyJoined() {
+        LoginDTO dto = new LoginDTO();
+        dto.setId(id);
+        dto.setType(type);
+        RetrofitClient.getInstance().clientService.login(dto).enqueue(new Callback<LoginDTO>() {
             @Override
-            public void onResponse(Call<Client> call, Response<Client> response) {
-                Log.d("HTJ", "login onResponse: " + response.body().toString());
-                if(response.body().getId() == null) {
-                    startActivity(new Intent(LoginActivity.this, JoinActivity.class));
+            public void onResponse(Call<LoginDTO> call, Response<LoginDTO> response) {
+                Log.d("HTJ", "login onResponse: " + response.body());
+                LoginDTO dto = response.body();
+                if(dto.getId() == null) {
+                    Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
+                    intent.putExtra(JoinActivity.EXTRA_ID, id);
+                    intent.putExtra(JoinActivity.EXTRA_TYPE, type);
+                    intent.putExtra(JoinActivity.EXTRA_NAME, name);
+                    startActivity(intent);
                     finish();
                 } else {
+                    SharedPreperenceHelper.getInstance(LoginActivity.this).saveLogin(dto);
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 }
             }
 
             @Override
-            public void onFailure(Call<Client> call, Throwable t) {
+            public void onFailure(Call<LoginDTO> call, Throwable t) {
                 Log.e("HTJ", "login onFailure: " + t.getMessage());
             }
         });

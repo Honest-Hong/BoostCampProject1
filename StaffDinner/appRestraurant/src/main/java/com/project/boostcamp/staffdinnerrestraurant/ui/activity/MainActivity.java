@@ -23,6 +23,7 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.project.boostcamp.publiclibrary.data.AccountType;
 import com.project.boostcamp.publiclibrary.data.Admin;
 import com.project.boostcamp.publiclibrary.data.Client;
+import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.MainViewPagerAdapter;
@@ -136,9 +137,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void logout() {
-        Admin admin = SharedPreperenceHelper.getInstance(this).getAdmin();
-        SharedPreperenceHelper.getInstance(this).saveClient(new Client());
-        if(admin.getType() == AccountType.TYPE_KAKAO) {
+        int loginType = SharedPreperenceHelper.getInstance(this).getLoginType();
+        SharedPreperenceHelper.getInstance(this).saveLogin(new LoginDTO());
+        if(loginType == AccountType.TYPE_KAKAO) {
             UserManagement.requestLogout(new LogoutResponseCallback() {
                 @Override
                 public void onCompleteLogout() {
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 }
             });
-        } else if(admin.getType() == AccountType.TYPE_FACEBOOK) {
+        } else if(loginType == AccountType.TYPE_FACEBOOK) {
             LoginManager.getInstance().logOut();
             finish();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));

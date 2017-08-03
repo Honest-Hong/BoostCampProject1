@@ -6,50 +6,47 @@ import android.os.Parcelable;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
- * Created by Hong Tae Joon on 2017-07-27.
+ * Created by Hong Tae Joon on 2017-08-03.
  */
 
-public class Apply implements Parcelable{
-    public static final int STATE_EDIT = 0x0;
-    public static final int STATE_APPLY = 0x1;
-    public static final int STATE_FAIL = 0x2;
+public class AdminApplication implements Parcelable{
 
     private String id;
+    private String writerName;
     private String title;
     private int number;
-    private long wantedTime;
-    private String wantedStyle;
-    private String wantedMenu;
+    private long time;
+    private String style;
+    private String menu;
     private Geo geo;
     private double distance;
     private long writedTime;
-    private int state;
 
-    public Apply() {
+    public AdminApplication() {
     }
 
-    protected Apply(Parcel in) {
+    protected AdminApplication(Parcel in) {
         id = in.readString();
+        writerName = in.readString();
         title = in.readString();
         number = in.readInt();
-        wantedTime = in.readLong();
-        wantedStyle = in.readString();
-        wantedMenu = in.readString();
+        time = in.readLong();
+        style = in.readString();
+        menu = in.readString();
         geo = (Geo)in.readSerializable();
         distance = in.readDouble();
         writedTime = in.readLong();
-        state = in.readInt();
     }
 
-    public static final Creator<Apply> CREATOR = new Creator<Apply>() {
+    public static final Creator<AdminApplication> CREATOR = new Creator<AdminApplication>() {
         @Override
-        public Apply createFromParcel(Parcel in) {
-            return new Apply(in);
+        public AdminApplication createFromParcel(Parcel in) {
+            return new AdminApplication(in);
         }
 
         @Override
-        public Apply[] newArray(int size) {
-            return new Apply[size];
+        public AdminApplication[] newArray(int size) {
+            return new AdminApplication[size];
         }
     };
 
@@ -61,22 +58,15 @@ public class Apply implements Parcelable{
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
+        parcel.writeString(writerName);
         parcel.writeString(title);
         parcel.writeInt(number);
-        parcel.writeLong(wantedTime);
-        parcel.writeString(wantedStyle);
-        parcel.writeString(wantedMenu);
+        parcel.writeLong(time);
+        parcel.writeString(style);
+        parcel.writeString(menu);
         parcel.writeSerializable(geo);
         parcel.writeDouble(distance);
         parcel.writeLong(writedTime);
-        parcel.writeInt(state);
-    }
-
-    public LatLng getLatLng() {
-        return new LatLng(
-                geo.getCoordinates()[1],
-                geo.getCoordinates()[0]
-        );
     }
 
     public String getId() {
@@ -85,6 +75,14 @@ public class Apply implements Parcelable{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getWriterName() {
+        return writerName;
+    }
+
+    public void setWriterName(String writerName) {
+        this.writerName = writerName;
     }
 
     public String getTitle() {
@@ -103,28 +101,28 @@ public class Apply implements Parcelable{
         this.number = number;
     }
 
-    public long getWantedTime() {
-        return wantedTime;
+    public long getTime() {
+        return time;
     }
 
-    public void setWantedTime(long wantedTime) {
-        this.wantedTime = wantedTime;
+    public void setTime(long time) {
+        this.time = time;
     }
 
-    public String getWantedStyle() {
-        return wantedStyle;
+    public String getStyle() {
+        return style;
     }
 
-    public void setWantedStyle(String wantedStyle) {
-        this.wantedStyle = wantedStyle;
+    public void setStyle(String style) {
+        this.style = style;
     }
 
-    public String getWantedMenu() {
-        return wantedMenu;
+    public String getMenu() {
+        return menu;
     }
 
-    public void setWantedMenu(String wantedMenu) {
-        this.wantedMenu = wantedMenu;
+    public void setMenu(String menu) {
+        this.menu = menu;
     }
 
     public Geo getGeo() {
@@ -151,11 +149,4 @@ public class Apply implements Parcelable{
         this.writedTime = writedTime;
     }
 
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-    }
 }

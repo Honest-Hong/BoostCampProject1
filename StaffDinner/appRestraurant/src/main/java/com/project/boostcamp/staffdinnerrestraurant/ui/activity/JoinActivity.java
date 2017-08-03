@@ -34,6 +34,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.project.boostcamp.publiclibrary.api.RetrofitAdmin;
 import com.project.boostcamp.publiclibrary.data.Admin;
 import com.project.boostcamp.publiclibrary.data.Geo;
+import com.project.boostcamp.publiclibrary.domain.AdminJoinDTO;
+import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.util.EditTextHelper;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
@@ -51,6 +53,8 @@ import retrofit2.Response;
 
 public class JoinActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, OnMapReadyCallback, OnSuccessListener<Location>, GoogleApiClient.OnConnectionFailedListener {
     private static final int REQUEST_PERMISSION = 0x100;
+    public static final String EXTRA_LOGIN_ID = "login_id";
+    public static final String EXTRA_LOGIN_TYPE = "login_type";
     private View rootView;
     @BindView(R.id.edit_name) EditText editName;
     @BindView(R.id.edit_phone) EditText editPhone;
@@ -63,12 +67,18 @@ public class JoinActivity extends AppCompatActivity implements CompoundButton.On
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationClient; // 현재 위치를 가져오는 서비스
     private Marker marker; // 신청서의 위치 지도 마커
+    private String loginId;
+    private int loginType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
 
+        if(getIntent() != null) {
+            loginId = getIntent().getStringExtra(EXTRA_LOGIN_ID);
+            loginType = getIntent().getIntExtra(EXTRA_LOGIN_TYPE, -1);
+        }
         ButterKnife.bind(this);
 
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
@@ -93,7 +103,9 @@ public class JoinActivity extends AppCompatActivity implements CompoundButton.On
     @OnClick(R.id.button_join)
     public void doJoin() {
         if(checkInvalidate()) {
-            Admin admin = SharedPreperenceHelper.getInstance(this).getAdmin();
+            final AdminJoinDTO admin = new AdminJoinDTO();
+            admin.setId(loginId);
+            admin.setType(loginType);
             admin.setName(editName.getText().toString());
             admin.setPhone(editPhone.getText().toString());
             admin.setStyle(editStyle.getText().toString());
@@ -102,10 +114,27 @@ public class JoinActivity extends AppCompatActivity implements CompoundButton.On
             admin.setGeo(new Geo("Point", new double[]{
                     googleMap.getCameraPosition().target.longitude,
                     googleMap.getCameraPosition().target.latitude
-            }));
+            }).toGeoDTO());
             admin.setToken(FirebaseInstanceId.getInstance().getToken());
-            SharedPreperenceHelper.getInstance(this).saveAdmin(admin);
-            requestJoin(admin);
+
+            RetrofitAdmin.getInstance().adminService.join(admin).enqueue(new Callback<LoginDTO>() {
+                @Override
+                public void onResponse(Call<LoginDTO> call, Response<LoginDTO> response) {
+                    Log.d("HTJ", "join onResponse: " + response.body());
+                    if(response.body().getId() != null) {
+                        SharedPreperenceHelper.getInstance(JoinActivity.this).saveLogin(response.body());
+                        SharedPreperenceHelper.getInstance(JoinActivity.this).saveGeo(admin.getGeo());
+                        startMainActivity();
+                    } else {
+                        Log.e("HTJ", "fail to join");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LoginDTO> call, Throwable t) {
+                    Log.e("HTJ", "join onFailure: " + t.getMessage());
+                }
+            });
         }
     }
 
@@ -132,21 +161,6 @@ public class JoinActivity extends AppCompatActivity implements CompoundButton.On
             return false;
         }
         return true;
-    }
-
-    private void requestJoin(Admin admin) {
-        RetrofitAdmin.getInstance().adminService.join(admin).enqueue(new Callback<Admin>() {
-            @Override
-            public void onResponse(Call<Admin> call, Response<Admin> response) {
-                Log.d("HTJ", "join onResponse: " + response.body());
-                startMainActivity();
-            }
-
-            @Override
-            public void onFailure(Call<Admin> call, Throwable t) {
-                Log.e("HTJ", "join onFailure: " + t.getMessage());
-            }
-        });
     }
 
     private void startMainActivity() {

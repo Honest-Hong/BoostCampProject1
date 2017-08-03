@@ -12,13 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.publiclibrary.api.RetrofitAdmin;
-import com.project.boostcamp.publiclibrary.data.Admin;
-import com.project.boostcamp.publiclibrary.data.Apply;
+import com.project.boostcamp.publiclibrary.data.AdminApplication;
 import com.project.boostcamp.publiclibrary.data.ApplyWithClient;
+import com.project.boostcamp.publiclibrary.domain.AdminApplicationDTO;
+import com.project.boostcamp.publiclibrary.domain.GeoDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
-import com.project.boostcamp.staffdinnerrestraurant.ui.activity.ApplyDetailActivity;
-import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.ApplyAdapter;
+import com.project.boostcamp.staffdinnerrestraurant.ui.activity.ApplicationActivity;
+import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.ApplicationAdapter;
 import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.OnClickItemListener;
 
 import java.util.ArrayList;
@@ -32,11 +33,11 @@ import retrofit2.Response;
  * Created by Hong Tae Joon on 2017-07-28.
  */
 
-public class ApplicationFragment extends Fragment implements OnClickItemListener<ApplyWithClient> {
+public class ApplicationFragment extends Fragment implements OnClickItemListener<AdminApplication> {
     private static final float MAX_DISTANCE = 2.0f;
     private static ApplicationFragment instance;
     private RecyclerView recyclerView;
-    private ApplyAdapter adapter;
+    private ApplicationAdapter adapter;
 
     public static ApplicationFragment getInstance() {
         if(instance == null) {
@@ -58,31 +59,45 @@ public class ApplicationFragment extends Fragment implements OnClickItemListener
         recyclerView = (RecyclerView)v;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ApplyAdapter(this);
+        adapter = new ApplicationAdapter(this);
         recyclerView.setAdapter(adapter);
     }
 
     private void loadData() {
         // TODO: 2017-08-02 서버로부터 데이터 불러오기 (근접한 신청서)
-        Admin admin = SharedPreperenceHelper.getInstance(getContext()).getAdmin();
-        RetrofitAdmin.getInstance().adminService.get(admin.getGeo().getCoordinates()[1], admin.getGeo().getCoordinates()[0], MAX_DISTANCE).enqueue(new Callback<List<ApplyWithClient>>() {
+        GeoDTO geo = SharedPreperenceHelper.getInstance(getContext()).getGeo();
+        RetrofitAdmin.getInstance().adminService.get(geo.getCoordinates()[1], geo.getCoordinates()[0], MAX_DISTANCE).enqueue(new Callback<List<AdminApplicationDTO>>() {
             @Override
-            public void onResponse(Call<List<ApplyWithClient>> call, Response<List<ApplyWithClient>> response) {
+            public void onResponse(Call<List<AdminApplicationDTO>> call, Response<List<AdminApplicationDTO>> response) {
                 Log.d("HTJ", "ApplicationFragment-loadData-onResponse: " + response.body());
-                adapter.setData((ArrayList<ApplyWithClient>)response.body());
+                ArrayList<AdminApplication> arr = new ArrayList<AdminApplication>();
+                for(AdminApplicationDTO dto : response.body()) {
+                    AdminApplication app = new AdminApplication();
+                    app.setId(dto.get_id());
+                    app.setWriterName(dto.getClient().getName());
+                    app.setTitle(dto.getTitle());
+                    app.setNumber(dto.getNumber());
+                    app.setTime(dto.getTime());
+                    app.setGeo(dto.getGeo().toGeo());
+                    app.setStyle(dto.getStyle());
+                    app.setMenu(dto.getMenu());
+                    app.setWritedTime(dto.getWritedTime());
+                    arr.add(app);
+                }
+                adapter.setData(arr);
             }
 
             @Override
-            public void onFailure(Call<List<ApplyWithClient>> call, Throwable t) {
+            public void onFailure(Call<List<AdminApplicationDTO>> call, Throwable t) {
                 Log.e("HTJ", "ApplicationFragment-loadData-onFailure: " + t.getMessage());
             }
         });
     }
 
     @Override
-    public void onClickItem(ApplyWithClient data) {
-        Intent intent = new Intent(getContext(), ApplyDetailActivity.class);
-        intent.putExtra(ApplyWithClient.class.getName(), data);
+    public void onClickItem(AdminApplication data) {
+        Intent intent = new Intent(getContext(), ApplicationActivity.class);
+        intent.putExtra(AdminApplication.class.getName(), data);
         startActivity(intent);
     }
 }

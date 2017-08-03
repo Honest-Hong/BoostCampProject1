@@ -23,6 +23,7 @@ import com.kakao.util.exception.KakaoException;
 import com.project.boostcamp.publiclibrary.api.RetrofitAdmin;
 import com.project.boostcamp.publiclibrary.data.AccountType;
 import com.project.boostcamp.publiclibrary.data.Admin;
+import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
@@ -38,6 +39,8 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
+    private String id;
+    private int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,15 +63,6 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             finish();
         }
-    }
-
-    private Admin saveAdmin(String access, String email, int type) {
-        Admin admin = new Admin();
-        admin.setAccess(access);
-        admin.setId(email);
-        admin.setType(type);
-        SharedPreperenceHelper.getInstance(LoginActivity.this).saveAdmin(admin);
-        return admin;
     }
 
     @Override
@@ -97,10 +91,9 @@ public class LoginActivity extends AppCompatActivity {
             UserManagement.requestMe(new MeResponseCallback() {
                 @Override
                 public void onSuccess(UserProfile result) {
-                    String access = Session.getCurrentSession().getTokenInfo().getAccessToken();
-                    long id = result.getId();
-                    Admin admin = saveAdmin(access, Long.toString(id), AccountType.TYPE_KAKAO);
-                    checkAlreadyJoined(admin);
+                    id = Long.toString(result.getId());
+                    type = AccountType.TYPE_KAKAO;
+                    checkAlreadyJoined();
                 }
 
                 @Override
@@ -129,10 +122,9 @@ public class LoginActivity extends AppCompatActivity {
         public void onSuccess(LoginResult loginResult) {
             Log.d("HTJ", "facebook onSuccess");
             Profile.fetchProfileForCurrentAccessToken();
-            String access = loginResult.getAccessToken().getToken();
-            String id = loginResult.getAccessToken().getUserId();
-            Admin admin = saveAdmin(access, id, AccountType.TYPE_FACEBOOK);
-            checkAlreadyJoined(admin);
+            id = loginResult.getAccessToken().getUserId();
+            type = AccountType.TYPE_FACEBOOK;
+            checkAlreadyJoined();
         }
 
         @Override
@@ -146,22 +138,29 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    private void checkAlreadyJoined(Admin admin) {
-        RetrofitAdmin.getInstance().adminService.login(admin).enqueue(new Callback<Admin>() {
+    private void checkAlreadyJoined() {
+        LoginDTO dto = new LoginDTO();
+        dto.setId(id);
+        dto.setType(type);
+        RetrofitAdmin.getInstance().adminService.login(dto).enqueue(new Callback<LoginDTO>() {
             @Override
-            public void onResponse(Call<Admin> call, Response<Admin> response) {
+            public void onResponse(Call<LoginDTO> call, Response<LoginDTO> response) {
                 Log.d("HTJ", "login onResponse: " + response.body().toString());
                 if(response.body().getId() == null) {
-                    startActivity(new Intent(LoginActivity.this, JoinActivity.class));
+                    Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
+                    intent.putExtra(JoinActivity.EXTRA_LOGIN_ID, id);
+                    intent.putExtra(JoinActivity.EXTRA_LOGIN_TYPE, type);
+                    startActivity(intent);
                     finish();
                 } else {
+                    SharedPreperenceHelper.getInstance(getApplicationContext()).saveLogin(response.body());
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 }
             }
 
             @Override
-            public void onFailure(Call<Admin> call, Throwable t) {
+            public void onFailure(Call<LoginDTO> call, Throwable t) {
                 Log.e("HTJ", "login onFailure: " + t.getMessage());
             }
         });

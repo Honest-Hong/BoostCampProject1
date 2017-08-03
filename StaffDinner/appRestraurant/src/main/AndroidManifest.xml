@@ -77,7 +77,7 @@
 
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.JoinActivity" />
-        <activity android:name=".ui.activity.ApplyDetailActivity" />
+        <activity android:name=".ui.activity.ApplicationActivity" />
         <activity android:name=".ui.activity.WriteEstimateActivity" />
         <activity android:name=".ui.activity.ContactDetailActivity" />
         <activity android:name=".ui.activity.MapDetailActivity" />

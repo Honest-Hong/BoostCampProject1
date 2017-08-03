@@ -20,8 +20,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Client client = SharedPreperenceHelper.getInstance(this).getClient();
-        isLogined = client != null && client.getPhone() != null;
+        String id = SharedPreperenceHelper.getInstance(this).getLoginId();
+        isLogined = !id.equals("");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

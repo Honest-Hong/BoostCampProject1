@@ -2,6 +2,10 @@ package com.project.boostcamp.publiclibrary.api;
 
 import com.project.boostcamp.publiclibrary.data.Admin;
 import com.project.boostcamp.publiclibrary.data.ApplyWithClient;
+import com.project.boostcamp.publiclibrary.domain.AdminApplicationDTO;
+import com.project.boostcamp.publiclibrary.domain.AdminDTO;
+import com.project.boostcamp.publiclibrary.domain.AdminJoinDTO;
+import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 
 import java.util.List;
 
@@ -21,13 +25,13 @@ import retrofit2.http.Query;
 
 public interface AdminService {
     @POST("/admin/login")
-    Call<Admin> login(@Body Admin admin);
+    Call<LoginDTO> login(@Body LoginDTO loginDTO);
 
     @POST("/admin/join")
-    Call<Admin> join(@Body Admin admin);
+    Call<LoginDTO> join(@Body AdminJoinDTO adminJoinDTO);
 
     @GET("/application/location")
-    Call<List<ApplyWithClient>> get(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("distance") float distance);
+    Call<List<AdminApplicationDTO>> get(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("distance") float distance);
 
     @FormUrlEncoded
     @PUT("/admin/{id}/token")

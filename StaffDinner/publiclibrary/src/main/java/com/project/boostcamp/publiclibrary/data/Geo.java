@@ -1,5 +1,8 @@
 package com.project.boostcamp.publiclibrary.data;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.project.boostcamp.publiclibrary.domain.GeoDTO;
+
 import java.io.Serializable;
 
 /**
@@ -37,5 +40,16 @@ public class Geo implements Serializable{
 
     public void setCoordinates(double[] coordinates) {
         this.coordinates = coordinates;
+    }
+
+    public GeoDTO toGeoDTO() {
+        GeoDTO dto = new GeoDTO();
+        dto.setType(type);
+        dto.setCoordinates(coordinates);
+        return dto;
+    }
+
+    public LatLng toLatLng() {
+        return new LatLng(coordinates[1], coordinates[0]);
     }
 }

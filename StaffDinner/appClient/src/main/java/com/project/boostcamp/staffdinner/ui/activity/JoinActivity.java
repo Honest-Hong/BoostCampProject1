@@ -10,11 +10,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
 import com.project.boostcamp.publiclibrary.data.Client;
+import com.project.boostcamp.publiclibrary.domain.ClientDTO;
+import com.project.boostcamp.publiclibrary.domain.ClientJoinDTO;
+import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinner.R;
 
@@ -25,16 +27,27 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class JoinActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener{
+    public static final String EXTRA_ID = "id";
+    public static final String EXTRA_TYPE = "type";
+    public static final String EXTRA_NAME = "name";
     private View rootView;
     @BindView(R.id.edit_name) EditText editName;
     @BindView(R.id.edit_phone) EditText editPhone;
     @BindView(R.id.button_join) Button btnJoin;
+    private String id;
+    private int type;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
 
+        if(getIntent() != null) {
+            id = getIntent().getStringExtra(EXTRA_ID);
+            type = getIntent().getIntExtra(EXTRA_TYPE, -1);
+            name = getIntent().getStringExtra(EXTRA_NAME);
+        }
         ButterKnife.bind(this);
         setupView();
     }
@@ -46,8 +59,7 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
         CheckBox checkBox = (CheckBox)findViewById(R.id.check_box);
         checkBox.setOnCheckedChangeListener(this);
 
-        Client client = SharedPreperenceHelper.getInstance(this).getClient();
-        editName.setText(client.getName());
+        editName.setText(name);
     }
 
     @Override
@@ -65,27 +77,30 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        Client client = SharedPreperenceHelper.getInstance(this).getClient();
-        client.setName(name);
-        client.setPhone(phone);
-        client.setToken(FirebaseInstanceId.getInstance().getToken());
-        SharedPreperenceHelper.getInstance(this).saveClient(client);
-        requestJoin(client);
+        ClientJoinDTO dto = new ClientJoinDTO();
+        dto.setId(id);
+        dto.setType(type);
+        dto.setName(name);
+        dto.setPhone(phone);
+        dto.setToken(FirebaseInstanceId.getInstance().getToken());
+        RetrofitClient.getInstance().clientService.join(dto).enqueue(joinCallback);
     }
 
-    private void requestJoin(Client client) {
-        RetrofitClient.getInstance().clientService.join(client).enqueue(joinCallback);
-    }
-
-    private Callback<Client> joinCallback = new Callback<Client>() {
+    private Callback<LoginDTO> joinCallback = new Callback<LoginDTO>() {
         @Override
-        public void onResponse(Call<Client> call, Response<Client> response) {
-            Log.d("HTJ", "join onResponse: " + response.body().toString());
-            startMainActivity();
+        public void onResponse(Call<LoginDTO> call, Response<LoginDTO> response) {
+            Log.d("HTJ", "join onResponse: " + response.body());
+            LoginDTO dto = response.body();
+            if(dto.getId() != null) {
+                SharedPreperenceHelper.getInstance(JoinActivity.this).saveLogin(dto);
+                startMainActivity();
+            } else {
+                Log.e("HTJ", "Fail to join");
+            }
         }
 
         @Override
-        public void onFailure(Call<Client> call, Throwable t) {
+        public void onFailure(Call<LoginDTO> call, Throwable t) {
             Log.e("HTJ", "join onFailure: " + t.getMessage());
         }
     };

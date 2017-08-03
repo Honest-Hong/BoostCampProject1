@@ -17,8 +17,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Admin admin = SharedPreperenceHelper.getInstance(this).getAdmin();
-        isLogined = admin != null && admin.getPhone() != null;
+        String loginId = SharedPreperenceHelper.getInstance(this).getLoginId();
+        isLogined = !loginId.equals("");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

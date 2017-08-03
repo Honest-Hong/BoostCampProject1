@@ -5,8 +5,11 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.project.boostcamp.publiclibrary.data.Admin;
-import com.project.boostcamp.publiclibrary.data.Apply;
+import com.project.boostcamp.publiclibrary.data.Application;
 import com.project.boostcamp.publiclibrary.data.Client;
+import com.project.boostcamp.publiclibrary.data.Geo;
+import com.project.boostcamp.publiclibrary.domain.GeoDTO;
+import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 
 /**
  * Created by Hong Tae Joon on 2017-07-28.
@@ -15,6 +18,9 @@ import com.project.boostcamp.publiclibrary.data.Client;
 public class SharedPreperenceHelper {
     private static final String PREFERENCE_NAME = "StaffDinner";
     private static final String KEY_APPLY = "apply";
+    public static final String EXTRA_LOGIN_ID = "login_id";
+    public static final String EXTRA_LOGIN_TYPE = "login_type";
+    public static final String EXTRA_GEO = "geo";
     private static SharedPreperenceHelper instance;
     private SharedPreferences preferences;
     private Gson gson;
@@ -30,36 +36,40 @@ public class SharedPreperenceHelper {
         gson = new Gson();
     }
 
-    public void saveApply(Apply apply) {
+    public void saveApply(Application application) {
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Apply.class.getName(), gson.toJson(apply));
+        editor.putString(Application.class.getName(), gson.toJson(application));
         editor.apply();
     }
 
-    public Apply getApply() {
-        String str = preferences.getString(Apply.class.getName(), "");
-        return gson.fromJson(str, Apply.class);
+    public Application getApply() {
+        String str = preferences.getString(Application.class.getName(), "");
+        return gson.fromJson(str, Application.class);
     }
 
-    public void saveClient(Client client) {
+    public void saveLogin(LoginDTO loginDTO) {
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Client.class.getName(), gson.toJson(client));
+        editor.putString(EXTRA_LOGIN_ID, loginDTO.getId());
+        editor.putInt(EXTRA_LOGIN_TYPE, loginDTO.getType());
         editor.apply();
     }
 
-    public Client getClient() {
-        String str = preferences.getString(Client.class.getName(), "");
-        return gson.fromJson(str, Client.class);
+    public String getLoginId() {
+        return preferences.getString(EXTRA_LOGIN_ID, "");
     }
 
-    public void saveAdmin(Admin admin) {
+    public int getLoginType() {
+        return preferences.getInt(EXTRA_LOGIN_TYPE, -1);
+    }
+
+    public void saveGeo(GeoDTO geo) {
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Admin.class.getName(), gson.toJson(admin));
+        editor.putString(EXTRA_GEO, gson.toJson(geo));
         editor.apply();
     }
 
-    public Admin getAdmin() {
-        String str = preferences.getString(Admin.class.getName(), "");
-        return gson.fromJson(str, Admin.class);
+    public GeoDTO getGeo() {
+        String str = preferences.getString(EXTRA_GEO, "");
+        return gson.fromJson(str, GeoDTO.class);
     }
 }

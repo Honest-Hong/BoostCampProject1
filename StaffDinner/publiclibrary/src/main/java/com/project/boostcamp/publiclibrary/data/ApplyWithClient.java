@@ -4,7 +4,7 @@ package com.project.boostcamp.publiclibrary.data;
  * Created by Hong Tae Joon on 2017-08-02.
  */
 
-public class ApplyWithClient extends Apply {
+public class ApplyWithClient extends Application {
     private Client client;
 
     public Client getClient() {

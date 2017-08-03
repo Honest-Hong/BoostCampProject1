@@ -1,10 +1,10 @@
-package com.project.boostcamp.publiclibrary.data;
+package com.project.boostcamp.publiclibrary.domain;
 
 /**
- * Created by Hong Tae Joon on 2017-08-01.
+ * Created by Hong Tae Joon on 2017-08-03.
  */
 
-public class Client {
+public class ClientDTO {
     private String id;
     private String name;
     private String phone;

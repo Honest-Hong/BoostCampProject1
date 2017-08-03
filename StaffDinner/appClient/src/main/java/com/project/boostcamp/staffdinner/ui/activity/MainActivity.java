@@ -23,6 +23,7 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.project.boostcamp.publiclibrary.data.AccountType;
 import com.project.boostcamp.publiclibrary.data.Client;
+import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinner.R;
 import com.project.boostcamp.publiclibrary.data.Contact;
@@ -158,9 +159,9 @@ public class MainActivity extends AppCompatActivity implements OnEstimateClickLi
     }
 
     private void logout() {
-        Client client = SharedPreperenceHelper.getInstance(this).getClient();
-        SharedPreperenceHelper.getInstance(this).saveClient(new Client());
-        if(client.getType() == AccountType.TYPE_KAKAO) {
+        int type = SharedPreperenceHelper.getInstance(this).getLoginType();
+        SharedPreperenceHelper.getInstance(this).saveLogin(new LoginDTO());
+        if(type == AccountType.TYPE_KAKAO) {
             UserManagement.requestLogout(new LogoutResponseCallback() {
                 @Override
                 public void onCompleteLogout() {
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements OnEstimateClickLi
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 }
             });
-        } else if(client.getType() == AccountType.TYPE_FACEBOOK) {
+        } else if(type == AccountType.TYPE_FACEBOOK) {
             LoginManager.getInstance().logOut();
             finish();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));

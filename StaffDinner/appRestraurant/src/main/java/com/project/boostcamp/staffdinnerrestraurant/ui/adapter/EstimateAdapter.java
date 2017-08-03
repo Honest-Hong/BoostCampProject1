@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.project.boostcamp.publiclibrary.data.Apply;
 import com.project.boostcamp.publiclibrary.data.Estimate;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 

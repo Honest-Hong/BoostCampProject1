@@ -36,8 +36,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
 import com.project.boostcamp.publiclibrary.data.Geo;
+import com.project.boostcamp.publiclibrary.domain.ClientApplicationDTO;
+import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
+import com.project.boostcamp.publiclibrary.domain.ResultStringDTO;
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.data.Apply;
+import com.project.boostcamp.publiclibrary.data.Application;
 import com.project.boostcamp.staffdinner.ui.activity.MapDetailActivity;
 import com.project.boostcamp.staffdinner.ui.adapter.TextWheelAdapter;
 import com.project.boostcamp.publiclibrary.dialog.DialogResultListener;
@@ -91,7 +94,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     private GoogleMap googleMap; // 신청서의 위치 지도
     private Marker marker; // 신청서의 위치 지도 마커
     private FusedLocationProviderClient fusedLocationClient; // 현재 위치를 가져오는 서비스
-    private Apply apply = new Apply(); // 현재 신청서 정보
+    private Application application = new Application(); // 현재 신청서 정보
     private static ApplicationFragment instance;
 
     public static ApplicationFragment getInstance() {
@@ -108,7 +111,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         ButterKnife.bind(this, v);
         setupView(v);
         setupWheel(v);
-        loadApplyData();
+        loadApplication();
         return v;
     }
 
@@ -176,68 +179,78 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
      * 서버에서 데이터를 불러올 수 있다면 서버의 데이터를 사용하고
      * 불러올 수 없다면 로컬 데이터를 사용합니다.
      */
-    private void loadApplyData() {
-        String id = SharedPreperenceHelper.getInstance(getContext()).getClient().getId();
-        RetrofitClient.getInstance().clientService.getApplication(id).enqueue(new Callback<Apply>() {
+    private void loadApplication() {
+        String id = SharedPreperenceHelper.getInstance(getContext()).getLoginId();
+        RetrofitClient.getInstance().clientService.getApplication(id).enqueue(new Callback<ClientApplicationDTO>() {
             @Override
-            public void onResponse(Call<Apply> call, Response<Apply> response) {
-                Log.d("HTJ", "ApplicationFragment-loadApplyData-onReponse: " + response.body());
-                Log.d("HTJ", "apply id: " + apply.getId());
-                apply = response.body();
-                setupTexts(apply);
+            public void onResponse(Call<ClientApplicationDTO> call, Response<ClientApplicationDTO> response) {
+                Log.d("HTJ", "ApplicationFragment-loadApplication-onReponse: " + response.body());
+                ClientApplicationDTO dto = response.body();
+                application = new Application();
+                if(dto.get_id() != null) {
+                    application.setId(dto.get_id());
+                    application.setTitle(dto.getTitle());
+                    application.setNumber(dto.getNumber());
+                    application.setWantedTime(dto.getTime());
+                    application.setWantedStyle(dto.getStyle());
+                    application.setWantedMenu(dto.getMenu());
+                    application.setGeo(dto.getGeo().toGeo());
+                    application.setState(Application.STATE_APPLY);
+                }
+                setupTexts(application);
             }
 
             @Override
-            public void onFailure(Call<Apply> call, Throwable t) {
-                Log.e("HTJ", "ApplicattionFragment-loadApplyData-onFailuer: " + t.getMessage());
-                apply = SharedPreperenceHelper.getInstance(getContext()).getApply();
-                if(apply == null) {
-                    apply = new Apply();
+            public void onFailure(Call<ClientApplicationDTO> call, Throwable t) {
+                Log.e("HTJ", "ApplicattionFragment-loadApplication-onFailuer: " + t.getMessage());
+                application = SharedPreperenceHelper.getInstance(getContext()).getApply();
+                if(application == null) {
+                    application = new Application();
                 }
-                setupTexts(apply);
+                setupTexts(application);
             }
         });
     }
 
     /**
      * 신청서 데이터를 뷰에 뿌려주는 함수
-     * @param apply 신청서 데이터
+     * @param application 신청서 데이터
      */
-    private void setupTexts(Apply apply) {
-        if(apply.getNumber() == 0) {
-            apply.setNumber(1);
+    private void setupTexts(Application application) {
+        if(application.getNumber() == 0) {
+            application.setNumber(1);
         }
-        if(apply.getWantedTime() == 0) {
-            apply.setWantedTime(TimeHelper.now());
+        if(application.getWantedTime() == 0) {
+            application.setWantedTime(TimeHelper.now());
         }
 
-        editTitle.setText(apply.getTitle());
-        editNumber.setText(apply.getNumber() + "");
-        autoStyle.setText(apply.getWantedStyle());
-        editMenu.setText(apply.getWantedMenu());
-        wheelHour.setSelectedIndex(TimeHelper.getHour(apply.getWantedTime()));
-        wheelMinute.setSelectedIndex(TimeHelper.getMinute(apply.getWantedTime()) / 10);
+        editTitle.setText(application.getTitle());
+        editNumber.setText(application.getNumber() + "");
+        autoStyle.setText(application.getWantedStyle());
+        editMenu.setText(application.getWantedMenu());
+        wheelHour.setSelectedIndex(TimeHelper.getHour(application.getWantedTime()));
+        wheelMinute.setSelectedIndex(TimeHelper.getMinute(application.getWantedTime()) / 10);
 
-        setState(apply.getState());
+        setState(application.getState());
         // TODO: 2017-07-28 저장된 위치 맵에 출력하기
     }
 
     @OnClick({R.id.button_up, R.id.button_down, R.id.button_apply, R.id.button_search})
     public void onClick(View view) {
-        int number = apply.getNumber();
+        int number = application.getNumber();
         switch(view.getId()) {
             case R.id.button_up:
                 if(number < MAX_NUMBER) {
                     number++;
                     editNumber.setText(Integer.toString(number));
-                    apply.setNumber(number);
+                    application.setNumber(number);
                 }
                 break;
             case R.id.button_down:
                 if(number > MIN_NUMBER) {
                     number--;
                     editNumber.setText(Integer.toString(number));
-                    apply.setNumber(number);
+                    application.setNumber(number);
                 }
                 break;
             case R.id.button_apply:
@@ -253,25 +266,25 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     }
 
     private void handleApplyButton() {
-        if(apply.getState() == Apply.STATE_EDIT) {
+        if(application.getState() == Application.STATE_EDIT) {
             MyAlertDialog.newInstance(getString(R.string.dialog_alert_title), getString(R.string.dialog_apply_message), this)
                     .show(getChildFragmentManager(), null);
-        } else if(apply.getState() == Apply.STATE_APPLY) {
+        } else if(application.getState() == Application.STATE_APPLY) {
             MyAlertDialog.newInstance(getString(R.string.dialog_alert_title), getString(R.string.dialog_cancel_message), this)
                     .show(getChildFragmentManager(), null);
         } else {
-            apply = new Apply();
-            setupTexts(apply);
-            setState(Apply.STATE_EDIT);
+            application = new Application();
+            setupTexts(application);
+            setState(Application.STATE_EDIT);
         }
     }
 
     @Override
     public void onPositive() {
-        if(apply.getState() == Apply.STATE_EDIT) {
-            sendApply();
+        if(application.getState() == Application.STATE_EDIT) {
+            submitApplication();
         } else {
-            cancelApply();
+            cancelApplication();
         }
         scrollView.smoothScrollTo(0,0);
     }
@@ -328,89 +341,114 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    public void sendApply() {
-        // 데이터 최신화 작업
-        apply.setTitle(editTitle.getText().toString());
-        apply.setNumber(Integer.parseInt(editNumber.getText().toString()));
-        String hour = wheelAdapterHour.getItem(wheelHour.getSelectedIndex());
-        String minute = wheelAdapterMinute.getItem(wheelMinute.getSelectedIndex());
-        apply.setWantedTime(TimeHelper.getTime(
-                Integer.parseInt(hour)
-                , Integer.parseInt(minute)));
-        apply.setWantedStyle(autoStyle.getText().toString());
-        apply.setWantedMenu(editMenu.getText().toString());
-        apply.setGeo(new Geo("Point",
-                marker.getPosition().longitude,
-                marker.getPosition().latitude));
-        apply.setWritedTime(TimeHelper.now());
-        apply.setState(Apply.STATE_APPLY);
-        // 로컬에 저장
-        SharedPreperenceHelper.getInstance(getContext()).saveApply(apply);
+    /**
+     * 신청서를 등록하는 함수
+     */
+    public void submitApplication() {
+        saveApplication();
+        ClientApplicationDTO dto = new ClientApplicationDTO();
+        dto.setTitle(application.getTitle());
+        dto.setNumber(application.getNumber());
+        dto.setTime(application.getWantedTime());
+        dto.setStyle(application.getWantedStyle());
+        dto.setMenu(application.getWantedMenu());
+        dto.setGeo(application.getGeo().toGeoDTO());
+
         // 서버에 저장
-        String clientId = SharedPreperenceHelper.getInstance(getContext()).getClient().getId();
-        RetrofitClient.getInstance().clientService.setApplication(clientId, apply).enqueue(new Callback<String>() {
+        String clientId = SharedPreperenceHelper.getInstance(getContext()).getLoginId();
+        RetrofitClient.getInstance().clientService.setApplication(clientId, dto).enqueue(new Callback<ResultStringDTO>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                Log.d("HTJ", "ApplicationFragment-sendApply-onResponse: " + response.body());
-                String id = response.body();
-                apply.setId(id);
-                SharedPreperenceHelper.getInstance(getContext()).saveApply(apply);
-                setState(Apply.STATE_APPLY);;
+            public void onResponse(Call<ResultStringDTO> call, Response<ResultStringDTO> response) {
+                Log.d("HTJ", "ApplicationFragment-submitApplication-onResponse: " + response.body());
+                if(response.body().getResult() != null) {
+                    application.setId(response.body().getResult());
+                    SharedPreperenceHelper.getInstance(getContext()).saveApply(application);
+                    setState(Application.STATE_APPLY);;
+                } else {
+                    Log.d("HTJ", "Not receive application id");
+                }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.e("HTJ", "ApplicationFragment-sendApply-onFailure: " + t.getMessage());
+            public void onFailure(Call<ResultStringDTO> call, Throwable t) {
+                Log.e("HTJ", "ApplicationFragment-submitApplication-onFailure: " + t.getMessage());
             }
         });
     }
 
-    private void cancelApply() {
-        Log.d("HTJ", "cancelApply: " + apply.getId());
-        RetrofitClient.getInstance().clientService.cancelApplication(apply.getId()).enqueue(new Callback<Apply>() {
+    private void saveApplication() {
+        // 데이터 최신화 작업
+        application.setTitle(editTitle.getText().toString());
+        application.setNumber(Integer.parseInt(editNumber.getText().toString()));
+        String hour = wheelAdapterHour.getItem(wheelHour.getSelectedIndex());
+        String minute = wheelAdapterMinute.getItem(wheelMinute.getSelectedIndex());
+        application.setWantedTime(TimeHelper.getTime(
+                Integer.parseInt(hour)
+                , Integer.parseInt(minute)));
+        application.setWantedStyle(autoStyle.getText().toString());
+        application.setWantedMenu(editMenu.getText().toString());
+        application.setGeo(new Geo("Point",
+                marker.getPosition().longitude,
+                marker.getPosition().latitude));
+        application.setWritedTime(TimeHelper.now());
+        application.setState(Application.STATE_APPLY);
+        // 로컬에 저장
+        SharedPreperenceHelper.getInstance(getContext()).saveApply(application);
+    }
+
+    /**
+     * 신청서를 취소하는 함수
+     */
+    private void cancelApplication() {
+        Log.d("HTJ", "cancelApplication: " + application.getId());
+        RetrofitClient.getInstance().clientService.cancelApplication(application.getId()).enqueue(new Callback<ResultIntDTO>() {
             @Override
-            public void onResponse(Call<Apply> call, Response<Apply> response) {
+            public void onResponse(Call<ResultIntDTO> call, Response<ResultIntDTO> response) {
                 // 취소 성공
-                Log.d("HTJ", "ApplicationFragment-cancelApply-onResponse: " + response.body());
-                // TODO: 2017-07-28 내용 모두 지우기
-                apply = new Apply();
-                setupTexts(apply);
-                apply.setState(Apply.STATE_EDIT);
-                setState(Apply.STATE_EDIT);
-                SharedPreperenceHelper.getInstance(getContext()).saveApply(apply);
+                Log.d("HTJ", "ApplicationFragment-cancelApplication-onResponse: " + response.body());
+                if(response.body().getResult() == 1) {
+                    // TODO: 2017-07-28 내용 모두 지우기
+                    application = new Application();
+                    setupTexts(application);
+                    application.setState(Application.STATE_EDIT);
+                    setState(Application.STATE_EDIT);
+                    SharedPreperenceHelper.getInstance(getContext()).saveApply(application);
+                } else {
+                    Log.e("HTJ", "Fail to canceling application");
+                }
             }
 
             @Override
-            public void onFailure(Call<Apply> call, Throwable t) {
+            public void onFailure(Call<ResultIntDTO> call, Throwable t) {
                 // 취소 실패
-                Log.e("HTJ", "ApplicationFragment-cancelApply-onFailure: " + t.getMessage());
+                Log.e("HTJ", "ApplicationFragment-cancelApplication-onFailure: " + t.getMessage());
                 Toast.makeText(getContext(), "서버 오류", Toast.LENGTH_SHORT).show();
-                apply = new Apply();
-                setupTexts(apply);
-                apply.setState(Apply.STATE_EDIT);
-                setState(Apply.STATE_EDIT);
-                SharedPreperenceHelper.getInstance(getContext()).saveApply(apply);
+                application = new Application();
+                setupTexts(application);
+                application.setState(Application.STATE_EDIT);
+                setState(Application.STATE_EDIT);
+                SharedPreperenceHelper.getInstance(getContext()).saveApply(application);
             }
         });
     }
 
     private void setState(int state) {
         switch(state) {
-            case Apply.STATE_EDIT:
+            case Application.STATE_EDIT:
                 btnApply.setText(R.string.text_apply);
                 imageState.setImageResource(R.drawable.ic_error_orange_24dp);
                 textState.setText(R.string.text_need_input);
                 textState.setTextColor(ContextCompat.getColor(getContext(), R.color.yellow));
                 blockView(false);
                 break;
-            case Apply.STATE_APPLY:
+            case Application.STATE_APPLY:
                 btnApply.setText(R.string.text_cancel);
                 imageState.setImageResource(R.drawable.ic_check_circle_green_24dp);
                 textState.setText(R.string.text_apply_success);
                 textState.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
                 blockView(true);
                 break;
-            case Apply.STATE_FAIL:
+            case Application.STATE_FAIL:
                 btnApply.setText(R.string.text_rewrite);
                 imageState.setImageResource(R.drawable.ic_cancel_red_24dp);
                 textState.setText(R.string.text_apply_canceled);

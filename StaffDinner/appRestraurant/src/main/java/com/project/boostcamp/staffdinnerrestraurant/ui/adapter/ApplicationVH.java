@@ -4,7 +4,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.project.boostcamp.publiclibrary.data.Apply;
+import com.project.boostcamp.publiclibrary.data.AdminApplication;
+import com.project.boostcamp.publiclibrary.data.Application;
 import com.project.boostcamp.publiclibrary.data.ApplyWithClient;
 import com.project.boostcamp.publiclibrary.object.BaseVH;
 import com.project.boostcamp.publiclibrary.util.TimeHelper;
@@ -14,14 +15,14 @@ import com.project.boostcamp.staffdinnerrestraurant.R;
  * Created by Hong Tae Joon on 2017-07-28.
  */
 
-public class ApplyVH extends BaseVH<ApplyWithClient> {
-    private ApplyWithClient data;
+public class ApplicationVH extends BaseVH<AdminApplication> {
+    private AdminApplication data;
     private ImageView imageView;
     private TextView textName;
     private TextView textTitle;
     private TextView textContent;
 
-    public ApplyVH(View v, final OnClickItemListener<ApplyWithClient> onClickItemListener) {
+    public ApplicationVH(View v, final OnClickItemListener<AdminApplication> onClickItemListener) {
         super(v);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,11 +37,11 @@ public class ApplyVH extends BaseVH<ApplyWithClient> {
     }
 
     @Override
-    public void setupView(ApplyWithClient data) {
+    public void setupView(AdminApplication data) {
         this.data = data;
-        textName.setText(data.getClient().getName());
+        textName.setText(data.getWriterName());
         textTitle.setText(data.getTitle());
-        String time = TimeHelper.getTimeString(data.getWantedTime(), "hh시 MM분");
+        String time = TimeHelper.getTimeString(data.getTime(), "hh시 MM분");
         textContent.setText(textName.getContext().getString(R.string.text_apply_content, data.getNumber(), time, String.format("%.1f", data.getDistance())));
     }
 }

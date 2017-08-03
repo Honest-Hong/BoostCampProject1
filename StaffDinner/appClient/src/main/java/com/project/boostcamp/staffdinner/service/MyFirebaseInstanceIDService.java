@@ -13,11 +13,12 @@ import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
-        Client client = SharedPreperenceHelper.getInstance(getApplicationContext()).getClient();
-        if(client.getToken() != null) {
+        String id = SharedPreperenceHelper.getInstance(getApplicationContext()).getLoginId();
+        int type = SharedPreperenceHelper.getInstance(getApplicationContext()).getLoginType();
+        if(!id.equals("")) {
             RetrofitClient.getInstance().clientService.updateToken(
-                    client.getId(),
-                    client.getType(),
+                    id,
+                    type,
                     FirebaseInstanceId.getInstance().getToken());
         }
     }
