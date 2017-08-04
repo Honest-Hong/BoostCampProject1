@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 /**
  * Created by Hong Tae Joon on 2017-07-27.

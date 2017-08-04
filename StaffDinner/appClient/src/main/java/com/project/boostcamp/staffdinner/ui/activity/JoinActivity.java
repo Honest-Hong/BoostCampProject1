@@ -64,10 +64,9 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        String name = editName.getText().toString();
-        String phone = editPhone.getText().toString();
-
-        if (checkValidate(name, phone)) {
+        if (checkValidate()) {
+            String name = editName.getText().toString();
+            String phone = editPhone.getText().toString();
             ClientJoinDTO dto = new ClientJoinDTO();
             dto.setId(id);
             dto.setType(type);
@@ -78,7 +77,14 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private boolean checkValidate(String name, String phone) {
+    /**
+     * 입력한 값의 유효성을 판단하는 함수
+     * @return 모두 유효하면 true
+     */
+    private boolean checkValidate() {
+        String name = editName.getText().toString();
+        String phone = editPhone.getText().toString();
+
         if(name.equals("")) {
             Snackbar.make(rootView, R.string.snack_need_name, Snackbar.LENGTH_SHORT).show();
             return false;
@@ -96,6 +102,11 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    /**
+     * 서버에 회원가입 요청 후 콜백 메소드
+     * 회원가입을 성공하면 로그인 정보가 반환되어 로컬에 저장하고 메인 액티비티로 넘어간다
+     * 실패할 경우 오류를 표시해준다
+     */
     private Callback<LoginDTO> joinCallback = new Callback<LoginDTO>() {
         @Override
         public void onResponse(Call<LoginDTO> call, Response<LoginDTO> response) {
@@ -121,6 +132,11 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
+    /**
+     * 동의합니다 체크박스 변화 이벤트
+     * @param compoundButton
+     * @param b
+     */
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         btnJoin.setEnabled(b);

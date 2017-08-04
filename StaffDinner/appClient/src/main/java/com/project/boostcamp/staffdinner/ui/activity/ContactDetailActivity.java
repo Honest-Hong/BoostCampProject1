@@ -66,6 +66,13 @@ public class ContactDetailActivity extends AppCompatActivity implements OnMapRea
         mapFragment.getMapAsync(this);
     }
 
+    /**
+     * 구글맵이 준비가 다 되었을 때를 처리하는 함수
+     * 맵을 그대로만 보여주도록 제스쳐를 모두 false한다
+     * 카메라의 위치는 식당의 위치를 가리킨다
+     * 맵을 클릭하였을 때만 이벤트가 발생한다
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         UiSettings uiSettings = googleMap.getUiSettings();
@@ -89,6 +96,10 @@ public class ContactDetailActivity extends AppCompatActivity implements OnMapRea
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 구글맵을 클릭하게 되는 경우 맵을 자세하게 볼 수 있는 액티비티로 넘어가게 된다
+     * @param latLng
+     */
     @Override
     public void onMapClick(LatLng latLng) {
         Intent intentMap = new Intent(this, MapDetailActivity.class);

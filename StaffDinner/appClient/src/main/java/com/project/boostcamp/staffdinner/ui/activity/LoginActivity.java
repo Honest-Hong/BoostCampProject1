@@ -42,6 +42,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * 로그인을 하는 액티비티입니다
+ * 카카오 로그인
+ * 페이스북 로그인
+ * 이메일 로그인
+ */
 public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private String id;
@@ -86,7 +92,11 @@ public class LoginActivity extends AppCompatActivity {
         Session.getCurrentSession().removeCallback(callbackKaKao);
     }
 
-    // 카카오톡 로그인 부분
+    /**
+     * 카카오 로그인 콜백
+     * 카카오 로그인 성공시 requestMe를 사용하여 이름을 가져온다
+     * id값은 카카오에서 제공하는 id이다
+     */
     private ISessionCallback callbackKaKao = new ISessionCallback() {
         @Override
         public void onSessionOpened() {
@@ -124,7 +134,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    // 페이스북 로그인 부분
+    /**
+     * 페이스북 로그인 콜백
+     * 페이스북 로그인 성공시 GraphAPI를 사용하여 이름을 가져온다
+     * id는 페이스북에서 제공하는 id이다
+     */
     private FacebookCallback<LoginResult> callbackFacebook = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
@@ -165,6 +179,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * 해당 id와 type이 이미 등록되어있는 상태인지 확인하는 함수
+     * 이미 등록되어 있으면 로그인 정보를 저장하고 메인화면으로 넘어간다
+     * 등록되어있지 않으면 회원가입 화면으로 넘어간다
+     */
     private void checkAlreadyJoined() {
         LoginDTO dto = new LoginDTO();
         dto.setId(id);

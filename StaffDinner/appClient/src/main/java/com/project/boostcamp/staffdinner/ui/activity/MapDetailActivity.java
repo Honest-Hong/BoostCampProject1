@@ -27,6 +27,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * 지도를 상세하게 볼 수 있는 액티비티
+ * 인텐트로 위도와 경도 그리고 읽기 모드를 전달해준다
+ * 읽기 모드에서는 위도와 경도에 마커를 표시하며 마커가 이동하지 않는다
+ * 기본 모드에서는 위도와 경도에 마커 포인트가 표시되고 그 위에 선택 버튼이 보인다
+ * 선택버튼을 누르면 result값으로 선택된 위도와 경도가 반환된다
+ */
 public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnCameraIdleListener{
     private double latitude;
     private double longitude;
@@ -59,6 +66,12 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
                 : View.VISIBLE);
     }
 
+    /**
+     * 구글맵이 준비가 되면 카메라를 넘겨받은 위도와 경도로 옮긴다
+     * 읽기 모드일 경우에는 마커를 추가한다
+     * 기본 모드에서는 기타 컨트롤러가 표시되며 카메라를 옮길 때 현재 위치의 주소가 표시된다
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
@@ -79,6 +92,9 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+    /**
+     * 카메라를 이동하고 정지했을 때 변경된 주소를 표시해준다
+     */
     @Override
     public void onCameraIdle() {
         latitude = googleMap.getCameraPosition().target.latitude;
@@ -86,6 +102,10 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         textLocation.setText(GeocoderHelper.getAddress(this, new LatLng(latitude, longitude)));
     }
 
+    /**
+     * 선택버튼을 클릭하였을 때 현재 위도와 경도를 반환해 준다
+     * @param view
+     */
     @OnClick(R.id.button_select)
     public void onSelect(View view) {
         getIntent().putExtra(ExtraType.EXTRA_LATITUDE, latitude);

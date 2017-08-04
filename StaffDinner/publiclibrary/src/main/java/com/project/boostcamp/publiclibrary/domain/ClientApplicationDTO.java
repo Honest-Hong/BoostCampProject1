@@ -1,5 +1,7 @@
 package com.project.boostcamp.publiclibrary.domain;
 
+import com.google.gson.Gson;
+
 /**
  * Created by Hong Tae Joon on 2017-08-03.
  */
@@ -85,5 +87,11 @@ public class ClientApplicationDTO {
 
     public void setWritedtime(long writedtime) {
         this.writedtime = writedtime;
+    }
+
+    @Override
+    public String toString() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }

@@ -64,9 +64,12 @@ import retrofit2.Response;
 
 /**
  * Created by Hong Tae Joon on 2017-07-25.
+ * 신청서 프래그먼트
+ * 현재의 신청서를 보여주는 화면이다
+ * 신청서를 작성하거나 취소할 수 있다.
  */
 
-public class ApplicationFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, OnSuccessListener<Location>, DialogResultListener {
+public class ApplicationFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, DialogResultListener {
     private static final int REQUEST_PERMISSION = 0x100;
     public static final int MAX_NUMBER = 99;
     public static final int MIN_NUMBER = 1;
@@ -125,6 +128,11 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         // TODO: 2017-07-31 분위기를 선택하면서 해시태깅을 하도록 추가!
     }
 
+    /**
+     * 구글맵이 준비가 되면 지도를 움직일 수 없도록 한다
+     * 기본적으로 현재 위치를 보여준다
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
@@ -132,11 +140,45 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         uiSettings.setScrollGesturesEnabled(false);
         uiSettings.setZoomGesturesEnabled(false);
         googleMap.moveCamera(CameraUpdateFactory.zoomTo(16));
+
+        // TODO: 2017-08-04 신청서가 존재하는 경우 현재 위치로 하지 않도록 하기
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_DENIED) {
             requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_PERMISSION);
         } else {
             setMyLocation();
+        }
+    }
+
+    /**
+     * 권한 요청이 허가 되면 맵을 현재 위치로 지정한다
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == REQUEST_PERMISSION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            setMyLocation();
+        }
+    }
+
+    /**
+     * 현재 위치를 가져와서 지도에 표시해주는 함수
+     */
+    private void setMyLocation() {
+        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if(location != null) {
+                        LatLng latLng = new LatLng(
+                                location.getLatitude(),
+                                location.getLongitude());
+                        setLocation(latLng);
+                    } else {
+                        textLocation.setText(R.string.text_no_address);
+                    }
+                }
+            });
         }
     }
 
@@ -261,6 +303,12 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    /**
+     * 하단의 보내기 버튼을 눌렀을 때 처리해주는 함수
+     * 작성중 상태의 경우 신청서를 보낼건지에 대해 다이얼로그가 나타난다
+     * 신청됨 상태의 경우 신청서를 취소할건지에 대해 다이얼로그가 나타난다
+     * 취소됨 상태의 경우 신청서를 다시 작성하도록 입력창이 비워진다
+     */
     private void handleApplyButton() {
         if(application.getState() == ApplicationStateType.STATE_EDITING) {
             MyAlertDialog.newInstance(getString(R.string.dialog_alert_title), getString(R.string.dialog_apply_message), this)
@@ -275,6 +323,9 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    /**
+     * 다이얼로그 결과 콜백 함수 (예 버튼)
+     */
     @Override
     public void onPositive() {
         if(application.getState() == ApplicationStateType.STATE_EDITING) {
@@ -285,41 +336,22 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         scrollView.smoothScrollTo(0,0);
     }
 
+    /**
+     * 다이얼로그 결과 콜백 함수 (아니오 버튼)
+     */
     @Override
     public void onNegative() {
     }
 
-    private void setMyLocation() {
-        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(this);
-        }
-    }
-
-    @Override
-    public void onSuccess(Location location) {
-        if(location != null) {
-            LatLng latLng = new LatLng(
-                    location.getLatitude(),
-                    location.getLongitude());
-            setLocation(latLng);
-        } else {
-            textLocation.setText(R.string.text_no_address);
-        }
-    }
-
+    /**
+     * 경도와 위도를 전달하면 맵의 위치를 변경시켜주는 함수
+     * @param latLng 경도와 위도
+     */
     private void setLocation(LatLng latLng) {
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         marker = googleMap.addMarker(MarkerBuilder.simple(latLng));
         String add = GeocoderHelper.getAddress(getContext(), latLng);
         textLocation.setText(StringHelper.cutStart(add, 18));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == REQUEST_PERMISSION) {
-            setMyLocation();
-        }
     }
 
     @Override
@@ -341,7 +373,12 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
      * 신청서를 등록하는 함수
      */
     public void submitApplication() {
-        saveApplication();
+        String appId = application.getId();
+        application = getApplicationFromEditText(appId);
+        // 로컬에 저장
+        SharedPreperenceHelper.getInstance(getContext()).saveApply(application);
+
+        // 서버에 전달
         ClientApplicationDTO dto = new ClientApplicationDTO();
         dto.setTitle(application.getTitle());
         dto.setNumber(application.getNumber());
@@ -350,8 +387,6 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         dto.setMenu(application.getWantedMenu());
         dto.setGeo(application.getGeo().toGeoDTO());
         dto.setWritedtime(application.getWritedTime());
-
-        // 서버에 저장
         String clientId = SharedPreperenceHelper.getInstance(getContext()).getLoginId();
         RetrofitClient.getInstance().clientService.setApplication(clientId, dto).enqueue(new Callback<ResultStringDTO>() {
             @Override
@@ -373,8 +408,14 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         });
     }
 
-    private void saveApplication() {
+    /**
+     * 현재 입력되어있는 값들을 Application 객체로 반환시켜주는 함수
+     * @param appId 신청서 아이디
+     */
+    private Application getApplicationFromEditText(String appId) {
+        Application application = new Application();
         // 데이터 최신화 작업
+        application.setId(appId);
         application.setTitle(editTitle.getText().toString());
         application.setNumber(Integer.parseInt(editNumber.getText().toString()));
         String hour = wheelAdapterHour.getItem(wheelHour.getSelectedIndex());
@@ -385,7 +426,6 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                 Integer.parseInt(date.substring(3,5)),
                 Integer.parseInt(hour)
                 , Integer.parseInt(minute)));
-        Log.d("HTJ", "wantedTime: " + application.getWantedTime());
         application.setWantedStyle(autoStyle.getText().toString());
         application.setWantedMenu(editMenu.getText().toString());
         application.setGeo(new Geo("Point",
@@ -393,8 +433,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                 marker.getPosition().latitude));
         application.setWritedTime(TimeHelper.now());
         application.setState(ApplicationStateType.STATE_APPLIED);
-        // 로컬에 저장
-        SharedPreperenceHelper.getInstance(getContext()).saveApply(application);
+        return application;
     }
 
     /**
@@ -433,6 +472,10 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         });
     }
 
+    /**
+     * 신청서의 상태에 따라서 화면을 다르게 표시해주는 함수
+     * @param state
+     */
     private void setState(int state) {
         switch(state) {
             case ApplicationStateType.STATE_EDITING:

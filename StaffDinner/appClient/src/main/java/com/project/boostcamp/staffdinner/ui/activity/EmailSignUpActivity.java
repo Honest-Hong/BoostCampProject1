@@ -38,7 +38,6 @@ public class EmailSignUpActivity extends AppCompatActivity {
     @BindView(R.id.edit_password) EditText editPassword;
     @BindView(R.id.edit_password2) EditText editPassword2;
     private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener authStateListener;
     private String id;
     private final int type = AccountType.TYPE_EMAIL;
 
@@ -54,19 +53,19 @@ public class EmailSignUpActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
     }
 
-    @OnClick({R.id.button_prev, R.id.button_next})
-    public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.button_prev:
-                finish();
-                break;
-            case R.id.button_next:
-                doEmailSignUp();
-                break;
-        }
+    @OnClick(R.id.button_prev)
+    public void doPrev(View v) {
+        finish();
     }
 
-    private void doEmailSignUp() {
+    /**
+     * 다음 버튼을 클릭했을 때 이메일로 가입하기를 진행한다.
+     * 이메일과 패스워드가 유효한 값인지를 먼저 판단한다.
+     * 파이어베이스에 이미 가입이 되어있으면 서버에 회원정보가 있는지 확인한 후에 다음으로 진행한다
+     * 가입이 되어있지 않으면 파이어베이스에 가입을 시킨후 회원가입으로 넘어간다
+     */
+    @OnClick(R.id.button_next)
+    public void doEmailSignUp() {
         if(checkValidate()) {
             final String email = editEmail.getText().toString();
             final String password = editPassword.getText().toString();
@@ -83,7 +82,7 @@ public class EmailSignUpActivity extends AppCompatActivity {
                                 Log.d("HTJ", "doEmailSignUp-onComplete!");
                                 if(task.isSuccessful()) {
                                     id = task.getResult().getUser().getUid();
-                                    checkAlreadyJoined();
+                                    moveJoinActivity();
                                 } else {
                                     Log.d("HTJ", "doEmailSignUp warning: " + task.getException());
                                 }
@@ -95,6 +94,10 @@ public class EmailSignUpActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 입력한 값의 유효성을 판단하는 함수
+     * @return 모두 유효하면 true
+     */
     private boolean checkValidate() {
         if(!editPassword.getText().toString().equals(editPassword2.getText().toString())) {
             Toast.makeText(this, "비밀번호 불일치", Toast.LENGTH_SHORT).show();
@@ -107,6 +110,11 @@ public class EmailSignUpActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * 서버에 회원정보가 등록되어있는지 확인하는 함수
+     * 등록되어있으면 로그인 정보를 로컬에 저장하고 메인으로 넘어간다
+     * 그렇지 않으면 회원가입 화면으로 넘어간다
+     */
     private void checkAlreadyJoined() {
         LoginDTO dto = new LoginDTO();
         dto.setId(id);
@@ -117,11 +125,7 @@ public class EmailSignUpActivity extends AppCompatActivity {
                 Log.d("HTJ", "login onResponse: " + response.body());
                 LoginDTO dto = response.body();
                 if(dto.getId() == null) {
-                    Intent intent = new Intent(EmailSignUpActivity.this, JoinActivity.class);
-                    intent.putExtra(ExtraType.EXTRA_ID, id);
-                    intent.putExtra(ExtraType.EXTRA_TYPE, type);
-                    startActivity(intent);
-                    finish();
+                    moveJoinActivity();
                 } else {
                     SharedPreperenceHelper.getInstance(EmailSignUpActivity.this).saveLogin(dto);
                     startActivity(new Intent(EmailSignUpActivity.this, MainActivity.class));
@@ -136,17 +140,24 @@ public class EmailSignUpActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 회원가입 화면으로 이동하는 함수
+     */
+    private void moveJoinActivity() {
+        Intent intent = new Intent(EmailSignUpActivity.this, JoinActivity.class);
+        intent.putExtra(ExtraType.EXTRA_ID, id);
+        intent.putExtra(ExtraType.EXTRA_TYPE, type);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
-//        auth.addAuthStateListener(authStateListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if(authStateListener != null) {
-            auth.addAuthStateListener(authStateListener);
-        }
     }
 }
