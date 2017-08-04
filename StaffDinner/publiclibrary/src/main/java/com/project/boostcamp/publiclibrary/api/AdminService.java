@@ -2,6 +2,7 @@ package com.project.boostcamp.publiclibrary.api;
 
 import com.project.boostcamp.publiclibrary.domain.AdminApplicationDTO;
 import com.project.boostcamp.publiclibrary.domain.AdminJoinDTO;
+import com.project.boostcamp.publiclibrary.domain.EstimateAddDTO;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
 
@@ -59,4 +60,7 @@ public interface AdminService {
     @FormUrlEncoded
     @PUT("/admin/{id}/token")
     Call<ResultIntDTO> updateToken(@Path("id") String id, @Field("type") int type, @Field("token") String token);
+
+    @POST("/application/{id}/estimate")
+    Call<ResultIntDTO> addEstimate(@Path("id") String id, @Body EstimateAddDTO estimateAddDTO);
 }
