@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.project.boostcamp.publiclibrary.data.AdminEstimate;
+import com.project.boostcamp.publiclibrary.data.DataEvent;
 import com.project.boostcamp.publiclibrary.data.Estimate;
 import com.project.boostcamp.publiclibrary.object.BaseVH;
 import com.project.boostcamp.staffdinnerrestraurant.R;
@@ -17,8 +19,7 @@ import butterknife.ButterKnife;
  * Created by Hong Tae Joon on 2017-07-28.
  */
 
-public class EstimateVH extends BaseVH<Estimate> {
-    private Estimate data;
+public class EstimateVH extends BaseVH<AdminEstimate> {
     private Context context;
     @BindView(R.id.image_state) ImageView imageState;
     @BindView(R.id.text_title) TextView textTitle;
@@ -26,23 +27,23 @@ public class EstimateVH extends BaseVH<Estimate> {
     @BindView(R.id.text_writed_time) TextView textWritedTime;
     @BindView(R.id.text_message) TextView textMessage;
 
-    public EstimateVH(Context context, View v, final OnClickItemListener<Estimate> onClickItemListener) {
-        super(v);
+    public EstimateVH(View v, final DataEvent<AdminEstimate> dataEvent, Context context) {
+        super(v, dataEvent);
         this.context = context;
         ButterKnife.bind(this, v);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickItemListener.onClickItem(data);
+                dataEvent.onClick(data);
             }
         });
     }
 
     @Override
-    public void setupView(Estimate data) {
+    public void setupView(AdminEstimate data) {
         this.data = data;
         setState(data.getState());
-        textTitle.setText(context.getString(R.string.text_estimate_list_title, data.getApplierName()));
+        textTitle.setText(context.getString(R.string.text_estimate_list_title, data.getClientName()));
         textWritedTime.setText(context.getString(R.string.text_estimate_list_writed_time, data.getWritedTime() + ""));
         textMessage.setText(data.getMessage());
     }

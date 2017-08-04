@@ -1,5 +1,17 @@
 package com.project.boostcamp.publiclibrary.api;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.project.boostcamp.publiclibrary.data.Estimate;
+import com.project.boostcamp.publiclibrary.domain.ClientEstimateDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -25,5 +37,21 @@ public class RetrofitClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         clientService = retrofit.create(ClientService.class);
+    }
+
+    public void getEstimateList(String applicationId, final DataReceiver<ArrayList<ClientEstimateDTO>> dataReceiver) {
+        clientService.getEstimateList(applicationId).enqueue(new Callback<ArrayList<ClientEstimateDTO>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ClientEstimateDTO>> call, Response<ArrayList<ClientEstimateDTO>> response) {
+                Log.d("HTJ", "getEstimateList: " + new Gson().toJson(response.body()));
+                dataReceiver.onReceive(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ClientEstimateDTO>> call, Throwable t) {
+                Log.e("HTJ", "Fail to client get estimate list: " + t.getMessage());
+                dataReceiver.onFail();
+            }
+        });
     }
 }

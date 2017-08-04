@@ -1,4 +1,4 @@
-package com.project.boostcamp.publiclibrary.wheelpicker;
+package com.project.boostcamp.publiclibrary.view;
 
 /**
  * Created by Hong Tae Joon on 2017-07-27.

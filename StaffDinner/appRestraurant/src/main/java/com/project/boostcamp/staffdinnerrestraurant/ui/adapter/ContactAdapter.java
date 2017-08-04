@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.publiclibrary.data.Contact;
-import com.project.boostcamp.publiclibrary.data.OnContactClickListener;
+import com.project.boostcamp.publiclibrary.data.DataEvent;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
 import java.util.ArrayList;
@@ -16,12 +16,14 @@ import java.util.ArrayList;
  */
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactVH> {
+    private Context context;
     private ArrayList<Contact> data;
-    private OnClickItemListener<Contact> onClickItemListener;
+    private DataEvent<Contact> dataEvent;
 
-    public ContactAdapter(OnClickItemListener<Contact> onClickItemListener) {
+    public ContactAdapter(Context context, DataEvent<Contact> dataEvent) {
         data = new ArrayList<>();
-        this.onClickItemListener = onClickItemListener;
+        this.dataEvent = dataEvent;
+        this.context = context;
     }
 
     public void setData(ArrayList<Contact> data) {
@@ -32,7 +34,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactVH> {
     @Override
     public ContactVH onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        return new ContactVH(LayoutInflater.from(context).inflate(R.layout.layout_contact_item, parent, false), context, onClickItemListener);
+        return new ContactVH(LayoutInflater.from(context).inflate(R.layout.layout_contact_item, parent, false), dataEvent, context);
     }
 
     @Override

@@ -17,6 +17,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.project.boostcamp.publiclibrary.data.ExtraType;
+import com.project.boostcamp.publiclibrary.domain.ClientEstimateDTO;
+import com.project.boostcamp.publiclibrary.util.TimeHelper;
 import com.project.boostcamp.staffdinner.GlideApp;
 import com.project.boostcamp.staffdinner.R;
 import com.project.boostcamp.publiclibrary.data.Estimate;
@@ -26,7 +28,7 @@ import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
 
 public class EstimateDetailActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, DialogResultListener, GoogleMap.OnMapClickListener {
-    private Estimate estimate;
+    private ClientEstimateDTO estimate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,7 @@ public class EstimateDetailActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_estimate_detail);
 
         if(getIntent() != null) {
-            estimate = getIntent().getParcelableExtra(Estimate.class.getName());
+            estimate = getIntent().getParcelableExtra(ClientEstimateDTO.class.getName());
             setupView();
         } else {
             finish();
@@ -57,15 +59,15 @@ public class EstimateDetailActivity extends AppCompatActivity implements View.On
         TextView textLocation = (TextView)findViewById(R.id.text_location);
 
         GlideApp.with(this)
-                .load(estimate.getRestImgUrl())
+                .load(estimate.getAdmin().getImage())
                 .centerCrop()
                 .into(imageView);
-        textName.setText(estimate.getRestName());
-        textDate.setText(estimate.getWritedTime() + "");
+        textName.setText(estimate.getAdmin().getName());
+        textDate.setText(TimeHelper.getTimeString(estimate.getWritedTime(), getString(R.string.default_time)));
         textMessage.setText(estimate.getMessage());
-        textStyle.setText(estimate.getRestStyle());
-        textMenu.setText(estimate.getRestMenu());
-        textLocation.setText(GeocoderHelper.getAddress(this, new LatLng(estimate.getRestLat(), estimate.getRestLng())));
+        textStyle.setText(estimate.getAdmin().getStyle());
+        textMenu.setText(estimate.getAdmin().getMenu());
+        textLocation.setText(GeocoderHelper.getAddress(this, estimate.getAdmin().getGeo().toLatLng()));
 
         findViewById(R.id.button_contact).setOnClickListener(this);
 
@@ -94,8 +96,7 @@ public class EstimateDetailActivity extends AppCompatActivity implements View.On
         UiSettings uiSettings = googleMap.getUiSettings();
         uiSettings.setScrollGesturesEnabled(false);
         uiSettings.setZoomGesturesEnabled(false);
-        LatLng latLng = new LatLng(estimate.getRestLat()
-                , estimate.getRestLng());
+        LatLng latLng = estimate.getAdmin().getGeo().toLatLng();
         googleMap.moveCamera(CameraUpdateFactory
                 .newLatLngZoom(latLng, 16));
         googleMap.addMarker(MarkerBuilder.simple(latLng));
@@ -114,11 +115,12 @@ public class EstimateDetailActivity extends AppCompatActivity implements View.On
     }
 
     @Override
-    public void onMapClick(LatLng latLng) {
+    public void onMapClick(LatLng notThing) {
 
         Intent intentMap = new Intent(this, MapDetailActivity.class);
-        intentMap.putExtra(ExtraType.EXTRA_LATITUDE, estimate.getRestLat());
-        intentMap.putExtra(ExtraType.EXTRA_LONGITUDE, estimate.getRestLng());
+        LatLng latLng = estimate.getAdmin().getGeo().toLatLng();
+        intentMap.putExtra(ExtraType.EXTRA_LATITUDE, latLng.latitude);
+        intentMap.putExtra(ExtraType.EXTRA_LONGITUDE, latLng.longitude);
         intentMap.putExtra(ExtraType.EXTRA_READ_ONLY, true);
         startActivity(intentMap);
     }

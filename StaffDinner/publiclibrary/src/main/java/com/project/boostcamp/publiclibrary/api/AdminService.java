@@ -1,11 +1,13 @@
 package com.project.boostcamp.publiclibrary.api;
 
 import com.project.boostcamp.publiclibrary.domain.AdminApplicationDTO;
+import com.project.boostcamp.publiclibrary.domain.AdminEstimateDTO;
 import com.project.boostcamp.publiclibrary.domain.AdminJoinDTO;
 import com.project.boostcamp.publiclibrary.domain.EstimateAddDTO;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -63,4 +65,7 @@ public interface AdminService {
 
     @POST("/application/{id}/estimate")
     Call<ResultIntDTO> addEstimate(@Path("id") String id, @Body EstimateAddDTO estimateAddDTO);
+
+    @GET("/admin/{id}/estimate")
+    Call<ArrayList<AdminEstimateDTO>> getEstimate(@Path("id") String id);
 }

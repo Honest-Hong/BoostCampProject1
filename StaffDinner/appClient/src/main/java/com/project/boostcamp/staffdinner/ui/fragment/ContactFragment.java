@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.data.OnContactClickListener;
-import com.project.boostcamp.staffdinner.ui.adapter.ContactRecyclerAdapter;
 
 /**
  * Created by Hong Tae Joon on 2017-07-25.
@@ -20,8 +18,6 @@ import com.project.boostcamp.staffdinner.ui.adapter.ContactRecyclerAdapter;
 
 public class ContactFragment extends Fragment {
     private RecyclerView recyclerView;
-    private ContactRecyclerAdapter adapter;
-    private OnContactClickListener contactClickListener;
 
     public static ContactFragment newInstance() {
         ContactFragment fragment = new ContactFragment();
@@ -31,7 +27,6 @@ public class ContactFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        contactClickListener = (OnContactClickListener)context;
     }
 
     @Nullable
@@ -47,7 +42,5 @@ public class ContactFragment extends Fragment {
         recyclerView = (RecyclerView)v.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ContactRecyclerAdapter(contactClickListener);
-        recyclerView.setAdapter(adapter);
     }
 }

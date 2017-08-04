@@ -45,7 +45,7 @@ import com.project.boostcamp.staffdinner.ui.activity.MapDetailActivity;
 import com.project.boostcamp.staffdinner.ui.adapter.TextWheelAdapter;
 import com.project.boostcamp.publiclibrary.dialog.DialogResultListener;
 import com.project.boostcamp.publiclibrary.dialog.MyAlertDialog;
-import com.project.boostcamp.publiclibrary.wheelpicker.WheelPicker;
+import com.project.boostcamp.publiclibrary.view.WheelPicker;
 import com.project.boostcamp.publiclibrary.util.TimeHelper;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
@@ -447,7 +447,6 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                 // 취소 성공
                 Log.d("HTJ", "ApplicationFragment-cancelApplication-onResponse: " + response.body());
                 if(response.body().getResult() == 1) {
-                    // TODO: 2017-07-28 내용 모두 지우기
                     application = new Application();
                     setupTexts(application);
                     application.setState(ApplicationStateType.STATE_EDITING);

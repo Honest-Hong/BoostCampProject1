@@ -1,10 +1,15 @@
 package com.project.boostcamp.publiclibrary.api;
 
 import com.project.boostcamp.publiclibrary.domain.ClientApplicationDTO;
+import com.project.boostcamp.publiclibrary.domain.ClientEstimateDTO;
 import com.project.boostcamp.publiclibrary.domain.ClientJoinDTO;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
 import com.project.boostcamp.publiclibrary.domain.ResultStringDTO;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -72,4 +77,7 @@ public interface ClientService {
     @FormUrlEncoded
     @PUT("/client/{id}/token")
     Call<ResultIntDTO> updateToken(@Path("id") String id, @Field("type") int type, @Field("token") String token);
+
+    @GET("/client/{id}/estimate")
+    Call<ArrayList<ClientEstimateDTO>> getEstimateList(@Path("id") String id);
 }

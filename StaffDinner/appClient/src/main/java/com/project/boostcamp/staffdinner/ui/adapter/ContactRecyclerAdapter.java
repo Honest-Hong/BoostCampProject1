@@ -5,9 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.project.boostcamp.publiclibrary.data.DataEvent;
 import com.project.boostcamp.staffdinner.R;
 import com.project.boostcamp.publiclibrary.data.Contact;
-import com.project.boostcamp.publiclibrary.data.OnContactClickListener;
 
 import java.util.ArrayList;
 
@@ -16,32 +16,32 @@ import java.util.ArrayList;
  */
 
 public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactVH> {
-    private ArrayList<Contact> contacts;
-    private OnContactClickListener contactClickListener;
+    private ArrayList<Contact> data;
+    private DataEvent<Contact> dataEvent;
 
-    public ContactRecyclerAdapter(OnContactClickListener contactClickListener) {
-        contacts = new ArrayList<>();
-        this.contactClickListener = contactClickListener;
+    public ContactRecyclerAdapter(DataEvent<Contact> contactClickListener) {
+        data = new ArrayList<>();
+        this.dataEvent = contactClickListener;
     }
 
-    public void setContacts(ArrayList<Contact> contacts) {
-        this.contacts = contacts;
+    public void setData(ArrayList<Contact> data) {
+        this.data = data;
         notifyDataSetChanged();
     }
 
     @Override
     public ContactVH onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        return new ContactVH(LayoutInflater.from(context).inflate(R.layout.layout_contact_item, parent, false), context, contactClickListener);
+        return new ContactVH(LayoutInflater.from(context).inflate(R.layout.layout_contact_item, parent, false), dataEvent, context);
     }
 
     @Override
     public void onBindViewHolder(ContactVH holder, int position) {
-        holder.setupView(contacts.get(position));
+        holder.setupView(data.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return contacts.size();
+        return data.size();
     }
 }

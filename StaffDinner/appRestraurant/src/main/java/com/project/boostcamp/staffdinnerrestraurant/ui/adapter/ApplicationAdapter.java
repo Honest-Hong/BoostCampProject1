@@ -1,10 +1,12 @@
 package com.project.boostcamp.staffdinnerrestraurant.ui.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.publiclibrary.data.AdminApplication;
+import com.project.boostcamp.publiclibrary.data.DataEvent;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
 import java.util.ArrayList;
@@ -14,12 +16,14 @@ import java.util.ArrayList;
  */
 
 public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationVH> {
+    private Context context;
     private ArrayList<AdminApplication> data;
-    private OnClickItemListener<AdminApplication> onClickItemListener;
+    private DataEvent<AdminApplication> dataEvent;
 
-    public ApplicationAdapter(OnClickItemListener<AdminApplication> onClickItemListener) {
+    public ApplicationAdapter(Context context, DataEvent<AdminApplication> dataEvent) {
         data = new ArrayList<>();
-        this.onClickItemListener = onClickItemListener;
+        this.dataEvent = dataEvent;
+        this.context = context;
     }
 
     public void setData(ArrayList<AdminApplication> data) {
@@ -29,7 +33,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationVH> {
 
     @Override
     public ApplicationVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ApplicationVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_apply_item, parent, false), onClickItemListener);
+        return new ApplicationVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_apply_item, parent, false), dataEvent, context);
     }
 
     @Override

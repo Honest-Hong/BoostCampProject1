@@ -1,5 +1,16 @@
 package com.project.boostcamp.publiclibrary.api;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.project.boostcamp.publiclibrary.domain.AdminEstimateDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -25,5 +36,21 @@ public class RetrofitAdmin {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         adminService = retrofit.create(AdminService.class);
+    }
+
+    public void getEstimateList(String id, final DataReceiver<ArrayList<AdminEstimateDTO>> dataReceiver) {
+        adminService.getEstimate(id).enqueue(new Callback<ArrayList<AdminEstimateDTO>>() {
+            @Override
+            public void onResponse(Call<ArrayList<AdminEstimateDTO>> call, Response<ArrayList<AdminEstimateDTO>> response) {
+                Log.d("HTJ", "admin get estimate list on response: " + new Gson().toJson(response.body()));
+                dataReceiver.onReceive(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<AdminEstimateDTO>> call, Throwable t) {
+                Log.e("HTJ", "RetrofitAdmin-getEstimateList-onFailure: " + t.getMessage());
+                dataReceiver.onFail();
+            }
+        });
     }
 }

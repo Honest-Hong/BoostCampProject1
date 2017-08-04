@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.project.boostcamp.publiclibrary.data.Contact;
-import com.project.boostcamp.publiclibrary.data.OnContactClickListener;
+import com.project.boostcamp.publiclibrary.data.DataEvent;
 import com.project.boostcamp.publiclibrary.object.BaseVH;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
@@ -20,13 +20,10 @@ public class ContactVH extends BaseVH<Contact> implements View.OnClickListener {
     private Context context;
     @BindView(R.id.text_title) TextView textTitle;
     @BindView(R.id.text_sub_title) TextView textSubTitle;
-    private Contact data;
-    private OnClickItemListener<Contact> onClickItemListener;
 
-    public ContactVH(View v, Context context, OnClickItemListener<Contact> onClickItemListener) {
-        super(v);
+    public ContactVH(View v, DataEvent<Contact> dataEvent, Context context) {
+        super(v, dataEvent);
         this.context = context;
-        this.onClickItemListener = onClickItemListener;
         ButterKnife.bind(this, v);
         v.setOnClickListener(this);
     }
@@ -40,6 +37,6 @@ public class ContactVH extends BaseVH<Contact> implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        onClickItemListener.onClickItem(data);
+        dataEvent.onClick(data);
     }
 }

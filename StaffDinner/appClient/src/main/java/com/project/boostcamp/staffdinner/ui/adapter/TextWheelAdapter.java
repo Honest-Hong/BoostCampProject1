@@ -6,9 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.wheelpicker.WheelPickerAdapter;
-
-import java.util.Locale;
+import com.project.boostcamp.publiclibrary.view.WheelPickerAdapter;
 
 /**
  * Created by Hong Tae Joon on 2017-07-27.

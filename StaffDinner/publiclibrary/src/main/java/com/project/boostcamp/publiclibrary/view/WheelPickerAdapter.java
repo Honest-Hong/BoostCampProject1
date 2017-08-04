@@ -1,4 +1,4 @@
-package com.project.boostcamp.publiclibrary.wheelpicker;
+package com.project.boostcamp.publiclibrary.view;
 
 import android.view.LayoutInflater;
 import android.view.View;

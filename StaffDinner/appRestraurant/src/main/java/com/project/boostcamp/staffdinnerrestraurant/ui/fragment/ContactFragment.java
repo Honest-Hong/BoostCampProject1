@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.publiclibrary.data.Contact;
+import com.project.boostcamp.publiclibrary.data.DataEvent;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 import com.project.boostcamp.staffdinnerrestraurant.ui.activity.ContactDetailActivity;
 import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.ContactAdapter;
@@ -20,7 +21,7 @@ import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.OnClickItemListen
  * Created by Hong Tae Joon on 2017-07-28.
  */
 
-public class ContactFragment extends Fragment implements OnClickItemListener<Contact> {
+public class ContactFragment extends Fragment {
     private static ContactFragment instance;
     private RecyclerView recyclerView;
     private ContactAdapter adapter;
@@ -45,17 +46,17 @@ public class ContactFragment extends Fragment implements OnClickItemListener<Con
         recyclerView = (RecyclerView)v;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ContactAdapter(this);
+        adapter = new ContactAdapter(getContext(), dataEvent);
         recyclerView.setAdapter(adapter);
     }
 
-    private void loadData() {
-    }
+    private DataEvent<Contact> dataEvent = new DataEvent<Contact>() {
+        @Override
+        public void onClick(Contact data) {
 
-    @Override
-    public void onClickItem(Contact data) {
-        Intent intent = new Intent(getContext(), ContactDetailActivity.class);
-        intent.putExtra(Contact.class.getName(), data);
-        startActivity(intent);
+        }
+    };
+
+    private void loadData() {
     }
 }

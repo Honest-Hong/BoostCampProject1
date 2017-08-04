@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import com.project.boostcamp.publiclibrary.data.DataEvent;
 import com.project.boostcamp.publiclibrary.object.BaseVH;
 import com.project.boostcamp.staffdinner.R;
 import com.project.boostcamp.publiclibrary.data.Contact;
-import com.project.boostcamp.publiclibrary.data.OnContactClickListener;
 
 /**
  * Created by Hong Tae Joon on 2017-07-25.
@@ -17,16 +17,10 @@ public class ContactVH extends BaseVH<Contact> implements View.OnClickListener {
     private Context context;
     private TextView textTitle;
     private TextView textSubTitle;
-    private Contact data;
-    private OnContactClickListener contactClickListener;
 
-    public ContactVH(View v, Context context, OnContactClickListener contactClickListener) {
-        super(v);
+    public ContactVH(View itemView, DataEvent<Contact> dataEvent, Context context) {
+        super(itemView, dataEvent);
         this.context = context;
-        this.contactClickListener = contactClickListener;
-        textTitle = (TextView)v.findViewById(R.id.text_title);
-        textSubTitle = (TextView)v.findViewById(R.id.text_sub_title);
-        v.setOnClickListener(this);
     }
 
     @Override
@@ -38,6 +32,6 @@ public class ContactVH extends BaseVH<Contact> implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        contactClickListener.onContactClick(data);
+        dataEvent.onClick(data);
     }
 }

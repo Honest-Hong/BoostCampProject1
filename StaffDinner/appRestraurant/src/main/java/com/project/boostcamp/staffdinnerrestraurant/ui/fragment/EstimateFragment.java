@@ -5,23 +5,32 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.project.boostcamp.publiclibrary.data.Estimate;
+import com.project.boostcamp.publiclibrary.api.DataReceiver;
+import com.project.boostcamp.publiclibrary.api.RetrofitAdmin;
+import com.project.boostcamp.publiclibrary.data.AdminEstimate;
+import com.project.boostcamp.publiclibrary.data.BaseData;
+import com.project.boostcamp.publiclibrary.data.DataEvent;
+import com.project.boostcamp.publiclibrary.domain.AdminEstimateDTO;
+import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.EstimateAdapter;
-import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.OnClickItemListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Hong Tae Joon on 2017-07-28.
  */
 
-public class EstimateFragment extends Fragment implements OnClickItemListener<Estimate> {
+public class EstimateFragment extends Fragment {
     private static EstimateFragment instance;
     private RecyclerView recyclerView;
-    private EstimateAdapter adapter;
+    private EstimateAdapter recyclerAdapter;
 
     public static EstimateFragment getInstance() {
         if(instance == null) {
@@ -43,15 +52,44 @@ public class EstimateFragment extends Fragment implements OnClickItemListener<Es
         recyclerView = (RecyclerView)v;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new EstimateAdapter(this);
-        recyclerView.setAdapter(adapter);
+
+        recyclerAdapter = new EstimateAdapter(getContext(), dataEvent);
+        recyclerView.setAdapter(recyclerAdapter);
     }
+
+    private DataEvent<AdminEstimate> dataEvent = new DataEvent<AdminEstimate>() {
+        @Override
+        public void onClick(AdminEstimate data) {
+
+        }
+    };
 
     private void loadData() {
+        String id = SharedPreperenceHelper.getInstance(getContext()).getLoginId();
+        RetrofitAdmin.getInstance().getEstimateList(id, dataReceiver);
     }
 
-    @Override
-    public void onClickItem(Estimate data) {
+    private DataReceiver<ArrayList<AdminEstimateDTO>> dataReceiver = new DataReceiver<ArrayList<AdminEstimateDTO>>() {
+        @Override
+        public void onReceive(ArrayList<AdminEstimateDTO> data) {
+            if(data == null) {
+                data = new ArrayList<>();
+            }
+            ArrayList<AdminEstimate> arr = new ArrayList<>();
+            for(int i=0; i<data.size();i ++) {
+                AdminEstimate item = new AdminEstimate();
+                item.set_id(data.get(i).get_id());
+                item.setClientName(data.get(i).getClient().getName());
+                item.setMessage(data.get(i).getMessage());
+                item.setWritedTime(data.get(i).getWritedTime());
+                arr.add(item);
+            }
+            recyclerAdapter.setData(arr);
+        }
 
-    }
+        @Override
+        public void onFail() {
+            Log.e("HTJ", "Fail to loading estimate list");
+        }
+    };
 }

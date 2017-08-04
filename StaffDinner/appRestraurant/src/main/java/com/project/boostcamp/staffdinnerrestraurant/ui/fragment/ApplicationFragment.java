@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 
 import com.project.boostcamp.publiclibrary.api.RetrofitAdmin;
 import com.project.boostcamp.publiclibrary.data.AdminApplication;
+import com.project.boostcamp.publiclibrary.data.DataEvent;
+import com.project.boostcamp.publiclibrary.data.Estimate;
 import com.project.boostcamp.publiclibrary.domain.AdminApplicationDTO;
 import com.project.boostcamp.publiclibrary.domain.GeoDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
@@ -32,7 +34,7 @@ import retrofit2.Response;
  * Created by Hong Tae Joon on 2017-07-28.
  */
 
-public class ApplicationFragment extends Fragment implements OnClickItemListener<AdminApplication> {
+public class ApplicationFragment extends Fragment {
     private static final float MAX_DISTANCE = 2.0f;
     private static ApplicationFragment instance;
     private RecyclerView recyclerView;
@@ -58,12 +60,20 @@ public class ApplicationFragment extends Fragment implements OnClickItemListener
         recyclerView = (RecyclerView)v;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ApplicationAdapter(this);
+        adapter = new ApplicationAdapter(getContext(), dataEvent);
         recyclerView.setAdapter(adapter);
     }
 
+    private DataEvent<AdminApplication> dataEvent = new DataEvent<AdminApplication>() {
+        @Override
+        public void onClick(AdminApplication data) {
+            Intent intent = new Intent(getContext(), ApplicationActivity.class);
+            intent.putExtra(AdminApplication.class.getName(), data);
+            startActivity(intent);
+        }
+    };
+
     private void loadData() {
-        // TODO: 2017-08-02 서버로부터 데이터 불러오기 (근접한 신청서)
         GeoDTO geo = SharedPreperenceHelper.getInstance(getContext()).getGeo();
         RetrofitAdmin.getInstance().adminService.get(geo.getCoordinates()[1], geo.getCoordinates()[0], MAX_DISTANCE).enqueue(new Callback<List<AdminApplicationDTO>>() {
             @Override
@@ -92,12 +102,5 @@ public class ApplicationFragment extends Fragment implements OnClickItemListener
                 Log.e("HTJ", "ApplicationFragment-loadData-onFailure: " + t.getMessage());
             }
         });
-    }
-
-    @Override
-    public void onClickItem(AdminApplication data) {
-        Intent intent = new Intent(getContext(), ApplicationActivity.class);
-        intent.putExtra(AdminApplication.class.getName(), data);
-        startActivity(intent);
     }
 }

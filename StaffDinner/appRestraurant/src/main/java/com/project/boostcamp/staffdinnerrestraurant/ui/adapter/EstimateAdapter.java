@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.project.boostcamp.publiclibrary.data.AdminEstimate;
+import com.project.boostcamp.publiclibrary.data.DataEvent;
 import com.project.boostcamp.publiclibrary.data.Estimate;
 import com.project.boostcamp.staffdinnerrestraurant.R;
 
@@ -15,23 +17,24 @@ import java.util.ArrayList;
  */
 
 public class EstimateAdapter extends RecyclerView.Adapter<EstimateVH> {
-    private ArrayList<Estimate> data;
-    private OnClickItemListener<Estimate> onClickItemListener;
+    private Context context;
+    private ArrayList<AdminEstimate> data;
+    private DataEvent<AdminEstimate> dataEvent;
 
-    public EstimateAdapter(OnClickItemListener<Estimate> onClickItemListener) {
+    public EstimateAdapter(Context context, DataEvent<AdminEstimate> dataEvent) {
         data = new ArrayList<>();
-        this.onClickItemListener = onClickItemListener;
+        this.dataEvent = dataEvent;
+        this.context = context;
     }
 
-    public void setData(ArrayList<Estimate> data) {
+    public void setData(ArrayList<AdminEstimate> data) {
         this.data = data;
         notifyDataSetChanged();
     }
 
     @Override
     public EstimateVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        return new EstimateVH(context, LayoutInflater.from(context).inflate(R.layout.layout_estimate_item, parent, false), onClickItemListener);
+        return new EstimateVH(LayoutInflater.from(context).inflate(R.layout.layout_estimate_item, parent, false), dataEvent, context);
     }
 
     @Override

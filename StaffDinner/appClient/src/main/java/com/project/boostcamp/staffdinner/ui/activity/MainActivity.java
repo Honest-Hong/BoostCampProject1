@@ -24,10 +24,6 @@ import com.project.boostcamp.publiclibrary.data.AccountType;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.util.SharedPreperenceHelper;
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.data.Contact;
-import com.project.boostcamp.publiclibrary.data.Estimate;
-import com.project.boostcamp.publiclibrary.data.OnContactClickListener;
-import com.project.boostcamp.publiclibrary.data.OnEstimateClickListener;
 import com.project.boostcamp.staffdinner.ui.adapter.MainViewPagerAdapter;
 
 import butterknife.BindView;
@@ -37,7 +33,7 @@ import butterknife.ButterKnife;
  * 메인 액티비티.
  * 신청서, 견적서, 계약서 탭 3가지가 존재한다.
  */
-public class MainActivity extends AppCompatActivity implements OnEstimateClickListener, OnContactClickListener, GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener{
     public static final String EXTRA_NOTIFICATION_TYPE = "noti_type";
     public static final int NOTIFICATION_TYPE_NONE = 0x00;
     public static final int NOTIFICATION_TYPE_ESTIMATE = 0x01;
@@ -118,20 +114,6 @@ public class MainActivity extends AppCompatActivity implements OnEstimateClickLi
             default:
                 viewPager.setCurrentItem(0);
         }
-    }
-
-    @Override
-    public void onContactClick(Contact c) {
-        Intent intent = new Intent(this, ContactDetailActivity.class);
-        intent.putExtra(c.getClass().getName(), c);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onEstimateClick(Estimate e) {
-        Intent intent = new Intent(this, EstimateDetailActivity.class);
-        intent.putExtra(e.getClass().getName(), e);
-        startActivity(intent);
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.project.boostcamp.publiclibrary.data.AdminApplication;
+import com.project.boostcamp.publiclibrary.data.DataEvent;
 import com.project.boostcamp.publiclibrary.object.BaseVH;
 import com.project.boostcamp.publiclibrary.util.TimeHelper;
 import com.project.boostcamp.staffdinnerrestraurant.R;
@@ -19,7 +20,6 @@ import butterknife.ButterKnife;
 
 public class ApplicationVH extends BaseVH<AdminApplication> {
     private Context context;
-    private AdminApplication data;
     @BindView(R.id.image_view) ImageView imageView;
     @BindView(R.id.text_name) TextView textName;
     @BindView(R.id.text_title) TextView textTitle;
@@ -27,14 +27,14 @@ public class ApplicationVH extends BaseVH<AdminApplication> {
     @BindView(R.id.text_time) TextView textTime;
     @BindView(R.id.text_distance) TextView textDistance;
 
-    public ApplicationVH(View v, final OnClickItemListener<AdminApplication> onClickItemListener) {
-        super(v);
+    public ApplicationVH(View v, final DataEvent<AdminApplication> dataEvent, Context context) {
+        super(v, dataEvent);
+        this.context = context;
         ButterKnife.bind(this, v);
-        context = v.getContext();
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickItemListener.onClickItem(data);
+                dataEvent.onClick(data);
             }
         });
     }

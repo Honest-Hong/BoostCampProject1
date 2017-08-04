@@ -1,45 +1,48 @@
 package com.project.boostcamp.staffdinner.ui.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.project.boostcamp.publiclibrary.data.DataEvent;
+import com.project.boostcamp.publiclibrary.domain.ClientEstimateDTO;
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.data.Estimate;
-import com.project.boostcamp.publiclibrary.data.OnEstimateClickListener;
 
 import java.util.ArrayList;
 
 /**
- * Created by Hong Tae Joon on 2017-07-25.
+ * Created by Hong Tae Joon on 2017-08-04.
  */
 
 public class EstimateRecyclerAdapter extends RecyclerView.Adapter<EstimateVH> {
-    private ArrayList<Estimate> estimates;
-    private OnEstimateClickListener estimateClickListener;
+    private Context context;
+    private ArrayList<ClientEstimateDTO> data;
+    private DataEvent<ClientEstimateDTO> dataEvent;
 
-    public EstimateRecyclerAdapter(OnEstimateClickListener estimateClickListener) {
-        estimates = new ArrayList<>();
-        this.estimateClickListener = estimateClickListener;
+    public EstimateRecyclerAdapter(Context context, DataEvent<ClientEstimateDTO> dataEvent) {
+        this.context = context;
+        this.dataEvent = dataEvent;
+        data = new ArrayList<>();
     }
 
-    public void setEstimates(ArrayList<Estimate> estimates) {
-        this.estimates = estimates;
+    public void setData(ArrayList<ClientEstimateDTO> data) {
+        this.data = data;
         notifyDataSetChanged();
     }
 
     @Override
     public EstimateVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new EstimateVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_estimate_item, parent, false), estimateClickListener);
+        return new EstimateVH(LayoutInflater.from(context).inflate(R.layout.layout_estimate_item, parent, false), dataEvent, context);
     }
 
     @Override
     public void onBindViewHolder(EstimateVH holder, int position) {
-        holder.setupView(estimates.get(position));
+        holder.setupView(data.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return estimates.size();
+        return data.size();
     }
 }
