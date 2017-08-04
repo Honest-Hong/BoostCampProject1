@@ -19,6 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.project.boostcamp.publiclibrary.data.ExtraType;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.staffdinner.R;
 
@@ -27,10 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnCameraIdleListener{
-    public static final String EXTRA_LATITUDE = "latitude";
-    public static final String EXTRA_LONGITUDE = "longitude";
-    public static final String EXTRA_READ_ONLY = "readOnly";
-    public static final int REQUEST_LOCATION = 0x100;
     private double latitude;
     private double longitude;
     private boolean readOnly;
@@ -50,9 +47,9 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        latitude = getIntent().getDoubleExtra(EXTRA_LATITUDE, 0);
-        longitude = getIntent().getDoubleExtra(EXTRA_LONGITUDE, 0);
-        readOnly = getIntent().getBooleanExtra(EXTRA_READ_ONLY, false);
+        latitude = getIntent().getDoubleExtra(ExtraType.EXTRA_LATITUDE, 0);
+        longitude = getIntent().getDoubleExtra(ExtraType.EXTRA_LONGITUDE, 0);
+        readOnly = getIntent().getBooleanExtra(ExtraType.EXTRA_READ_ONLY, false);
 
         imageMarker.setVisibility(readOnly
                 ? View.GONE
@@ -89,34 +86,10 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         textLocation.setText(GeocoderHelper.getAddress(this, new LatLng(latitude, longitude)));
     }
 
-    public static void show(Fragment fragment, double startLatitude, double startLongitude, boolean readOnly) {
-        Intent intent = new Intent(fragment.getContext(), MapDetailActivity.class);
-        intent.putExtra(EXTRA_LATITUDE, startLatitude);
-        intent.putExtra(EXTRA_LONGITUDE, startLongitude);
-        intent.putExtra(EXTRA_READ_ONLY, readOnly);
-        if(readOnly) {
-            fragment.startActivity(intent);
-        } else {
-            fragment.startActivityForResult(intent, REQUEST_LOCATION);
-        }
-    }
-
-    public static void show(AppCompatActivity activity, double latitude, double longitude, boolean readOnly) {
-        Intent intent = new Intent(activity, MapDetailActivity.class);
-        intent.putExtra(EXTRA_LATITUDE, latitude);
-        intent.putExtra(EXTRA_LONGITUDE, longitude);
-        intent.putExtra(EXTRA_READ_ONLY, readOnly);
-        if(readOnly) {
-            activity.startActivity(intent);
-        } else {
-            activity.startActivityForResult(intent, REQUEST_LOCATION);
-        }
-    }
-
     @OnClick(R.id.button_select)
     public void onSelect(View view) {
-        getIntent().putExtra(EXTRA_LATITUDE, latitude);
-        getIntent().putExtra(EXTRA_LONGITUDE, longitude);
+        getIntent().putExtra(ExtraType.EXTRA_LATITUDE, latitude);
+        getIntent().putExtra(ExtraType.EXTRA_LONGITUDE, longitude);
         setResult(RESULT_OK, getIntent());
         finish();
     }

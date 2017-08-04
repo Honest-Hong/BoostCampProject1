@@ -13,4 +13,9 @@ public class ExtraType {
     public static final String EXTRA_LOGIN_ID = "login_id";
     public static final String EXTRA_LOGIN_TYPE = "login_type";
     public static final String EXTRA_GEO = "geo";
+    public static final String EXTRA_LATITUDE = "latitude";
+    public static final String EXTRA_LONGITUDE = "longitude";
+    public static final String EXTRA_READ_ONLY = "readOnly";
+
+    public static final int REQUEST_LOCATION = 0x100;
 }

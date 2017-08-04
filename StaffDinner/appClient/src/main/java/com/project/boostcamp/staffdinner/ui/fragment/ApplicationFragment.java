@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.project.boostcamp.publiclibrary.api.RetrofitClient;
 import com.project.boostcamp.publiclibrary.data.ApplicationStateType;
+import com.project.boostcamp.publiclibrary.data.ExtraType;
 import com.project.boostcamp.publiclibrary.data.Geo;
 import com.project.boostcamp.publiclibrary.domain.ClientApplicationDTO;
 import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
@@ -251,10 +252,11 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
                 handleApplyButton();
                 break;
             case R.id.button_search:
-                MapDetailActivity.show(this
-                        , googleMap.getCameraPosition().target.latitude
-                        , googleMap.getCameraPosition().target.longitude
-                        , false);
+                Intent intentMap = new Intent(getContext(), MapDetailActivity.class);
+                intentMap.putExtra(ExtraType.EXTRA_LATITUDE, googleMap.getCameraPosition().target.latitude);
+                intentMap.putExtra(ExtraType.EXTRA_LONGITUDE, googleMap.getCameraPosition().target.longitude);
+                intentMap.putExtra(ExtraType.EXTRA_READ_ONLY, false);
+                startActivityForResult(intentMap, ExtraType.REQUEST_LOCATION);
                 break;
         }
     }
@@ -322,11 +324,11 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == MapDetailActivity.REQUEST_LOCATION) {
+        if(requestCode == ExtraType.REQUEST_LOCATION) {
             if(resultCode == Activity.RESULT_OK) {
                 LatLng latLng = new LatLng(
-                        data.getDoubleExtra(MapDetailActivity.EXTRA_LATITUDE, 0)
-                        , data.getDoubleExtra(MapDetailActivity.EXTRA_LONGITUDE, 0));
+                        data.getDoubleExtra(ExtraType.EXTRA_LATITUDE, 0)
+                        , data.getDoubleExtra(ExtraType.EXTRA_LONGITUDE, 0));
                 if(marker != null) {
                     marker.remove();
                 }

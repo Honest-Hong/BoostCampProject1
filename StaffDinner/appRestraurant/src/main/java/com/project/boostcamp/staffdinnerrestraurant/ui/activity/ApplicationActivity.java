@@ -14,6 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.project.boostcamp.publiclibrary.data.AdminApplication;
+import com.project.boostcamp.publiclibrary.data.ExtraType;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
 import com.project.boostcamp.publiclibrary.util.TimeHelper;
@@ -84,11 +85,11 @@ public class ApplicationActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onMapClick(LatLng latLng) {
-        MapDetailActivity.show(
-                this
-                , application.getGeo().getCoordinates()[1]
-                , application.getGeo().getCoordinates()[0]
-                , true);
+        Intent intentMap = new Intent(this, MapDetailActivity.class);
+        intentMap.putExtra(ExtraType.EXTRA_LATITUDE, application.getGeo().getCoordinates()[1]);
+        intentMap.putExtra(ExtraType.EXTRA_LONGITUDE, application.getGeo().getCoordinates()[0]);
+        intentMap.putExtra(ExtraType.EXTRA_READ_ONLY, true);
+        startActivity(intentMap);
     }
 
     @OnClick(R.id.button_send)

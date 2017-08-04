@@ -1,5 +1,6 @@
 package com.project.boostcamp.staffdinner.ui.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.project.boostcamp.publiclibrary.data.ExtraType;
 import com.project.boostcamp.staffdinner.GlideApp;
 import com.project.boostcamp.staffdinner.R;
 import com.project.boostcamp.publiclibrary.data.Estimate;
@@ -113,6 +115,11 @@ public class EstimateDetailActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onMapClick(LatLng latLng) {
-        MapDetailActivity.show(this, estimate.getRestLat(), estimate.getRestLng(), true);
+
+        Intent intentMap = new Intent(this, MapDetailActivity.class);
+        intentMap.putExtra(ExtraType.EXTRA_LATITUDE, estimate.getRestLat());
+        intentMap.putExtra(ExtraType.EXTRA_LONGITUDE, estimate.getRestLng());
+        intentMap.putExtra(ExtraType.EXTRA_READ_ONLY, true);
+        startActivity(intentMap);
     }
 }

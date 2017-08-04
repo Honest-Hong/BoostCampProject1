@@ -1,5 +1,6 @@
 package com.project.boostcamp.staffdinner.ui.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.project.boostcamp.publiclibrary.data.Contact;
+import com.project.boostcamp.publiclibrary.data.ExtraType;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
 import com.project.boostcamp.staffdinner.R;
@@ -89,6 +91,10 @@ public class ContactDetailActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     public void onMapClick(LatLng latLng) {
-        MapDetailActivity.show(this, contact.getEstimateLat(), contact.getEstimateLng(), true);
+        Intent intentMap = new Intent(this, MapDetailActivity.class);
+        intentMap.putExtra(ExtraType.EXTRA_LATITUDE, contact.getEstimateLat());
+        intentMap.putExtra(ExtraType.EXTRA_LONGITUDE, contact.getEstimateLng());
+        intentMap.putExtra(ExtraType.EXTRA_READ_ONLY, true);
+        startActivity(intentMap);
     }
 }

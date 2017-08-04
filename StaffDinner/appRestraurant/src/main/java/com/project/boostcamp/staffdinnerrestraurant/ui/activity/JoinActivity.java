@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.project.boostcamp.publiclibrary.api.RetrofitAdmin;
+import com.project.boostcamp.publiclibrary.data.ExtraType;
 import com.project.boostcamp.publiclibrary.data.Geo;
 import com.project.boostcamp.publiclibrary.domain.AdminJoinDTO;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;
@@ -225,16 +226,20 @@ public class JoinActivity extends AppCompatActivity implements CompoundButton.On
     @OnClick(R.id.button_search)
     public void searchLocation() {
         LatLng latLng = marker.getPosition();
-        MapDetailActivity.show(this, latLng.latitude, latLng.longitude, false);
+        Intent intentMap = new Intent(this, MapDetailActivity.class);
+        intentMap.putExtra(ExtraType.EXTRA_LATITUDE, latLng.latitude);
+        intentMap.putExtra(ExtraType.EXTRA_LONGITUDE, latLng.longitude);
+        intentMap.putExtra(ExtraType.EXTRA_READ_ONLY, false);
+        startActivityForResult(intentMap, ExtraType.REQUEST_LOCATION);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == MapDetailActivity.REQUEST_LOCATION) {
+        if(requestCode == ExtraType.REQUEST_LOCATION) {
             if(resultCode == RESULT_OK) {
                 setLocation(new LatLng(
-                        data.getDoubleExtra(MapDetailActivity.EXTRA_LATITUDE, 0),
-                        data.getDoubleExtra(MapDetailActivity.EXTRA_LONGITUDE, 0)
+                        data.getDoubleExtra(ExtraType.EXTRA_LATITUDE, 0),
+                        data.getDoubleExtra(ExtraType.EXTRA_LONGITUDE, 0)
                 ));
             }
         }
