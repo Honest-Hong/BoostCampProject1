@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("HTJ", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void setupViewPager() {
+        Log.d("HTJ", "setupViewPager");
         pagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager)findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
@@ -102,9 +104,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+        Log.d("HTJ", "setupViewPager end");
     }
 
     private void handleIntent() {
+        Log.d("HTJ", "handleIntent");
         int type = getIntent().getIntExtra(EXTRA_NOTIFICATION_TYPE, NOTIFICATION_TYPE_NONE);
         switch(type) {
             case NOTIFICATION_TYPE_NONE:

@@ -38,16 +38,12 @@ import retrofit2.Response;
 
 public class ApplicationFragment extends Fragment {
     private static final float MAX_DISTANCE = 2.0f;
-    private static ApplicationFragment instance;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.help_empty) View viewEmpty;
     private ApplicationAdapter adapter;
 
-    public static ApplicationFragment getInstance() {
-        if(instance == null) {
-            instance = new ApplicationFragment();
-        }
-        return instance;
+    public static ApplicationFragment newInstance() {
+        return new ApplicationFragment();
     }
 
     @Nullable

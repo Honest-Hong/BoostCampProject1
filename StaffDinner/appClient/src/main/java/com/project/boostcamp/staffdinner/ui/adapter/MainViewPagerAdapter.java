@@ -3,7 +3,6 @@ package com.project.boostcamp.staffdinner.ui.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.project.boostcamp.staffdinner.ui.fragment.ApplicationFragment;
 import com.project.boostcamp.staffdinner.ui.fragment.ContactFragment;
@@ -22,7 +21,7 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter{
     public Fragment getItem(int position) {
         switch(position) {
             case 0:
-                return ApplicationFragment.getInstance();
+                return ApplicationFragment.newInstance();
             case 1:
                 return EstimateFragment.newInstance();
             case 2:

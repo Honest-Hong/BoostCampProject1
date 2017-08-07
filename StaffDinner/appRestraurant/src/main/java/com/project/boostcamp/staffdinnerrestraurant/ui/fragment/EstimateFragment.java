@@ -31,16 +31,12 @@ import butterknife.ButterKnife;
  */
 
 public class EstimateFragment extends Fragment {
-    private static EstimateFragment instance;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.help_empty) View viewEmpty;
     private EstimateAdapter recyclerAdapter;
 
-    public static EstimateFragment getInstance() {
-        if(instance == null) {
-            instance = new EstimateFragment();
-        }
-        return instance;
+    public static EstimateFragment newInstance() {
+        return new EstimateFragment();
     }
 
     @Nullable

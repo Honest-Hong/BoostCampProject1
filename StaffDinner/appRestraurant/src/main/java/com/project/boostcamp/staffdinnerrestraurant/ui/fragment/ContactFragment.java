@@ -32,16 +32,12 @@ import butterknife.ButterKnife;
  */
 
 public class ContactFragment extends Fragment {
-    private static ContactFragment instance;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.help_empty) View viewEmpty;
     private ContactRecyclerAdapter adapter;
 
-    public static ContactFragment getInstance() {
-        if(instance == null) {
-            instance = new ContactFragment();
-        }
-        return instance;
+    public static ContactFragment newInstance() {
+        return new ContactFragment();
     }
 
     @Nullable

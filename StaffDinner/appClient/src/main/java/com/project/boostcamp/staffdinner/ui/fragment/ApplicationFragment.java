@@ -98,13 +98,9 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
     private Marker marker; // 신청서의 위치 지도 마커
     private FusedLocationProviderClient fusedLocationClient; // 현재 위치를 가져오는 서비스
     private Application application = new Application(); // 현재 신청서 정보
-    private static ApplicationFragment instance;
 
-    public static ApplicationFragment getInstance() {
-        if(instance == null) {
-            instance = new ApplicationFragment();
-        }
-        return instance;
+    public static ApplicationFragment newInstance() {
+        return new ApplicationFragment();
     }
 
     @Nullable

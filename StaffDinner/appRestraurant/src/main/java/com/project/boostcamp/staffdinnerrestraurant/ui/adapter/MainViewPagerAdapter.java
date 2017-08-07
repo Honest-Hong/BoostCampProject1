@@ -19,13 +19,13 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        switch(position) {
+        switch (position) {
             case 0:
-                return ApplicationFragment.getInstance();
+                return ApplicationFragment.newInstance();
             case 1:
-                return EstimateFragment.getInstance();
+                return EstimateFragment.newInstance();
             case 2:
-                return ContactFragment.getInstance();
+                return ContactFragment.newInstance();
             default:
                 return null;
         }
