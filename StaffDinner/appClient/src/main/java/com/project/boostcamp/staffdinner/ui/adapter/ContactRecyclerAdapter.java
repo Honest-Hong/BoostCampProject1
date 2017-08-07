@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.project.boostcamp.publiclibrary.data.DataEvent;
+import com.project.boostcamp.publiclibrary.domain.ContactDTO;
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.data.Contact;
 
 import java.util.ArrayList;
 
@@ -16,22 +16,23 @@ import java.util.ArrayList;
  */
 
 public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactVH> {
-    private ArrayList<Contact> data;
-    private DataEvent<Contact> dataEvent;
+    private Context context;
+    private ArrayList<ContactDTO> data;
+    private DataEvent<ContactDTO> dataEvent;
 
-    public ContactRecyclerAdapter(DataEvent<Contact> contactClickListener) {
+    public ContactRecyclerAdapter(Context context, DataEvent<ContactDTO> dataEvent) {
+        this.context = context;
+        this.dataEvent = dataEvent;
         data = new ArrayList<>();
-        this.dataEvent = contactClickListener;
     }
 
-    public void setData(ArrayList<Contact> data) {
+    public void setData(ArrayList<ContactDTO> data) {
         this.data = data;
         notifyDataSetChanged();
     }
 
     @Override
     public ContactVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
         return new ContactVH(LayoutInflater.from(context).inflate(R.layout.layout_contact_item, parent, false), dataEvent, context);
     }
 

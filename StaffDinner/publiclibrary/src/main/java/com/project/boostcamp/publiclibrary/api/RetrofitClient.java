@@ -5,6 +5,9 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.project.boostcamp.publiclibrary.data.Estimate;
 import com.project.boostcamp.publiclibrary.domain.ClientEstimateDTO;
+import com.project.boostcamp.publiclibrary.domain.ContactAddDTO;
+import com.project.boostcamp.publiclibrary.domain.ContactDTO;
+import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,17 +42,52 @@ public class RetrofitClient {
         clientService = retrofit.create(ClientService.class);
     }
 
-    public void getEstimateList(String applicationId, final DataReceiver<ArrayList<ClientEstimateDTO>> dataReceiver) {
+    public void getEstimates(String applicationId, final DataReceiver<ArrayList<ClientEstimateDTO>> dataReceiver) {
         clientService.getEstimateList(applicationId).enqueue(new Callback<ArrayList<ClientEstimateDTO>>() {
             @Override
             public void onResponse(Call<ArrayList<ClientEstimateDTO>> call, Response<ArrayList<ClientEstimateDTO>> response) {
-                Log.d("HTJ", "getEstimateList: " + new Gson().toJson(response.body()));
+                Log.d("HTJ", "getEstimates: " + new Gson().toJson(response.body()));
                 dataReceiver.onReceive(response.body());
             }
 
             @Override
             public void onFailure(Call<ArrayList<ClientEstimateDTO>> call, Throwable t) {
                 Log.e("HTJ", "Fail to client get estimate list: " + t.getMessage());
+                dataReceiver.onFail();
+            }
+        });
+    }
+
+    /**
+     * 계약서 추가 요청
+     * @param dto 계약서 신청 데이터
+     * @param dataReceiver 요청 결과 이벤트
+     */
+    public void addContact(ContactAddDTO dto, final DataReceiver<ResultIntDTO> dataReceiver) {
+        clientService.addContact(dto).enqueue(new Callback<ResultIntDTO>() {
+            @Override
+            public void onResponse(Call<ResultIntDTO> call, Response<ResultIntDTO> response) {
+                dataReceiver.onReceive(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ResultIntDTO> call, Throwable t) {
+                dataReceiver.onFail();
+            }
+        });
+    }
+
+    public void getContacts(String id, final DataReceiver<ArrayList<ContactDTO>> dataReceiver) {
+        clientService.getContacts(id).enqueue(new Callback<ArrayList<ContactDTO>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ContactDTO>> call, Response<ArrayList<ContactDTO>> response) {
+                Log.d("HTJ", "getContacts onResponse: " + new Gson().toJson(response.body()));
+                dataReceiver.onReceive(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ContactDTO>> call, Throwable t) {
+                Log.e("HTJ", "getContacts onFailure: " + t.getMessage());
                 dataReceiver.onFail();
             }
         });

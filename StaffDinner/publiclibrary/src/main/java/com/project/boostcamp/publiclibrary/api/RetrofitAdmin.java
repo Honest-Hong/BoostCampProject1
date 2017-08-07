@@ -48,7 +48,7 @@ public class RetrofitAdmin {
 
             @Override
             public void onFailure(Call<ArrayList<AdminEstimateDTO>> call, Throwable t) {
-                Log.e("HTJ", "RetrofitAdmin-getEstimateList-onFailure: " + t.getMessage());
+                Log.e("HTJ", "RetrofitAdmin-getEstimates-onFailure: " + t.getMessage());
                 dataReceiver.onFail();
             }
         });

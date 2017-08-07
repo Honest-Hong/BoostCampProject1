@@ -80,4 +80,10 @@ public class TimeHelper {
     public static String getTimeString(long time, String pattern) {
         return new SimpleDateFormat(pattern).format(new Date(time));
     }
+
+    public static String getTimeDiffString(long time) {
+        long diff = now() - time;
+        diff /= 1000 * 60;
+        return String.format("%d분 전", diff);
+    }
 }

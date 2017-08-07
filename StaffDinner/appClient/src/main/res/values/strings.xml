@@ -63,5 +63,9 @@
     <string name="email_sign_up_password_confirm_help">동일한 비밀번호를 한번더 입력해주세요.</string>
     <string name="text_prev">이전</string>
     <string name="text_next">다음</string>
-    <string name="default_time">yyyy.MM.dd HH:mm</string>
+    <string name="default_time_pattern">yyyy.MM.dd HH:mm</string>
+    <string name="help_empty">데이터가 존재하지 않습니다!</string>
+    <string name="application_time">신청 시간</string>
+    <string name="estimate_time">견적서 시간</string>
+    <string name="contact_time">계약한 시간</string>
 </resources>

@@ -73,5 +73,6 @@ public class GlobalApplication extends Application {
         super.onCreate();
         instance = this;
         KakaoSDK.init(new KakaoSDKAdapter());
+        // TODO: 2017-08-07 사용하는 부분에서만 init!
     }
 }

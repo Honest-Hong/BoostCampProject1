@@ -386,7 +386,7 @@ public class ApplicationFragment extends Fragment implements View.OnClickListene
         dto.setStyle(application.getWantedStyle());
         dto.setMenu(application.getWantedMenu());
         dto.setGeo(application.getGeo().toGeoDTO());
-        dto.setWritedtime(application.getWritedTime());
+        dto.setWritedtime(TimeHelper.now());
         String clientId = SharedPreperenceHelper.getInstance(getContext()).getLoginId();
         RetrofitClient.getInstance().clientService.setApplication(clientId, dto).enqueue(new Callback<ResultStringDTO>() {
             @Override

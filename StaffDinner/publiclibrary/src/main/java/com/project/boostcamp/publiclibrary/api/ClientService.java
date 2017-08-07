@@ -3,6 +3,8 @@ package com.project.boostcamp.publiclibrary.api;
 import com.project.boostcamp.publiclibrary.domain.ClientApplicationDTO;
 import com.project.boostcamp.publiclibrary.domain.ClientEstimateDTO;
 import com.project.boostcamp.publiclibrary.domain.ClientJoinDTO;
+import com.project.boostcamp.publiclibrary.domain.ContactAddDTO;
+import com.project.boostcamp.publiclibrary.domain.ContactDTO;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
 import com.project.boostcamp.publiclibrary.domain.ResultStringDTO;
@@ -78,6 +80,27 @@ public interface ClientService {
     @PUT("/client/{id}/token")
     Call<ResultIntDTO> updateToken(@Path("id") String id, @Field("type") int type, @Field("token") String token);
 
+    /**
+     * 견적서 목록 요청
+     * @param id 신청서 아이디
+     * @return 견적서 목록
+     */
     @GET("/client/{id}/estimate")
     Call<ArrayList<ClientEstimateDTO>> getEstimateList(@Path("id") String id);
+
+    /**
+     * 계약 요청
+     * @param contactAddDTO 신청서 아이디와 견적서 아이디를 포함한다
+     * @return 성공시 1 반환
+     */
+    @POST("/contact/add")
+    Call<ResultIntDTO> addContact(@Body ContactAddDTO contactAddDTO);
+
+    /**
+     * 계약 목록 요청
+     * @param id 고객 로그인 아이디
+     * @return 계약 목록
+     */
+    @GET("/client/{id}/contact")
+    Call<ArrayList<ContactDTO>> getContacts(@Path("id") String id);
 }

@@ -16,12 +16,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.project.boostcamp.publiclibrary.api.DataReceiver;
+import com.project.boostcamp.publiclibrary.api.RetrofitClient;
 import com.project.boostcamp.publiclibrary.data.ExtraType;
 import com.project.boostcamp.publiclibrary.domain.ClientEstimateDTO;
+import com.project.boostcamp.publiclibrary.domain.ContactAddDTO;
+import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
 import com.project.boostcamp.publiclibrary.util.TimeHelper;
 import com.project.boostcamp.staffdinner.GlideApp;
 import com.project.boostcamp.staffdinner.R;
-import com.project.boostcamp.publiclibrary.data.Estimate;
 import com.project.boostcamp.publiclibrary.dialog.DialogResultListener;
 import com.project.boostcamp.publiclibrary.dialog.MyAlertDialog;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
@@ -63,7 +66,7 @@ public class EstimateDetailActivity extends AppCompatActivity implements View.On
                 .centerCrop()
                 .into(imageView);
         textName.setText(estimate.getAdmin().getName());
-        textDate.setText(TimeHelper.getTimeString(estimate.getWritedTime(), getString(R.string.default_time)));
+        textDate.setText(TimeHelper.getTimeString(estimate.getWritedTime(), getString(R.string.default_time_pattern)));
         textMessage.setText(estimate.getMessage());
         textStyle.setText(estimate.getAdmin().getStyle());
         textMenu.setText(estimate.getAdmin().getMenu());
@@ -105,9 +108,30 @@ public class EstimateDetailActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onPositive() {
-        Toast.makeText(this, "계약 완료", Toast.LENGTH_SHORT).show();
-        finish();
+        // TODO: 2017-08-07 계약서 서버에 등록하기
+        ContactAddDTO dto = new ContactAddDTO();
+        dto.setApp_id(estimate.getAppId());
+        dto.setEstimate_id(estimate.getEstimateId());
+        dto.setContactTime(TimeHelper.now());
+        RetrofitClient.getInstance().addContact(dto, dataReceiver);
     }
+
+    private DataReceiver<ResultIntDTO> dataReceiver = new DataReceiver<ResultIntDTO>() {
+        @Override
+        public void onReceive(ResultIntDTO data) {
+            if(data.getResult() == 1) {
+                Toast.makeText(EstimateDetailActivity.this, "계약 성공", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(EstimateDetailActivity.this, "계약 실패", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFail() {
+            Toast.makeText(EstimateDetailActivity.this, "서버 오류로 인한 계약 실패", Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     public void onNegative() {
@@ -116,7 +140,6 @@ public class EstimateDetailActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onMapClick(LatLng notThing) {
-
         Intent intentMap = new Intent(this, MapDetailActivity.class);
         LatLng latLng = estimate.getAdmin().getGeo().toLatLng();
         intentMap.putExtra(ExtraType.EXTRA_LATITUDE, latLng.latitude);

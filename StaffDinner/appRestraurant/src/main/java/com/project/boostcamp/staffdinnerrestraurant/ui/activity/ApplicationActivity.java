@@ -38,7 +38,7 @@ public class ApplicationActivity extends AppCompatActivity implements OnMapReady
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_apply_detail);
+        setContentView(R.layout.activity_application_detail);
         ButterKnife.bind(this);
 
         application = getIntent().getParcelableExtra(AdminApplication.class.getName());

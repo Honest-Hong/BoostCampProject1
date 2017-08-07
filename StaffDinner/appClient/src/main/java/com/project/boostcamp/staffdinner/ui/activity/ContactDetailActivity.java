@@ -13,17 +13,25 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.project.boostcamp.publiclibrary.data.Contact;
 import com.project.boostcamp.publiclibrary.data.ExtraType;
+import com.project.boostcamp.publiclibrary.domain.ContactDTO;
 import com.project.boostcamp.publiclibrary.util.GeocoderHelper;
 import com.project.boostcamp.publiclibrary.util.MarkerBuilder;
+import com.project.boostcamp.publiclibrary.util.TimeHelper;
 import com.project.boostcamp.staffdinner.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  *  계약서를 자세히 볼 수 잇는 액티비티
  */
 public class ContactDetailActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
-    private Contact contact;
+    private ContactDTO contact;
+    @BindView(R.id.text_title) TextView textTitle;
+    @BindView(R.id.text_apply_detail) TextView textApplyDetail;
+    @BindView(R.id.text_estimate_detail) TextView textEstimateDetail;
+    @BindView(R.id.text_contact_detail) TextView textContactDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +39,7 @@ public class ContactDetailActivity extends AppCompatActivity implements OnMapRea
         setContentView(R.layout.activity_contact_detail);
 
         if(getIntent() != null) {
-            contact = getIntent().getParcelableExtra(Contact.class.getName());
+            contact = getIntent().getParcelableExtra(ContactDTO.class.getName());
             setupView();
         } else {
             finish();
@@ -39,28 +47,25 @@ public class ContactDetailActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void setupView() {
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         toolbar.setTitle(R.string.contact_detail_activity_title);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-        TextView textTitle = (TextView)findViewById(R.id.text_title);
-        TextView textApplyDetail = (TextView)findViewById(R.id.text_apply_detail);
-        TextView textEstimateDetail = (TextView)findViewById(R.id.text_estimate_detail);
-        TextView textContactDetail = (TextView)findViewById(R.id.text_contact_detail);
 
-        textTitle.setText(getString(R.string.text_contact_list_title, contact.getApplierName(), contact.getEstimaterName()));
+        textTitle.setText(getString(R.string.text_contact_list_title, contact.getClientName(), contact.getAdminName()));
         textApplyDetail.setText(getString(R.string.text_contact_apply_detail
-                , contact.getApplyNumber()
-                , GeocoderHelper.getAddress(this, new LatLng(contact.getApplyLat(), contact.getApplyLng()))
-                , contact.getApplyDate()
-                , contact.getApplierPhone()));
+                , contact.getAppNumber()
+                , GeocoderHelper.getAddress(this, contact.getAppGeo().toLatLng())
+                , TimeHelper.getTimeString(contact.getAppTime(), getString(R.string.default_time_pattern))
+                , contact.getClientPhone()));
         textEstimateDetail.setText(getString(R.string.text_contact_estimate_detail
-                , GeocoderHelper.getAddress(this, new LatLng(contact.getEstimateLat(), contact.getEstimateLng()))
-                , contact.getEstimateDate()
-                , contact.getEstimaterPhone()
-                , contact.getEstimaterMessage()));
-        textContactDetail.setText(getString(R.string.text_contact_contact_detail, contact.getContactDate()));
+                , GeocoderHelper.getAddress(this, contact.getAdminGeo().toLatLng())
+                , TimeHelper.getTimeString(contact.getEstimateTime(), getString(R.string.default_time_pattern))
+                , contact.getAdminPhone()
+                , contact.getEstimateMessage()));
+        textContactDetail.setText(getString(R.string.text_contact_contact_detail, TimeHelper.getTimeString(contact.getContactTime(), getString(R.string.default_time_pattern))));
 
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -78,8 +83,7 @@ public class ContactDetailActivity extends AppCompatActivity implements OnMapRea
         UiSettings uiSettings = googleMap.getUiSettings();
         uiSettings.setScrollGesturesEnabled(false);
         uiSettings.setZoomGesturesEnabled(false);
-        LatLng latLng = new LatLng(contact.getApplyLat()
-                , contact.getApplyLng());
+        LatLng latLng = contact.getAdminGeo().toLatLng();
         googleMap.moveCamera(CameraUpdateFactory
                 .newLatLngZoom(latLng, 16));
         googleMap.addMarker(MarkerBuilder.simple(latLng));
@@ -103,8 +107,8 @@ public class ContactDetailActivity extends AppCompatActivity implements OnMapRea
     @Override
     public void onMapClick(LatLng latLng) {
         Intent intentMap = new Intent(this, MapDetailActivity.class);
-        intentMap.putExtra(ExtraType.EXTRA_LATITUDE, contact.getEstimateLat());
-        intentMap.putExtra(ExtraType.EXTRA_LONGITUDE, contact.getEstimateLng());
+        intentMap.putExtra(ExtraType.EXTRA_LATITUDE, contact.getAdminGeo().getCoordinates()[1]);
+        intentMap.putExtra(ExtraType.EXTRA_LONGITUDE, contact.getAdminGeo().getCoordinates()[0]);
         intentMap.putExtra(ExtraType.EXTRA_READ_ONLY, true);
         startActivity(intentMap);
     }

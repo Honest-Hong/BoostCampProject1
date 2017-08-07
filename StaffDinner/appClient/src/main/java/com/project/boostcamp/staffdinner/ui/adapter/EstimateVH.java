@@ -13,24 +13,25 @@ import com.project.boostcamp.publiclibrary.util.TimeHelper;
 import com.project.boostcamp.staffdinner.GlideApp;
 import com.project.boostcamp.staffdinner.R;
 
+import butterknife.BindDimen;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Hong Tae Joon on 2017-07-25.
  */
 
 public class EstimateVH extends BaseVH<ClientEstimateDTO> implements View.OnClickListener{
     private Context context;
-    private ImageView imageView;
-    private TextView textName;
-    private TextView textMessage;
-    private TextView textDate;
+    @BindView(R.id.image_view) ImageView imageView;
+    @BindView(R.id.text_name) TextView textName;
+    @BindView(R.id.text_message) TextView textMessage;
+    @BindView(R.id.text_date) TextView textDate;
 
     public EstimateVH(View v, DataEvent<ClientEstimateDTO> dataEvent, Context context) {
         super(v, dataEvent);
         this.context = context;
-        imageView = (ImageView)v.findViewById(R.id.image_view);
-        textName = (TextView)v.findViewById(R.id.text_name);
-        textMessage = (TextView)v.findViewById(R.id.text_message);
-        textDate = (TextView)v.findViewById(R.id.text_date);
+        ButterKnife.bind(this, v);
         v.setOnClickListener(this);
     }
 
@@ -42,7 +43,7 @@ public class EstimateVH extends BaseVH<ClientEstimateDTO> implements View.OnClic
                 .centerCrop()
                 .into(imageView);
         textName.setText(data.getAdmin().getName());
-        textDate.setText(TimeHelper.getTimeString(data.getWritedTime(), context.getString(R.string.default_time)));
+        textDate.setText(TimeHelper.getTimeDiffString(data.getWritedTime()));
         textMessage.setText(StringHelper.cutEnd(data.getMessage(), 30));
     }
 

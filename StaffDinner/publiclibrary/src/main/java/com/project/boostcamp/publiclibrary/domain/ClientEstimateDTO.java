@@ -3,6 +3,7 @@ package com.project.boostcamp.publiclibrary.domain;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.project.boostcamp.publiclibrary.data.BaseData;
 
 /**
@@ -10,6 +11,9 @@ import com.project.boostcamp.publiclibrary.data.BaseData;
  */
 
 public class ClientEstimateDTO extends BaseData implements Parcelable{
+    @SerializedName("_id")
+    private String estimateId;
+    @SerializedName("app_id")
     private String appId;
     private String message;
     private long writedTime;
@@ -20,6 +24,7 @@ public class ClientEstimateDTO extends BaseData implements Parcelable{
     }
 
     protected ClientEstimateDTO(Parcel in) {
+        estimateId = in.readString();
         appId = in.readString();
         message = in.readString();
         writedTime = in.readLong();
@@ -46,11 +51,20 @@ public class ClientEstimateDTO extends BaseData implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(estimateId);
         parcel.writeString(appId);
         parcel.writeString(message);
         parcel.writeLong(writedTime);
         parcel.writeInt(state);
         parcel.writeParcelable(admin, PARCELABLE_WRITE_RETURN_VALUE);
+    }
+
+    public String getEstimateId() {
+        return estimateId;
+    }
+
+    public void setEstimateId(String estimateId) {
+        this.estimateId = estimateId;
     }
 
     public String getAppId() {
