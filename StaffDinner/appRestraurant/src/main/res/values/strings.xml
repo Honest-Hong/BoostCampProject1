@@ -68,5 +68,9 @@
     <string name="nav_logout">로그아웃</string>
     <string name="estimate_content">견적서 내용</string>
     <string name="help_estimate_send">견적서의 내용은 고객에게 전달되며 사실만을 작성해주시기 바랍니다.</string>
-
+    <string name="application_time">신청서 시간</string>
+    <string name="estimate_time">견적서 시간</string>
+    <string name="contact_time">계약 시간</string>
+    <string name="default_time_pattern">yyyy.MM.dd HH:mm</string>
+    <string name="help_empty">데이터가 존재하지 않습니다!</string>
 </resources>

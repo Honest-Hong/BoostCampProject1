@@ -26,6 +26,8 @@ import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.OnClickItemListen
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,7 +39,7 @@ import retrofit2.Response;
 public class ApplicationFragment extends Fragment {
     private static final float MAX_DISTANCE = 2.0f;
     private static ApplicationFragment instance;
-    private RecyclerView recyclerView;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
     private ApplicationAdapter adapter;
 
     public static ApplicationFragment getInstance() {
@@ -57,7 +59,7 @@ public class ApplicationFragment extends Fragment {
     }
 
     private void setupView(View v) {
-        recyclerView = (RecyclerView)v;
+        ButterKnife.bind(this, v);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ApplicationAdapter(getContext(), dataEvent);

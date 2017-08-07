@@ -3,6 +3,7 @@ package com.project.boostcamp.publiclibrary.api;
 import com.project.boostcamp.publiclibrary.domain.AdminApplicationDTO;
 import com.project.boostcamp.publiclibrary.domain.AdminEstimateDTO;
 import com.project.boostcamp.publiclibrary.domain.AdminJoinDTO;
+import com.project.boostcamp.publiclibrary.domain.ContactDTO;
 import com.project.boostcamp.publiclibrary.domain.EstimateAddDTO;
 import com.project.boostcamp.publiclibrary.domain.LoginDTO;
 import com.project.boostcamp.publiclibrary.domain.ResultIntDTO;
@@ -68,4 +69,7 @@ public interface AdminService {
 
     @GET("/admin/{id}/estimate")
     Call<ArrayList<AdminEstimateDTO>> getEstimate(@Path("id") String id);
+
+    @GET("/admin/{id}/contact")
+    Call<ArrayList<ContactDTO>> getContacts(@Path("id") String id);
 }

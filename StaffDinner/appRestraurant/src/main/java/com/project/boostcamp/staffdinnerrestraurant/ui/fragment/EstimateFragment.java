@@ -23,13 +23,16 @@ import com.project.boostcamp.staffdinnerrestraurant.ui.adapter.EstimateAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Hong Tae Joon on 2017-07-28.
  */
 
 public class EstimateFragment extends Fragment {
     private static EstimateFragment instance;
-    private RecyclerView recyclerView;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
     private EstimateAdapter recyclerAdapter;
 
     public static EstimateFragment getInstance() {
@@ -49,7 +52,7 @@ public class EstimateFragment extends Fragment {
     }
 
     private void setupView(View v) {
-        recyclerView = (RecyclerView)v;
+        ButterKnife.bind(this, v);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

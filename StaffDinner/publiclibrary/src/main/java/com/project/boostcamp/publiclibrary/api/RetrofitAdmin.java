@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.project.boostcamp.publiclibrary.domain.AdminEstimateDTO;
+import com.project.boostcamp.publiclibrary.domain.ContactDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,22 @@ public class RetrofitAdmin {
             @Override
             public void onFailure(Call<ArrayList<AdminEstimateDTO>> call, Throwable t) {
                 Log.e("HTJ", "RetrofitAdmin-getEstimates-onFailure: " + t.getMessage());
+                dataReceiver.onFail();
+            }
+        });
+    }
+
+    public void getContacts(String id, final DataReceiver<ArrayList<ContactDTO>> dataReceiver) {
+        adminService.getContacts(id).enqueue(new Callback<ArrayList<ContactDTO>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ContactDTO>> call, Response<ArrayList<ContactDTO>> response) {
+                Log.d("HTJ", "getContacts onResponse: " + new Gson().toJson(response.body()));
+                dataReceiver.onReceive(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ContactDTO>> call, Throwable t) {
+                Log.e("HTJ", "getContacts onFailure: " + t.getMessage());
                 dataReceiver.onFail();
             }
         });

@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         pagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager)findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
