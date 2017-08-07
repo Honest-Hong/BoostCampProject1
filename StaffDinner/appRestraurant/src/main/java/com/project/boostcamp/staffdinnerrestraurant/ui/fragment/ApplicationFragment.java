@@ -40,6 +40,7 @@ public class ApplicationFragment extends Fragment {
     private static final float MAX_DISTANCE = 2.0f;
     private static ApplicationFragment instance;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.help_empty) View viewEmpty;
     private ApplicationAdapter adapter;
 
     public static ApplicationFragment getInstance() {
@@ -95,6 +96,13 @@ public class ApplicationFragment extends Fragment {
                     app.setMenu(dto.getMenu());
                     app.setWritedTime(dto.getWritedTime());
                     arr.add(app);
+                }
+                if(arr.size() > 0) {
+                    viewEmpty.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    viewEmpty.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
                 adapter.setData(arr);
             }

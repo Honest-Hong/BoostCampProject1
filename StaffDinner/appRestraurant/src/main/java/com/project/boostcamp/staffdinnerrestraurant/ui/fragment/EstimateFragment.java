@@ -33,6 +33,7 @@ import butterknife.ButterKnife;
 public class EstimateFragment extends Fragment {
     private static EstimateFragment instance;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.help_empty) View viewEmpty;
     private EstimateAdapter recyclerAdapter;
 
     public static EstimateFragment getInstance() {
@@ -86,6 +87,13 @@ public class EstimateFragment extends Fragment {
                 item.setMessage(data.get(i).getMessage());
                 item.setWritedTime(data.get(i).getWritedTime());
                 arr.add(item);
+            }
+            if(arr.size() > 0) {
+                viewEmpty.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            } else {
+                viewEmpty.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
             }
             recyclerAdapter.setData(arr);
         }

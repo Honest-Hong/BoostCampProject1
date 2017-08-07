@@ -64,12 +64,28 @@ public interface AdminService {
     @PUT("/admin/{id}/token")
     Call<ResultIntDTO> updateToken(@Path("id") String id, @Field("type") int type, @Field("token") String token);
 
+    /**
+     * 신청서에 견적서를 추가 교청
+     * @param id 신청서 아이디
+     * @param estimateAddDTO 견적서 정보
+     * @return 성공시 1 반환
+     */
     @POST("/application/{id}/estimate")
     Call<ResultIntDTO> addEstimate(@Path("id") String id, @Body EstimateAddDTO estimateAddDTO);
 
+    /**
+     * 견적서 목록 요청
+     * @param id 식당 로그인 아이디
+     * @return 견적서 목록 반환
+     */
     @GET("/admin/{id}/estimate")
     Call<ArrayList<AdminEstimateDTO>> getEstimate(@Path("id") String id);
 
+    /**
+     * 계약서 목록 요청
+     * @param id 식당 로그인 아이디
+     * @return 계약서 목록 반환
+     */
     @GET("/admin/{id}/contact")
     Call<ArrayList<ContactDTO>> getContacts(@Path("id") String id);
 }
